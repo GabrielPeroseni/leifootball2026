@@ -42,7 +42,7 @@
       overflow: hidden; 
     }
 
-    /* ESTILOS DO MENU PRINCIPAL DE FUTEBOL */
+    /* ESTILOS DO MENU PRINCIPAL */
     #main-menu-screen {
       display: flex;
       flex-direction: column;
@@ -55,10 +55,7 @@
       padding: 20px;
     }
 
-    .menu-header {
-      text-align: center;
-      margin-bottom: 40px;
-    }
+    .menu-header { text-align: center; margin-bottom: 40px; }
 
     .menu-title {
       font-size: 2.8rem;
@@ -106,10 +103,7 @@
     .mode-card::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 4px;
+      top: 0; left: 0; width: 100%; height: 4px;
       background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
       transform: translateX(-100%);
       transition: transform 0.5s ease;
@@ -122,314 +116,99 @@
       background: var(--bg-card-hover);
     }
 
-    .mode-card:hover::before {
-      transform: translateX(100%);
-    }
+    .mode-card:hover::before { transform: translateX(100%); }
 
-    .mode-card.disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      border-color: #273549;
-    }
+    .mode-card.disabled { opacity: 0.6; cursor: not-allowed; border-color: #273549; }
+    .mode-card.disabled:hover { transform: none; box-shadow: none; background: var(--bg-card); }
 
-    .mode-card.disabled:hover {
-      transform: none;
-      box-shadow: none;
-      background: var(--bg-card);
-    }
-
-    .mode-icon {
-      font-size: 3.5rem;
-      margin-bottom: 15px;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
-    }
-
-    .mode-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .mode-desc {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
+    .mode-icon { font-size: 3.5rem; margin-bottom: 15px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4)); }
+    .mode-title { font-size: 1.3rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+    .mode-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; }
 
     .badge-coming-soon {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      background: var(--accent-slate);
-      color: #fff;
-      font-size: 0.65rem;
-      font-weight: 700;
-      padding: 4px 8px;
-      border-radius: 20px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      position: absolute; top: 12px; right: 12px;
+      background: var(--accent-slate); color: #fff;
+      font-size: 0.65rem; font-weight: 700; padding: 4px 8px;
+      border-radius: 20px; text-transform: uppercase; letter-spacing: 1px;
       border: 1px solid var(--border-color);
     }
 
     /* TELAS DE CONFIGURAÇÃO */
     .screen { 
-      position: absolute; 
-      inset: 0; 
+      position: absolute; inset: 0; 
       background: var(--bg-primary); 
       z-index: 100; 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      justify-content: flex-start; 
-      gap: 15px; 
-      padding: 20px; 
-      overflow-y: auto; 
+      display: flex; flex-direction: column; 
+      align-items: center; justify-content: flex-start; 
+      gap: 15px; padding: 20px; overflow-y: auto; 
     }
 
-    .setup-title {
-      font-size: 1.5rem;
-      letter-spacing: 2px;
-      color: var(--text-main);
-      text-transform: uppercase;
-      text-align: center;
-      margin-top: 10px;
-    }
+    .setup-title { font-size: 1.5rem; letter-spacing: 2px; color: var(--text-main); text-transform: uppercase; text-align: center; margin-top: 10px; }
 
     .setup-header-controls {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      background: var(--bg-card);
-      padding: 16px;
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
-      width: 100%;
-      max-width: 600px;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      background: var(--bg-card); padding: 16px; border-radius: 8px;
+      border: 1px solid var(--border-color); width: 100%; max-width: 600px;
     }
 
-    .mode-tabs {
-      display: flex;
-      gap: 10px;
-      width: 100%;
-    }
+    .mode-tabs { display: flex; gap: 10px; width: 100%; }
 
     .tab-btn {
-      flex: 1;
-      padding: 10px;
-      background: var(--bg-input);
-      color: var(--text-muted);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      text-transform: uppercase;
-      font-size: 0.8rem;
+      flex: 1; padding: 10px; background: var(--bg-input);
+      color: var(--text-muted); border: 1px solid var(--border-color);
+      border-radius: 6px; cursor: pointer; font-weight: 600;
+      text-transform: uppercase; font-size: 0.8rem;
     }
 
-    .tab-btn.active {
-      background: var(--accent-blue);
-      color: white;
-      border-color: var(--accent-blue);
-    }
+    .tab-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
 
-    .player-select-box {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.9rem;
-      color: var(--text-main);
-    }
+    .player-select-box { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-main); }
+    .player-select-box select { padding: 6px 12px; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); outline: none; font-size: 0.9rem; }
 
-    .player-select-box select {
-      padding: 6px 12px;
-      border-radius: 4px;
-      border: 1px solid var(--border-color);
-      background: var(--bg-input);
-      color: var(--text-main);
-      outline: none;
-      font-size: 0.9rem;
-    }
+    .setup-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; width: 100%; max-width: 1250px; }
+    .team-input-card { background: var(--bg-card); padding: 12px; border-radius: 8px; display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; align-items: center; border: 1px solid var(--border-color); }
+    .team-input-card label { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+    .team-input-card input, .team-input-card select { padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); width: 100%; font-size: 0.8rem; outline: none; }
+    .team-input-card input:focus, .team-input-card select:focus { border-color: var(--border-focus); }
 
-    .setup-grid { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
-      gap: 12px; 
-      width: 100%; 
-      max-width: 1250px; 
-    }
-
-    .team-input-card { 
-      background: var(--bg-card); 
-      padding: 12px; 
-      border-radius: 8px; 
-      display: flex; 
-      flex-direction: column; 
-      gap: 6px; 
-      font-size: 0.85rem; 
-      align-items: center; 
-      border: 1px solid var(--border-color); 
-    }
-
-    .team-input-card label {
-      color: var(--text-muted);
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-top: 2px;
-    }
-
-    .team-input-card input, .team-input-card select { 
-      padding: 8px; 
-      border-radius: 4px; 
-      border: 1px solid var(--border-color); 
-      background: var(--bg-input); 
-      color: var(--text-main); 
-      width: 100%; 
-      font-size: 0.8rem; 
-      outline: none;
-    }
-
-    .team-input-card input:focus, .team-input-card select:focus {
-      border-color: var(--border-focus);
-    }
-
-    .btn-start { 
-      padding: 12px 24px; 
-      font-size: 0.95rem; 
-      font-weight: 600; 
-      background: var(--accent-blue); 
-      color: white; 
-      border: none; 
-      border-radius: 6px; 
-      cursor: pointer; 
-      transition: background 0.2s; 
-      touch-action: manipulation; 
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
+    .btn-start { padding: 12px 24px; font-size: 0.95rem; font-weight: 600; background: var(--accent-blue); color: white; border: none; border-radius: 6px; cursor: pointer; transition: background 0.2s; touch-action: manipulation; text-transform: uppercase; letter-spacing: 1px; }
     .btn-start:hover { background: var(--accent-blue-hover); }
     .btn-start:active { transform: scale(0.98); }
 
-    .btn-back {
-      padding: 8px 16px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      background: var(--accent-slate);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      text-transform: uppercase;
-      transition: 0.2s;
-    }
-
+    .btn-back { padding: 8px 16px; font-size: 0.8rem; font-weight: 600; background: var(--accent-slate); color: white; border: none; border-radius: 6px; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
     .btn-back:hover { background: #334155; }
 
     .badge-preview { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; margin-bottom: 2px; }
 
     /* GAME ARENA (LEILÃO) */
-    #game-arena { 
-      display: grid; 
-      grid-template-columns: 320px 1fr; 
-      height: 100vh; 
-      padding: 12px; 
-      gap: 12px; 
-      overflow: hidden; 
-      background-color: var(--bg-primary);
-    }
-
+    #game-arena { display: grid; grid-template-columns: 320px 1fr; height: 100vh; padding: 12px; gap: 12px; overflow: hidden; background-color: var(--bg-primary); }
     .teams-left-sidebar { display: flex; flex-direction: column; gap: 8px; height: 100%; overflow-y: auto; padding-right: 4px; }
-    
-    .team-panel { 
-      background: var(--bg-card); 
-      border-radius: 8px; 
-      padding: 8px; 
-      display: flex; 
-      flex-direction: column; 
-      border: 2px solid var(--border-color); 
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
-      flex-shrink: 0; 
-      transition: border-color 0.3s, box-shadow 0.3s; 
-    }
-
-    .team-panel.active-turn { 
-      border-color: var(--accent-blue) !important; 
-      box-shadow: 0 0 12px rgba(59, 130, 246, 0.4); 
-    }
-
+    .team-panel { background: var(--bg-card); border-radius: 8px; padding: 8px; display: flex; flex-direction: column; border: 2px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.3); flex-shrink: 0; transition: border-color 0.3s, box-shadow 0.3s; }
+    .team-panel.active-turn { border-color: var(--accent-blue) !important; box-shadow: 0 0 12px rgba(59, 130, 246, 0.4); }
     .team-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid var(--border-color); font-size: 0.8rem; }
     .team-tokens { background: var(--accent-slate); color: var(--text-main); padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 0.7rem; }
     .passes-left { background: rgba(239, 68, 68, 0.2); color: var(--danger-color); padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 0.65rem; margin-left: 4px; border: 1px solid rgba(239, 68, 68, 0.3); }
-    
+
     .lineup-slots { display: grid; grid-template-columns: 1fr; gap: 3px; font-size: 0.7rem; }
     .slot { background: var(--bg-input); padding: 3px 6px; border-radius: 4px; border: 1px dashed var(--border-color); display: flex; justify-content: space-between; align-items: center; }
     .slot.filled { border-style: solid; border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.1); }
     .slot-pos { font-weight: bold; color: var(--text-muted); font-size: 0.6rem; }
     .slot-player { color: var(--success-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.65rem; font-weight: 600; }
 
-    #auction-right-center { 
-      background: var(--bg-card); 
-      border-radius: 8px; 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      justify-content: space-between; 
-      padding: 16px; 
-      border: 1px solid var(--border-color); 
-      height: 100%; 
-      overflow-y: auto; 
-    }
-
-    .player-card { 
-      background: linear-gradient(135deg, #1e293b, #0f172a); 
-      width: 280px; 
-      height: 340px; 
-      border-radius: 16px; 
-      padding: 16px; 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      justify-content: space-between; 
-      color: var(--text-main); 
-      box-shadow: 0 12px 30px rgba(0,0,0,0.6); 
-      position: relative; 
-      border: 2px solid var(--border-color); 
-      flex-shrink: 0; 
-      margin: 10px 0;
-    }
-
+    #auction-right-center { background: var(--bg-card); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border-color); height: 100%; overflow-y: auto; }
+    .player-card { background: linear-gradient(135deg, #1e293b, #0f172a); width: 280px; height: 340px; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; color: var(--text-main); box-shadow: 0 12px 30px rgba(0,0,0,0.6); position: relative; border: 2px solid var(--border-color); flex-shrink: 0; margin: 10px 0; }
     .card-ovr { position: absolute; top: 12px; left: 16px; font-size: 2.2rem; font-weight: 900; line-height: 1; color: var(--accent-gold); }
     .card-pos { position: absolute; top: 48px; left: 16px; font-size: 0.85rem; font-weight: bold; text-transform: uppercase; color: var(--text-muted); }
     .card-photo-box { width: 170px; height: 170px; border-radius: 50%; margin-top: 15px; display: flex; align-items: center; justify-content: center; background: var(--bg-input); border: 3px solid var(--border-color); overflow: hidden; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
     .card-photo-img { width: 100%; height: 100%; object-fit: contain; }
     .card-name { font-size: 1.1rem; font-weight: 700; text-align: center; text-transform: uppercase; border-top: 1px solid var(--border-color); width: 100%; padding-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main); }
-    
+
     .bidding-info { text-align: center; margin: 4px 0; }
     .current-bid { font-size: 2rem; color: #60a5fa; font-weight: bold; margin: 2px 0; }
-    
+
     .controls-panel { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 450px; }
     .btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
-    
-    .btn-action { 
-      flex: 1; 
-      min-width: 70px; 
-      padding: 10px 6px; 
-      border: none; 
-      border-radius: 4px; 
-      font-weight: 600; 
-      cursor: pointer; 
-      color: white; 
-      transition: 0.2s; 
-      font-size: 0.8rem; 
-      touch-action: manipulation; 
-      text-transform: uppercase;
-    }
-
+    .btn-action { flex: 1; min-width: 70px; padding: 10px 6px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; color: white; transition: 0.2s; font-size: 0.8rem; touch-action: manipulation; text-transform: uppercase; }
     .btn-action:active { transform: scale(0.96); }
     .btn-pass { background: rgba(239, 68, 68, 0.2); color: var(--danger-color); border: 1px solid rgba(239, 68, 68, 0.3); }
     .btn-pass:hover { background: rgba(239, 68, 68, 0.3); }
@@ -439,8 +218,99 @@
     .btn-zero:hover { background: #334155; }
     .btn-dice { background: #475569; width: 100%; padding: 10px; font-size: 0.85rem; }
     .btn-dice:hover { background: #334155; }
-    
+
     button:disabled { opacity: 0.3; cursor: not-allowed; transform: none !important; }
+
+    /* TELA DE CAMPEONATO */
+    #league-screen { display: flex; flex-direction: column; gap: 10px; padding: 16px; width: 100%; height: 100vh; background: var(--bg-primary); overflow: hidden; }
+    .brasfoot-header { text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; flex-shrink: 0; }
+    .brasfoot-grid { display: grid; grid-template-columns: 1fr 420px; gap: 12px; flex: 1; overflow: hidden; }
+
+    .matches-broadcast { display: flex; flex-direction: column; gap: 10px; height: 100%; overflow-y: auto; justify-content: flex-start; align-items: center; padding-right: 4px; }
+    .match-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; max-width: 600px; }
+    .match-box.active { border-color: var(--accent-blue); box-shadow: 0 0 12px rgba(59, 130, 246, 0.3); }
+    .match-time { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); padding: 3px 10px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; letter-spacing: 1px; }
+    .match-teams { display: flex; justify-content: space-between; width: 100%; align-items: center; font-weight: 600; font-size: 1rem; }
+    .team-display { display: flex; align-items: center; gap: 8px; width: 42%; font-size: 0.95rem; }
+    .team-display.home { justify-content: flex-start; }
+    .team-display.away { justify-content: flex-end; }
+
+    .team-badge-icon { width: 22px; height: 22px; flex-shrink: 0; object-fit: contain; display: inline-block; vertical-align: middle; }
+    .badge-inline-svg { width: 22px; height: 22px; flex-shrink: 0; display: inline-block; vertical-align: middle; }
+
+    .match-score { font-size: 1.5rem; color: #60a5fa; background: var(--bg-input); border: 1px solid var(--border-color); padding: 4px 12px; border-radius: 4px; font-family: monospace; letter-spacing: 2px; }
+    .match-events { width: 100%; height: 90px; background: var(--bg-input); border-radius: 4px; padding: 8px; font-size: 0.8rem; color: var(--text-main); overflow-y: auto; font-family: monospace; border: 1px solid var(--border-color); }
+
+    /* PAINEL DE ESTATÍSTICAS DA PARTIDA */
+    .match-stats-panel {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.75rem;
+    }
+    .stats-title {
+      font-weight: 700;
+      color: #60a5fa;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      text-align: center;
+      letter-spacing: 1px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 3px;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .stat-val { font-weight: 700; color: var(--text-main); width: 40px; }
+    .stat-val.home { text-align: left; }
+    .stat-val.away { text-align: right; }
+    .stat-label { color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; text-align: center; flex: 1; }
+
+    .league-table-container { background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-color); padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+    .bracket-list { display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem; overflow-y: auto; }
+
+    .group-tables-grid { display: grid; grid-template-columns: 1fr; gap: 12px; overflow-y: auto; }
+    .group-card { background: var(--bg-input); padding: 10px; border-radius: 6px; font-size: 0.9rem; border: 1px solid var(--border-color); }
+    .group-card-title { font-weight: 700; color: #60a5fa; font-size: 0.95rem; margin-bottom: 6px; text-transform: uppercase; border-bottom: 1px solid var(--border-color); padding-bottom: 2px; }
+    .group-card table { width: 100%; border-collapse: collapse; text-align: center; }
+    .group-card th, .group-card td { padding: 5px 3px; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; }
+    .group-card td.team-cell { text-align: left; display: flex; align-items: center; gap: 6px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* MATA-MATA BRACKETS */
+    .bracket-phase-title { color: #60a5fa; font-weight: 700; font-size: 0.95rem; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; margin-top: 8px; text-transform: uppercase; }
+    .bracket-match-item { background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
+    .bracket-team { display: flex; justify-content: space-between; align-items: center; padding: 4px 6px; border-radius: 4px; font-size: 0.88rem; }
+    .bracket-team.winner { background: rgba(16, 185, 129, 0.2); font-weight: bold; color: var(--success-color); }
+    .qualified-tag { font-size: 0.65rem; color: var(--success-color); font-weight: 800; text-transform: uppercase; margin-left: 6px; background: rgba(16, 185, 129, 0.15); padding: 2px 5px; border-radius: 3px; border: 1px solid rgba(16, 185, 129, 0.3); }
+
+    /* PÓDIO */
+    #podium-screen { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 40px; background: var(--bg-primary); }
+    .podium-container { display: flex; align-items: flex-end; justify-content: center; gap: 12px; height: 300px; width: 100%; max-width: 600px; }
+    .podium-step { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 12px; border-radius: 8px 8px 0 0; font-weight: bold; transition: transform 0.8s ease-out; transform: translateY(100%); width: 30%; }
+    .podium-step.show { transform: translateY(0); }
+    .podium-1 { height: 220px; background: #334155; color: #fff; border-top: 3px solid #60a5fa; z-index: 3; }
+    .podium-2 { height: 160px; background: #283141; color: #fff; border-top: 3px solid #94a3b8; z-index: 2; }
+    .podium-3 { height: 120px; background: #1e2530; color: #fff; border-top: 3px solid #475569; z-index: 1; }
+    .podium-team-name { font-size: 0.9rem; margin-top: 6px; text-align: center; word-break: break-word; }
+    .trophy { font-size: 2.5rem; animation: bounce 1.5s infinite alternate; }
+    @keyframes bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-8px); } }
+
+    /* MODAL DE TROCA */
+    #swap-modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 300; display: none; align-items: center; justify-content: center; padding: 15px; }
+    .swap-modal { background: var(--bg-card); border: 2px solid var(--accent-blue); border-radius: 12px; width: 100%; max-width: 450px; padding: 20px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+    .swap-modal-title { font-size: 1.1rem; font-weight: 700; color: #60a5fa; text-transform: uppercase; text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
+    .swap-list { display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; }
+    .swap-item { background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.2s; }
+    .swap-item:hover { border-color: var(--accent-blue); background: var(--bg-card-hover); }
+    .swap-item-name { font-weight: 600; font-size: 0.85rem; color: var(--text-main); }
+    .swap-item-pos { font-size: 0.75rem; color: var(--text-muted); }
 
     @media (max-width: 768px) {
       #game-arena { grid-template-columns: 1fr; height: 100vh; overflow-y: auto; }
@@ -453,125 +323,6 @@
       .card-photo-box { width: 140px; height: 140px; }
       .menu-title { font-size: 2rem; }
     }
-
-    /* TELA DE CAMPEONATO */
-    #league-screen { display: flex; flex-direction: column; gap: 10px; padding: 16px; width: 100%; height: 100vh; background: var(--bg-primary); overflow: hidden; }
-    .brasfoot-header { text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; flex-shrink: 0; }
-    .brasfoot-grid { display: grid; grid-template-columns: 1fr 420px; gap: 12px; flex: 1; overflow: hidden; }
-    
-    .matches-broadcast { display: flex; flex-direction: column; gap: 10px; height: 100%; overflow-y: auto; justify-content: flex-start; align-items: center; padding-right: 4px; }
-    .match-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; max-width: 600px; }
-    .match-box.active { border-color: var(--accent-blue); box-shadow: 0 0 12px rgba(59, 130, 246, 0.3); }
-    .match-time { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); padding: 3px 10px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; letter-spacing: 1px; }
-    .match-teams { display: flex; justify-content: space-between; width: 100%; align-items: center; font-weight: 600; font-size: 1rem; }
-    .team-display { display: flex; align-items: center; gap: 8px; width: 42%; font-size: 0.95rem; }
-    .team-display.home { justify-content: flex-start; }
-    .team-display.away { justify-content: flex-end; }
-    
-    .team-badge-icon { 
-      width: 22px; 
-      height: 22px; 
-      flex-shrink: 0; 
-      object-fit: contain; 
-      display: inline-block;
-      vertical-align: middle;
-    }
-
-    .badge-inline-svg {
-      width: 22px;
-      height: 22px;
-      flex-shrink: 0;
-      display: inline-block;
-      vertical-align: middle;
-    }
-    
-    .match-score { font-size: 1.5rem; color: #60a5fa; background: var(--bg-input); border: 1px solid var(--border-color); padding: 4px 12px; border-radius: 4px; font-family: monospace; letter-spacing: 2px; }
-    .match-events { width: 100%; height: 110px; background: var(--bg-input); border-radius: 4px; padding: 8px; font-size: 0.8rem; color: var(--text-main); overflow-y: auto; font-family: monospace; border: 1px solid var(--border-color); }
-
-    .league-table-container { background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-color); padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-    .bracket-list { display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem; overflow-y: auto; }
-
-    .group-tables-grid { display: grid; grid-template-columns: 1fr; gap: 12px; overflow-y: auto; }
-    .group-card { background: var(--bg-input); padding: 10px; border-radius: 6px; font-size: 0.9rem; border: 1px solid var(--border-color); }
-    .group-card-title { font-weight: 700; color: #60a5fa; font-size: 0.95rem; margin-bottom: 6px; text-transform: uppercase; border-bottom: 1px solid var(--border-color); padding-bottom: 2px; }
-    .group-card table { width: 100%; border-collapse: collapse; text-align: center; }
-    .group-card th, .group-card td { padding: 5px 3px; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; }
-    .group-card td.team-cell { text-align: left; display: flex; align-items: center; gap: 6px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-    /* ESTILOS DA CHAVE MATA-MATA */
-    .bracket-phase-title { color: #60a5fa; font-weight: 700; font-size: 0.95rem; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; margin-top: 8px; text-transform: uppercase; }
-    .bracket-match-item { background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
-    .bracket-team { display: flex; justify-content: space-between; align-items: center; padding: 4px 6px; border-radius: 4px; font-size: 0.88rem; }
-    .bracket-team.winner { background: rgba(16, 185, 129, 0.2); font-weight: bold; color: var(--success-color); }
-
-    /* PÓDIO ANIMADO */
-    #podium-screen { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 40px; background: var(--bg-primary); }
-    .podium-container { display: flex; align-items: flex-end; justify-content: center; gap: 12px; height: 300px; width: 100%; max-width: 600px; }
-    .podium-step { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 12px; border-radius: 8px 8px 0 0; font-weight: bold; transition: transform 0.8s ease-out; transform: translateY(100%); width: 30%; }
-    .podium-step.show { transform: translateY(0); }
-    .podium-1 { height: 220px; background: #334155; color: #fff; border-top: 3px solid #60a5fa; z-index: 3; }
-    .podium-2 { height: 160px; background: #283141; color: #fff; border-top: 3px solid #94a3b8; z-index: 2; }
-    .podium-3 { height: 120px; background: #1e2530; color: #fff; border-top: 3px solid #475569; z-index: 1; }
-    .podium-team-name { font-size: 0.9rem; margin-top: 6px; text-align: center; word-break: break-word; }
-    .trophy { font-size: 2.5rem; animation: bounce 1.5s infinite alternate; }
-    @keyframes bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-8px); } }
-
-    /* MODAL DE TROCA DE JOGADOR DA 2ª TEMPORADA */
-    #swap-modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.85);
-      z-index: 300;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 15px;
-    }
-    .swap-modal {
-      background: var(--bg-card);
-      border: 2px solid var(--accent-blue);
-      border-radius: 12px;
-      width: 100%;
-      max-width: 450px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-    }
-    .swap-modal-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #60a5fa;
-      text-transform: uppercase;
-      text-align: center;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 8px;
-    }
-    .swap-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 250px;
-      overflow-y: auto;
-    }
-    .swap-item {
-      background: var(--bg-input);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      padding: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .swap-item:hover {
-      border-color: var(--accent-blue);
-      background: var(--bg-card-hover);
-    }
-    .swap-item-name { font-weight: 600; font-size: 0.85rem; color: var(--text-main); }
-    .swap-item-pos { font-size: 0.75rem; color: var(--text-muted); }
   </style>
 </head>
 <body>
@@ -1091,7 +842,7 @@
 
     let currentDeck = [];
     let rejectedQueue = [];
-    let usedPlayerNames = new Set(); // Histórico para não repetir os jogadores leiloados da 1ª temporada
+    let usedPlayerNames = new Set();
     let currentPlayerCard = null;
     let turnOrder = [];
     let activeTurnIndex = 0;
@@ -1459,7 +1210,6 @@
         ...database.DEF.map(p => ({ ...p, pos: 'DEF' })),
         ...database.ATA.map(p => ({ ...p, pos: 'ALA/PIVÔ' }))
       ];
-      // NÃO REPETIR JOGADORES DA 1ª TEMPORADA
       const filtered = fullList.filter(p => !usedPlayerNames.has(p.name));
       currentDeck = filtered.sort(() => Math.random() - 0.5);
     }
@@ -1472,7 +1222,7 @@
       teams.forEach(t => {
         t.tokens += 100;
         t.passesLeft = 3;
-        t.season2SwapsLeft = 2; // Exatamente 2 trocas/reforços por jogador
+        t.season2SwapsLeft = 2;
       });
 
       document.getElementById('league-screen').style.display = 'none';
@@ -1552,7 +1302,6 @@
       if (currentSeason === 1) {
         turnOrder = activeIndices.filter(id => !isTeamFull(id)).sort(() => Math.random() - 0.5);
       } else {
-        // Na 2ª temporada só entram quem ainda tem limite de trocas/reforços (máximo 2)
         turnOrder = activeIndices.filter(id => teams[id].season2SwapsLeft > 0).sort(() => Math.random() - 0.5);
       }
       activeBidders = [...turnOrder];
@@ -1686,11 +1435,10 @@
     function finishAuction(winnerId) {
       const winner = teams[winnerId];
       winner.tokens -= (highestBid > 0 ? highestBid : 0);
-      usedPlayerNames.add(currentPlayerCard.name); // Registrar para não repetir lances de temporadas passadas
+      usedPlayerNames.add(currentPlayerCard.name);
       
       if (currentSeason === 2) {
         winner.season2SwapsLeft--;
-        // ABRE O MODAL PARA O JOGADOR VENCEDOR ESCOLHER QUEM SUBSTITUIR NA ESCALAÇÃO
         promptSwapPlayerSelection(winnerId, currentPlayerCard);
       } else {
         assignPlayerToTeam(winnerId, currentPlayerCard);
@@ -1714,14 +1462,22 @@
       }
     }
 
-    /* MODAL E TROCA DE JOGADOR ESPECÍFICO NA 2ª TEMPORADA */
+    /* FIX: MODAL DE TROCA NA 2ª TEMPORADA (PERMITE TROCAR GOLEIRO E QUALQUER POSIÇÃO DIRECTLY) */
     function promptSwapPlayerSelection(winnerId, card) {
       if (winnerId === myPlayerId) {
         openSwapModal(winnerId, card);
       } else {
-        // Se for outro jogador na rede/host, ou se for bot
-        renderTeamPanels();
-        // Em multiplayer remoto, o evento CONFIRM_SWAP enviará a escolha ao host
+        // Se for Bot ou time remoto sem interação imediata local: substitui automático mantendo integridade
+        const winner = teams[winnerId];
+        let chosenSlot = null;
+        for (let s in winner.lineup) {
+          if (winner.lineup[s] && (card.pos === 'GOL' ? s === 'GOL' : true)) {
+            chosenSlot = s;
+            break;
+          }
+        }
+        if (!chosenSlot) chosenSlot = Object.keys(winner.lineup)[0];
+        executeSwapInTeam(winnerId, chosenSlot, card);
       }
     }
 
@@ -1818,7 +1574,7 @@
       }
     }
 
-    /* SISTEMA DE SIMULAÇÃO DA COPA DOS 32 E MATA-MATA */
+    /* SIMULAÇÃO DA COPA DOS 32 E MATA-MATA COM ESTATÍSTICAS E CLASSIFICADO */
     function startTournamentSim() {
       document.getElementById('game-arena').style.display = 'none';
       document.getElementById('league-screen').style.display = 'flex';
@@ -1871,7 +1627,7 @@
         currentMatchMinute: 0,
         bracket: [],
         bracketPhase: '',
-        semiLosers: [] // Guardar os perdedores da semi para a disputa de 3º lugar
+        semiLosers: []
       };
 
       generateGroupRoundMatches();
@@ -1893,245 +1649,406 @@
 
       state.groupNames.forEach(g => {
         const t = state.groups[g];
-        let p1, p2, p3, p4;
-        if (r === 1) { p1 = t[0]; p2 = t[1]; p3 = t[2]; p4 = t[3]; }
-        else if (r === 2) { p1 = t[0]; p2 = t[2]; p3 = t[1]; p4 = t[3]; }
-        else { p1 = t[0]; p2 = t[3]; p3 = t[1]; p4 = t[2]; }
-
-        state.roundMatches.push({ group: g, home: p1, away: p2, scoreHome: 0, scoreAway: 0, events: [], done: false });
-        state.roundMatches.push({ group: g, home: p3, away: p4, scoreHome: 0, scoreAway: 0, events: [], done: false });
+        if (r === 1) {
+          state.roundMatches.push(createMatchObj(t[0], t[1], g));
+          state.roundMatches.push(createMatchObj(t[2], t[3], g));
+        } else if (r === 2) {
+          state.roundMatches.push(createMatchObj(t[0], t[2], g));
+          state.roundMatches.push(createMatchObj(t[1], t[3], g));
+        } else if (r === 3) {
+          state.roundMatches.push(createMatchObj(t[3], t[0], g));
+          state.roundMatches.push(createMatchObj(t[1], t[2], g));
+        }
       });
-
       state.currentMatchIndex = 0;
+    }
+
+    function createMatchObj(home, away, group = null) {
+      return {
+        home: home,
+        away: away,
+        group: group,
+        homeGoals: 0,
+        awayGoals: 0,
+        penalties: null,
+        winnerId: null,
+        events: [],
+        stats: {
+          possessionHome: 50, possessionAway: 50,
+          shotsHome: 0, shotsAway: 0,
+          cornersHome: 0, cornersAway: 0,
+          cardsHome: 0, cardsAway: 0
+        }
+      };
     }
 
     function runCurrentMatchSimulation() {
       if (!isHost) return;
       const state = currentBrasfootState;
-
-      if (state.currentMatchIndex >= state.roundMatches.length) {
-        if (state.phase === 'GROUPS') {
-          if (state.currentRound < state.totalRounds) {
-            state.currentRound++;
-            generateGroupRoundMatches();
-            broadcastState();
-            setTimeout(runCurrentMatchSimulation, 1000);
-          } else {
-            setupKnockoutStage();
-          }
-        } else {
-          processKnockoutPhaseCompletion();
-        }
-        return;
-      }
-
       const match = state.roundMatches[state.currentMatchIndex];
-      const hasHuman = match.home.isHuman || match.away.isHuman;
+      
+      if (!match) return;
 
-      const intervalTime = hasHuman ? 555 : 277; 
       state.currentMatchMinute = 0;
+      match.events = ["0' 🔔 Apito inicial do árbitro!"];
 
-      broadcastState();
+      // Inicializa estatísticas dinâmicas ajustadas pelo OVR
+      const ovrDiff = (match.home.ovr - match.away.ovr);
+      const basePosHome = Math.min(Math.max(50 + ovrDiff * 2, 35), 65);
+      match.stats.possessionHome = basePosHome;
+      match.stats.possessionAway = 100 - basePosHome;
 
-      const timer = setInterval(() => {
+      let simInterval = setInterval(() => {
         state.currentMatchMinute += 5;
-        if (state.currentMatchMinute > 90) state.currentMatchMinute = 90;
+        const min = state.currentMatchMinute;
 
-        const ovrDiff = match.home.ovr - match.away.ovr;
-        const probHome = 0.05 + (ovrDiff * 0.003);
-        const probAway = 0.04 - (ovrDiff * 0.003);
+        // Eventos aleatórios a cada intervalo (Golos, Chutes, Escanteios, Cartões)
+        const chanceHome = 0.08 + (match.home.ovr - 80) * 0.005;
+        const chanceAway = 0.08 + (match.away.ovr - 80) * 0.005;
 
-        if (Math.random() < probHome) {
-          match.scoreHome++;
-          match.events.unshift(`⚽ ${state.currentMatchMinute}' GOL do ${match.home.name}!`);
-        } else if (Math.random() < probAway) {
-          match.scoreAway++;
-          match.events.unshift(`⚽ ${state.currentMatchMinute}' GOL do ${match.away.name}!`);
+        // Chutes e Escanteios
+        if (Math.random() < 0.35) { match.stats.shotsHome += Math.floor(Math.random() * 2) + 1; }
+        if (Math.random() < 0.35) { match.stats.shotsAway += Math.floor(Math.random() * 2) + 1; }
+        if (Math.random() < 0.20) { match.stats.cornersHome += 1; }
+        if (Math.random() < 0.20) { match.stats.cornersAway += 1; }
+
+        // Cartões
+        if (Math.random() < 0.05) { match.stats.cardsHome += 1; match.events.push(`${min}' 🟨 Cartão amarelo para o ${match.home.name}`); }
+        if (Math.random() < 0.05) { match.stats.cardsAway += 1; match.events.push(`${min}' 🟨 Cartão amarelo para o ${match.away.name}`); }
+
+        // Gols
+        if (Math.random() < chanceHome) {
+          match.homeGoals++;
+          match.stats.shotsHome++;
+          match.events.push(`${min}' ⚽ GOL do ${match.home.name}! (${match.homeGoals}x${match.awayGoals})`);
+        } else if (Math.random() < chanceAway) {
+          match.awayGoals++;
+          match.stats.shotsAway++;
+          match.events.push(`${min}' ⚽ GOL do ${match.away.name}! (${match.homeGoals}x${match.awayGoals})`);
         }
 
-        broadcastState();
-
-        if (state.currentMatchMinute >= 90) {
-          clearInterval(timer);
-          match.done = true;
+        if (min >= 90) {
+          clearInterval(simInterval);
+          
+          // Tratamento para Mata-Mata (Decisão se houver empate)
+          if (state.phase === 'BRACKET' && match.homeGoals === match.awayGoals) {
+            let penH = Math.floor(Math.random() * 3) + 3;
+            let penA = Math.floor(Math.random() * 3) + 3;
+            while (penH === penA) { penH++; }
+            match.penalties = { home: penH, away: penA };
+            match.winnerId = penH > penA ? match.home.id : match.away.id;
+            match.events.push(`90' 🏁 Fim de jogo empatado! Pênaltis: ${match.home.name} ${penH} x ${penA} ${match.away.name}`);
+          } else {
+            if (match.homeGoals > match.awayGoals) match.winnerId = match.home.id;
+            else if (match.awayGoals > match.homeGoals) match.winnerId = match.away.id;
+            else match.winnerId = null;
+            match.events.push(`90' 🏁 Fim de papo na partida!`);
+          }
 
           if (state.phase === 'GROUPS') {
-            updateGroupStats(match);
-          } else if (match.scoreHome === match.scoreAway) {
-            if (Math.random() > 0.5) match.scoreHome++;
-            else match.scoreAway++;
-            match.events.unshift(`🛑 Decisão: ${match.scoreHome > match.scoreAway ? match.home.name : match.away.name} venceu nos pênaltis!`);
+            updateGroupTable(match);
           }
 
-          state.currentMatchIndex++;
           broadcastState();
-          setTimeout(runCurrentMatchSimulation, 800);
+
+          setTimeout(() => {
+            state.currentMatchIndex++;
+            if (state.currentMatchIndex < state.roundMatches.length) {
+              runCurrentMatchSimulation();
+            } else {
+              finishRoundOrPhase();
+            }
+          }, 1800);
+        } else {
+          broadcastState();
         }
-      }, intervalTime);
+      }, 200);
     }
 
-    function updateGroupStats(match) {
-      const state = currentBrasfootState;
-      const g = state.groups[match.group];
-      const h = g.find(x => x.name === match.home.name);
-      const a = g.find(x => x.name === match.away.name);
+    function updateGroupTable(match) {
+      const g = match.group;
+      const list = currentBrasfootState.groups[g];
+      const h = list.find(t => t.id === match.home.id);
+      const a = list.find(t => t.id === match.away.id);
 
       h.pj++; a.pj++;
-      h.gp += match.scoreHome; h.gc += match.scoreAway;
-      a.gp += match.scoreAway; a.gc += match.scoreHome;
-      h.sg = h.gp - h.gc; a.sg = a.gp - a.gc;
+      h.gp += match.homeGoals; h.gc += match.awayGoals; h.sg = h.gp - h.gc;
+      a.gp += match.awayGoals; a.gc += match.homeGoals; a.sg = a.gp - a.gc;
 
-      if (match.scoreHome > match.scoreAway) {
+      if (match.homeGoals > match.awayGoals) {
         h.pts += 3; h.v++; a.d++;
-      } else if (match.scoreAway > match.scoreHome) {
+      } else if (match.awayGoals > match.homeGoals) {
         a.pts += 3; a.v++; h.d++;
       } else {
         h.pts += 1; a.pts += 1; h.e++; a.e++;
       }
 
-      g.sort((x, y) => y.pts - x.pts || y.sg - x.sg || y.gp - x.gp);
+      // Ordenar Tabela do Grupo (Pts > Vitórias > Saldo > Gols Pró)
+      list.sort((x, y) => y.pts - x.pts || y.v - x.v || y.sg - x.sg || y.gp - x.gp);
     }
 
-    function setupKnockoutStage() {
+    function finishRoundOrPhase() {
       const state = currentBrasfootState;
-      state.phase = 'KNOCKOUT';
-      state.bracketPhase = 'OITAVAS DE FINAL';
-      
-      const qualified = [];
-      state.groupNames.forEach(g => {
-        const top2 = state.groups[g].slice(0, 2);
-        qualified.push(top2[0], top2[1]);
-      });
 
-      state.bracket = [];
-      for (let i = 0; i < qualified.length; i += 2) {
-        state.bracket.push({
-          home: qualified[i],
-          away: qualified[i+1],
-          winner: null
+      if (state.phase === 'GROUPS') {
+        if (state.currentRound < state.totalRounds) {
+          state.currentRound++;
+          generateGroupRoundMatches();
+          runCurrentMatchSimulation();
+        } else {
+          startBracketPhase('OITAVAS');
+        }
+      } else if (state.phase === 'BRACKET') {
+        if (state.bracketPhase === 'OITAVAS') {
+          startBracketPhase('QUARTAS');
+        } else if (state.bracketPhase === 'QUARTAS') {
+          startBracketPhase('SEMI');
+        } else if (state.bracketPhase === 'SEMI') {
+          startBracketPhase('TERCEIRO');
+        } else if (state.bracketPhase === 'TERCEIRO') {
+          startBracketPhase('FINAL');
+        } else if (state.bracketPhase === 'FINAL') {
+          showPodium();
+        }
+      }
+    }
+
+    function startBracketPhase(phaseName) {
+      const state = currentBrasfootState;
+      state.phase = 'BRACKET';
+      state.bracketPhase = phaseName;
+      state.roundMatches = [];
+
+      if (phaseName === 'OITAVAS') {
+        let qualified = [];
+        state.groupNames.forEach(g => {
+          qualified.push(state.groups[g][0]); // 1º colocado
+          qualified.push(state.groups[g][1]); // 2º colocado
         });
+        
+        for (let i = 0; i < 8; i++) {
+          let home = qualified[i * 2];
+          let away = qualified[i * 2 + 1];
+          state.roundMatches.push(createMatchObj(home, away));
+        }
+      } else if (phaseName === 'QUARTAS' || phaseName === 'SEMI' || phaseName === 'FINAL') {
+        const lastWinners = state.bracket.filter(b => b.phase === getPreviousPhase(phaseName)).map(b => b.winner);
+        
+        if (phaseName === 'SEMI') {
+          // Guardar perdedores para disputa de 3º lugar
+          const prevMatches = state.bracket.filter(b => b.phase === 'SEMI');
+          state.semiLosers = prevMatches.map(b => (b.winner.id === b.match.home.id ? b.match.away : b.match.home));
+        }
+
+        for (let i = 0; i < lastWinners.length; i += 2) {
+          state.roundMatches.push(createMatchObj(lastWinners[i], lastWinners[i + 1]));
+        }
+      } else if (phaseName === 'TERCEIRO') {
+        const prevMatches = state.bracket.filter(b => b.phase === 'SEMI');
+        const losers = prevMatches.map(b => (b.winner.id === b.match.home.id ? b.match.away : b.match.home));
+        state.roundMatches.push(createMatchObj(losers[0], losers[1]));
       }
 
-      generateKnockoutRoundMatches();
+      state.currentMatchIndex = 0;
       runCurrentMatchSimulation();
     }
 
-    function generateKnockoutRoundMatches() {
-      const state = currentBrasfootState;
-      state.roundMatches = [];
-
-      state.bracket.forEach(b => {
-        state.roundMatches.push({
-          home: b.home,
-          away: b.away,
-          scoreHome: 0,
-          scoreAway: 0,
-          events: [],
-          done: false
-        });
-      });
-
-      state.currentMatchIndex = 0;
+    function getPreviousPhase(p) {
+      if (p === 'QUARTAS') return 'OITAVAS';
+      if (p === 'SEMI') return 'QUARTAS';
+      if (p === 'FINAL') return 'SEMI';
+      return '';
     }
 
-    /* CORREÇÃO COMPLETA DA SEQUÊNCIA DAS FASES DA COPA:
-       SEMIFINAIS -> DISPUTA DE 3º LUGAR -> GRANDE FINAL -> PÓDIO */
-    function processKnockoutPhaseCompletion() {
+    function renderTournamentUI() {
       const state = currentBrasfootState;
+      if (!state.active) return;
 
-      // 1. Atualizar vencedores da rodada atual
-      for (let i = 0; i < state.bracket.length; i++) {
-        const m = state.roundMatches[i];
-        if (m.scoreHome > m.scoreAway) {
-          state.bracket[i].winner = m.home;
-          state.bracket[i].loser = m.away;
-        } else {
-          state.bracket[i].winner = m.away;
-          state.bracket[i].loser = m.home;
-        }
-      }
+      const phaseTitleMap = {
+        'GROUPS': '🏆 COPA DOS 32 - FASE DE GRUPOS',
+        'OITAVAS': '🔥 OITAVAS DE FINAL',
+        'QUARTAS': '⚡ QUARTAS DE FINAL',
+        'SEMI': '🌟 SEMIFINAIS',
+        'TERCEIRO': '🥉 DISPUTA DE 3º LUGAR',
+        'FINAL': '👑 GRANDE FINAL'
+      };
 
-      if (state.bracketPhase === 'OITAVAS DE FINAL') {
-        state.bracketPhase = 'QUARTAS DE FINAL';
-        let winners = state.bracket.map(b => b.winner);
-        state.bracket = [];
-        for (let i = 0; i < winners.length; i += 2) {
-          state.bracket.push({ home: winners[i], away: winners[i+1], winner: null });
-        }
-        generateKnockoutRoundMatches();
-        broadcastState();
-        setTimeout(runCurrentMatchSimulation, 1000);
-      } 
-      else if (state.bracketPhase === 'QUARTAS DE FINAL') {
-        state.bracketPhase = 'SEMIFINAIS';
-        let winners = state.bracket.map(b => b.winner);
-        state.bracket = [];
-        for (let i = 0; i < winners.length; i += 2) {
-          state.bracket.push({ home: winners[i], away: winners[i+1], winner: null });
-        }
-        generateKnockoutRoundMatches();
-        broadcastState();
-        setTimeout(runCurrentMatchSimulation, 1000);
-      } 
-      else if (state.bracketPhase === 'SEMIFINAIS') {
-        // Guarda os 2 perdedores das semifinais para realizarem a Disputa de 3º Lugar
-        state.semiLosers = state.bracket.map(b => b.loser);
-        state.finalists = state.bracket.map(b => b.winner);
+      document.getElementById('phase-indicator').innerText = phaseTitleMap[state.bracketPhase || state.phase] || 'COPA DOS 32';
+      document.getElementById('round-indicator').innerText = state.phase === 'GROUPS' ? `Rodada ${state.currentRound} de 3` : 'Mata-Mata Eliminatório';
 
-        // Avança para a Disputa de 3º Lugar (Apenas 1 Jogo Único)
-        state.bracketPhase = 'DISPUTA DE 3º LUGAR';
-        state.bracket = [{ home: state.semiLosers[0], away: state.semiLosers[1], winner: null }];
+      // RENDERIZAR PARTIDA EM TEMPO REAL COM ESTATÍSTICAS
+      const broadcastContainer = document.getElementById('matches-broadcast-container');
+      broadcastContainer.innerHTML = '';
+
+      const match = state.roundMatches[state.currentMatchIndex];
+      if (match) {
+        const isMataMata = state.phase === 'BRACKET';
+        let winnerHomeTag = '', winnerAwayTag = '';
         
-        generateKnockoutRoundMatches();
-        broadcastState();
-        setTimeout(runCurrentMatchSimulation, 1000);
-      } 
-      else if (state.bracketPhase === 'DISPUTA DE 3º LUGAR') {
-        // O vencedor da disputa garante o 3º Lugar
-        state.thirdPlaceTeam = state.bracket[0].winner;
+        if (isMataMata && state.currentMatchMinute >= 90 && match.winnerId) {
+          if (match.winnerId === match.home.id) winnerHomeTag = `<span class="qualified-tag">(CLASSIFICADO)</span>`;
+          if (match.winnerId === match.away.id) winnerAwayTag = `<span class="qualified-tag">(CLASSIFICADO)</span>`;
+        }
 
-        // Avança para a GRANDE FINAL (Apenas 1 Jogo Único)
-        state.bracketPhase = 'GRANDE FINAL';
-        state.bracket = [{ home: state.finalists[0], away: state.finalists[1], winner: null }];
+        let penText = match.penalties ? `<div style="font-size:0.75rem; color:#60a5fa; font-weight:bold;">Pênaltis: ${match.penalties.home} x ${match.penalties.away}</div>` : '';
 
-        generateKnockoutRoundMatches();
-        broadcastState();
-        setTimeout(runCurrentMatchSimulation, 1000);
-      } 
-      else if (state.bracketPhase === 'GRANDE FINAL') {
-        // Final encerrada -> Exibir Pódio
-        const champion = state.bracket[0].winner;
-        const runnerUp = state.bracket[0].loser;
-        const thirdPlace = state.thirdPlaceTeam;
+        let box = document.createElement('div');
+        box.className = 'match-box active';
+        box.innerHTML = `
+          <div class="match-time">${state.currentMatchMinute}' MIN</div>
+          <div class="match-teams">
+            <div class="team-display home">
+              <div style="width:24px; height:24px;">${getTeamLogoHTML(match.home.name, match.home.badge)}</div>
+              <span>${match.home.name} ${winnerHomeTag}</span>
+            </div>
+            <div class="match-score">${match.homeGoals} - ${match.awayGoals}</div>
+            <div class="team-display away">
+              <span>${winnerAwayTag} ${match.away.name}</span>
+              <div style="width:24px; height:24px;">${getTeamLogoHTML(match.away.name, match.away.badge)}</div>
+            </div>
+          </div>
+          ${penText}
+          
+          <!-- HISTÓRICO DE EVENTOS EM TEMPO REAL -->
+          <div class="match-events">
+            ${match.events.slice(-4).reverse().join('<br>')}
+          </div>
 
-        showPodium(champion, runnerUp, thirdPlace);
+          <!-- PAINEL DE ESTATÍSTICAS DETALHADAS -->
+          <div class="match-stats-panel">
+            <div class="stats-title">Estatísticas do Jogo</div>
+            <div class="stat-row">
+              <span class="stat-val home">${match.stats.possessionHome}%</span>
+              <span class="stat-label">Posse de Bola</span>
+              <span class="stat-val away">${match.stats.possessionAway}%</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-val home">${match.stats.shotsHome}</span>
+              <span class="stat-label">Chutes no Gol</span>
+              <span class="stat-val away">${match.stats.shotsAway}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-val home">${match.stats.cornersHome}</span>
+              <span class="stat-label">Escanteios</span>
+              <span class="stat-val away">${match.stats.cornersAway}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-val home">${match.stats.cardsHome}</span>
+              <span class="stat-label">Cartões Amarelos</span>
+              <span class="stat-val away">${match.stats.cardsAway}</span>
+            </div>
+          </div>
+        `;
+        broadcastContainer.appendChild(box);
+      }
+
+      // RENDERIZAR TABELAS OU CHAVES NA LATERAL
+      const groupsComp = document.getElementById('groups-container');
+      const bracketComp = document.getElementById('bracket-list-container');
+
+      if (state.phase === 'GROUPS') {
+        groupsComp.style.display = 'grid';
+        bracketComp.style.display = 'none';
+        document.getElementById('side-panel-title').innerText = 'Classificação dos Grupos';
+        groupsComp.innerHTML = '';
+
+        state.groupNames.forEach(g => {
+          let card = document.createElement('div');
+          card.className = 'group-card';
+          let rowsHtml = state.groups[g].map((t, idx) => `
+            <tr>
+              <td class="team-cell">
+                <span style="font-size:0.7rem; color:var(--text-muted); width:12px;">${idx+1}</span>
+                <div style="width:18px; height:18px;">${getTeamLogoHTML(t.name, t.badge)}</div>
+                ${t.name}
+              </td>
+              <td><b>${t.pts}</b></td>
+              <td>${t.pj}</td>
+              <td>${t.sg}</td>
+            </tr>
+          `).join('');
+
+          card.innerHTML = `
+            <div class="group-card-title">Grupo ${g}</div>
+            <table>
+              <thead><tr><th style="text-align:left;">Time</th><th>P</th><th>J</th><th>SG</th></tr></thead>
+              <tbody>${rowsHtml}</tbody>
+            </table>
+          `;
+          groupsComp.appendChild(card);
+        });
+      } else {
+        groupsComp.style.display = 'none';
+        bracketComp.style.display = 'flex';
+        document.getElementById('side-panel-title').innerText = 'Chaves do Mata-Mata';
+        bracketComp.innerHTML = '';
+
+        // Registrar partida concluída nas chaves se for mata-mata
+        if (match && match.winnerId && !state.bracket.some(b => b.match === match)) {
+          const winnerTeam = match.winnerId === match.home.id ? match.home : match.away;
+          state.bracket.push({ phase: state.bracketPhase, match: match, winner: winnerTeam });
+        }
+
+        const phasesOrder = ['OITAVAS', 'QUARTAS', 'SEMI', 'TERCEIRO', 'FINAL'];
+        phasesOrder.forEach(p => {
+          const pMatches = state.bracket.filter(b => b.phase === p);
+          if (pMatches.length > 0) {
+            let section = document.createElement('div');
+            section.innerHTML = `<div class="bracket-phase-title">${phaseTitleMap[p]}</div>`;
+            pMatches.forEach(b => {
+              const hWin = b.winner.id === b.match.home.id;
+              section.innerHTML += `
+                <div class="bracket-match-item">
+                  <div class="bracket-team ${hWin ? 'winner' : ''}">
+                    <span>${b.match.home.name}</span>
+                    <span>${b.match.homeGoals} ${hWin ? '✔ (PASCOU)' : ''}</span>
+                  </div>
+                  <div class="bracket-team ${!hWin ? 'winner' : ''}">
+                    <span>${b.match.away.name}</span>
+                    <span>${b.match.awayGoals} ${!hWin ? '✔ (PASSOU)' : ''}</span>
+                  </div>
+                </div>
+              `;
+            });
+            bracketComp.appendChild(section);
+          }
+        });
       }
     }
 
-    function showPodium(champion, runnerUp, thirdPlace) {
+    function showPodium() {
       document.getElementById('league-screen').style.display = 'none';
       document.getElementById('podium-screen').style.display = 'flex';
 
-      document.getElementById('podium-name-1').innerText = champion.name;
-      document.getElementById('podium-badge-1').innerHTML = getTeamLogoHTML(champion.name, champion.badge);
+      const state = currentBrasfootState;
+      const finalMatch = state.bracket.find(b => b.phase === 'FINAL');
+      const thirdMatch = state.bracket.find(b => b.phase === 'TERCEIRO');
 
-      document.getElementById('podium-name-2').innerText = runnerUp.name;
-      document.getElementById('podium-badge-2').innerHTML = getTeamLogoHTML(runnerUp.name, runnerUp.badge);
+      if (finalMatch) {
+        const champ = finalMatch.winner;
+        const vice = finalMatch.winner.id === finalMatch.match.home.id ? finalMatch.match.away : finalMatch.match.home;
+        const third = thirdMatch ? thirdMatch.winner : { name: "3º Lugar", badge: null };
 
-      document.getElementById('podium-name-3').innerText = thirdPlace.name;
-      document.getElementById('podium-badge-3').innerHTML = getTeamLogoHTML(thirdPlace.name, thirdPlace.badge);
+        document.getElementById('podium-name-1').innerText = champ.name;
+        document.getElementById('podium-badge-1').innerHTML = getTeamLogoHTML(champ.name, champ.badge);
 
-      setTimeout(() => { document.getElementById('step-1').classList.add('show'); }, 300);
-      setTimeout(() => { document.getElementById('step-2').classList.add('show'); }, 600);
-      setTimeout(() => { document.getElementById('step-3').classList.add('show'); }, 900);
+        document.getElementById('podium-name-2').innerText = vice.name;
+        document.getElementById('podium-badge-2').innerHTML = getTeamLogoHTML(vice.name, vice.badge);
 
-      const btnNext = document.getElementById('btn-next-phase');
+        document.getElementById('podium-name-3').innerText = third.name;
+        document.getElementById('podium-badge-3').innerHTML = getTeamLogoHTML(third.name, third.badge);
+
+        setTimeout(() => {
+          document.getElementById('step-1').classList.add('show');
+          document.getElementById('step-2').classList.add('show');
+          document.getElementById('step-3').classList.add('show');
+        }, 300);
+      }
+
       if (currentSeason === 1) {
-        btnNext.innerText = "Avançar para a 2ª Temporada (Reforços)";
-        btnNext.onclick = () => { sendActionToHost('NEXT_SEASON'); };
+        document.getElementById('btn-next-phase').innerText = "Avançar para a 2ª Temporada (Reforços)";
       } else {
-        btnNext.innerText = "Voltar ao Menu Principal";
-        btnNext.onclick = () => { location.reload(); };
+        document.getElementById('btn-next-phase').innerText = "Finalizar Campeonato";
       }
     }
 
@@ -2140,103 +2057,6 @@
         sendActionToHost('NEXT_SEASON');
       } else {
         location.reload();
-      }
-    }
-
-    function renderTournamentUI() {
-      const state = currentBrasfootState;
-      if (!state.active) return;
-
-      document.getElementById('phase-indicator').innerText = `🏆 COPA DOS 32 - ${state.phase === 'GROUPS' ? `FASE DE GRUPOS (RODADA ${state.currentRound}/${state.totalRounds})` : state.bracketPhase}`;
-
-      const matchesContainer = document.getElementById('matches-broadcast-container');
-      matchesContainer.innerHTML = '';
-
-      if (state.roundMatches && state.roundMatches.length > 0) {
-        const match = state.roundMatches[state.currentMatchIndex] || state.roundMatches[state.roundMatches.length - 1];
-        if (match) {
-          const eventsHTML = match.events.map(e => `<div>${e}</div>`).join('');
-          matchesContainer.innerHTML = `
-            <div class="match-box active">
-              <div class="match-time">${match.done ? 'FIM DE JOGO' : `${state.currentMatchMinute}' MIN`}</div>
-              <div class="match-teams">
-                <div class="team-display home">
-                  ${getTeamLogoHTML(match.home.name, match.home.badge)}
-                  <span>${match.home.name}</span>
-                </div>
-                <div class="match-score">${match.scoreHome} - ${match.scoreAway}</div>
-                <div class="team-display away">
-                  <span>${match.away.name}</span>
-                  ${getTeamLogoHTML(match.away.name, match.away.badge)}
-                </div>
-              </div>
-              <div class="match-events">${eventsHTML || '<div>Aguardando início da partida...</div>'}</div>
-            </div>
-          `;
-        }
-      }
-
-      const groupsContainer = document.getElementById('groups-container');
-      const bracketContainer = document.getElementById('bracket-list-container');
-
-      if (state.phase === 'GROUPS') {
-        groupsContainer.style.display = 'grid';
-        bracketContainer.style.display = 'none';
-        groupsContainer.innerHTML = '';
-
-        state.groupNames.forEach(g => {
-          const tList = state.groups[g];
-          let rows = tList.map((t, idx) => `
-            <tr class="${idx < 2 ? 'qualified-row' : ''}">
-              <td class="team-cell">${getTeamLogoHTML(t.name, t.badge)} ${t.name}</td>
-              <td><b>${t.pts}</b></td>
-              <td>${t.pj}</td>
-              <td>${t.v}</td>
-              <td>${t.sg}</td>
-            </tr>
-          `).join('');
-
-          groupsContainer.innerHTML += `
-            <div class="group-card">
-              <div class="group-card-title">GRUPO ${g}</div>
-              <table>
-                <thead>
-                  <tr>
-                    <th style="text-align:left;">Time</th>
-                    <th>P</th>
-                    <th>J</th>
-                    <th>V</th>
-                    <th>SG</th>
-                  </tr>
-                </thead>
-                <tbody>${rows}</tbody>
-              </table>
-            </div>
-          `;
-        });
-      } else {
-        groupsContainer.style.display = 'none';
-        bracketContainer.style.display = 'flex';
-        bracketContainer.innerHTML = `<div class="bracket-phase-title">${state.bracketPhase}</div>`;
-
-        state.bracket.forEach(b => {
-          bracketContainer.innerHTML += `
-            <div class="bracket-match-item">
-              <div class="bracket-team ${b.winner && b.winner.name === b.home.name ? 'winner' : ''}">
-                <div style="display:flex; align-items:center; gap:6px;">
-                  ${getTeamLogoHTML(b.home.name, b.home.badge)}
-                  <span>${b.home.name}</span>
-                </div>
-              </div>
-              <div class="bracket-team ${b.winner && b.winner.name === b.away.name ? 'winner' : ''}">
-                <div style="display:flex; align-items:center; gap:6px;">
-                  ${getTeamLogoHTML(b.away.name, b.away.badge)}
-                  <span>${b.away.name}</span>
-                </div>
-              </div>
-            </div>
-          `;
-        });
       }
     }
   </script>
