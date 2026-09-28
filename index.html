@@ -454,7 +454,7 @@
       .menu-title { font-size: 2rem; }
     }
 
-    /* TELA DE CAMPEONATO (ESCUDOS MAIORES E PROPORCIONAIS NAS TABELAS E MINUTOS DE JOGO) */
+    /* TELA DE CAMPEONATO */
     #league-screen { display: flex; flex-direction: column; gap: 10px; padding: 16px; width: 100%; height: 100vh; background: var(--bg-primary); overflow: hidden; }
     .brasfoot-header { text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; flex-shrink: 0; }
     .brasfoot-grid { display: grid; grid-template-columns: 1fr 420px; gap: 12px; flex: 1; overflow: hidden; }
@@ -468,7 +468,6 @@
     .team-display.home { justify-content: flex-start; }
     .team-display.away { justify-content: flex-end; }
     
-    /* TAMANHO PROPORCIONAL AO TEXTO (22px) */
     .team-badge-icon { 
       width: 22px; 
       height: 22px; 
@@ -492,14 +491,12 @@
     .league-table-container { background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-color); padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
     .bracket-list { display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem; overflow-y: auto; }
 
-    /* FRONT END DA FASE DE GRUPOS MAIOR E MAIS AMPLO */
     .group-tables-grid { display: grid; grid-template-columns: 1fr; gap: 12px; overflow-y: auto; }
     .group-card { background: var(--bg-input); padding: 10px; border-radius: 6px; font-size: 0.9rem; border: 1px solid var(--border-color); }
     .group-card-title { font-weight: 700; color: #60a5fa; font-size: 0.95rem; margin-bottom: 6px; text-transform: uppercase; border-bottom: 1px solid var(--border-color); padding-bottom: 2px; }
     .group-card table { width: 100%; border-collapse: collapse; text-align: center; }
     .group-card th, .group-card td { padding: 5px 3px; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; }
     .group-card td.team-cell { text-align: left; display: flex; align-items: center; gap: 6px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .qualified-row { background: rgba(16, 185, 129, 0.15); font-weight: bold; }
 
     /* ESTILOS DA CHAVE MATA-MATA */
     .bracket-phase-title { color: #60a5fa; font-weight: 700; font-size: 0.95rem; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; margin-top: 8px; text-transform: uppercase; }
@@ -518,6 +515,63 @@
     .podium-team-name { font-size: 0.9rem; margin-top: 6px; text-align: center; word-break: break-word; }
     .trophy { font-size: 2.5rem; animation: bounce 1.5s infinite alternate; }
     @keyframes bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-8px); } }
+
+    /* MODAL DE TROCA DE JOGADOR DA 2ª TEMPORADA */
+    #swap-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+    }
+    .swap-modal {
+      background: var(--bg-card);
+      border: 2px solid var(--accent-blue);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 450px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+    .swap-modal-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #60a5fa;
+      text-transform: uppercase;
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+    .swap-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 250px;
+      overflow-y: auto;
+    }
+    .swap-item {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .swap-item:hover {
+      border-color: var(--accent-blue);
+      background: var(--bg-card-hover);
+    }
+    .swap-item-name { font-weight: 600; font-size: 0.85rem; color: var(--text-main); }
+    .swap-item-pos { font-size: 0.75rem; color: var(--text-muted); }
   </style>
 </head>
 <body>
@@ -592,7 +646,7 @@
     </div>
 
     <div class="setup-grid" id="setup-teams-grid">
-      <!-- Times 1 a 8 gerados dinamicamente ou fixos -->
+      <!-- Times 1 a 8 -->
       <div class="team-input-card" id="card-t0">
         <label><b>Time 1 (Host)</b></label>
         <div class="badge-preview" id="badge-prev-0"></div>
@@ -791,6 +845,7 @@
     <button class="btn-start" id="btn-host-start" onclick="startGame()">Iniciar Leilão (Host)</button>
   </div>
 
+  <!-- GAME ARENA (LEILÃO) -->
   <div id="game-arena" style="display: none;">
     <div class="teams-left-sidebar" id="teams-sidebar">
       <div class="team-panel" id="panel-0"></div>
@@ -838,7 +893,7 @@
     </div>
   </div>
 
-  <!-- TELA DE CAMPEONATO (ESCUDOS PROPORCIONAIS E MINUTOS DO JOGO NO FRONT-END) -->
+  <!-- TELA DE CAMPEONATO -->
   <div id="league-screen" class="screen" style="display: none;">
     <div class="brasfoot-header">
       <h2 style="color:var(--text-main); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px;" id="phase-indicator">🏆 COPA DOS 32 - FASE DE GRUPOS</h2>
@@ -858,6 +913,7 @@
     </div>
   </div>
 
+  <!-- PÓDIO DA COMPETIÇÃO -->
   <div id="podium-screen" class="screen" style="display: none;">
     <h1 style="color: var(--text-main); margin-bottom: 5px; font-size: 1.6rem; text-align:center; text-transform: uppercase;" id="podium-title">👑 GRANDES CAMPEÕES 👑</h1>
     <p id="podium-subtitle" style="color:#60a5fa; margin-bottom:20px; font-weight:600; text-align:center; font-size:0.9rem;">Competição Encerrada!</p>
@@ -882,8 +938,17 @@
     <button class="btn-start" id="btn-next-phase" style="margin-top:25px;" onclick="handlePodiumNextPhase()">Avançar para a próxima fase</button>
   </div>
 
+  <!-- MODAL DE TROCA DE JOGADOR (2ª TEMPORADA) -->
+  <div id="swap-modal-overlay">
+    <div class="swap-modal">
+      <div class="swap-modal-title" id="swap-modal-title">Substituir Jogador</div>
+      <p style="font-size:0.8rem; color:var(--text-muted); text-align:center;" id="swap-modal-subtitle">Escolha qual jogador do seu elenco sairá para a entrada do reforço:</p>
+      <div class="swap-list" id="swap-modal-list"></div>
+    </div>
+  </div>
+
   <script>
-    // MAPEAMENTO DE LOGOS DOS TIMES OFICIAIS PARA LIGA E COPA DOS 32
+    // MAPEAMENTO DE LOGOS
     const TEAM_LOGOS = {
       "real madrid": "https://logopng.com.br/logos/real-madrid-174.png",
       "manchester city": "https://upload.wikimedia.org/wikipedia/pt/0/02/Manchester_City_Football_Club.png",
@@ -927,7 +992,6 @@
       "internacional": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Escudo_do_Sport_Club_Internacional.svg"
     };
 
-    // LISTA PADRÃO DE 32 TIMES PARA MONTAGEM DA COPA
     const BOT_TEAMS_32 = [
       "Real Madrid", "Manchester City", "Bayern de Munique", "PSG", "Barcelona", "Liverpool", "Arsenal", "Inter de Milão",
       "Juventus", "Bayer Leverkusen", "Borussia Dortmund", "Atlético de Madrid", "Chelsea", "Milan", "Manchester United", "Tottenham",
@@ -1013,20 +1077,21 @@
     let playerCount = 5;
 
     let defaultTeamsMaster = [
-      { id: 0, name: "Time 1", tokens: 100, passesLeft: 3, lineup: { GOL: null, DEF1: null, DEF2: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null }, badge: { c1: "#3b82f6", c2: "#0f172a", shape: "shield", pattern: "solid", animal: "🦅" } },
-      { id: 1, name: "Time 2", tokens: 100, passesLeft: 3, lineup: { GOL: null, DEF1: null, DEF2: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null }, badge: { c1: "#10b981", c2: "#ffffff", shape: "circle", pattern: "solid", animal: "🟢" } },
-      { id: 2, name: "Time 3", tokens: 100, passesLeft: 3, lineup: { GOL: null, DEF1: null, DEF2: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null }, badge: { c1: "#f59e0b", c2: "#000000", shape: "diamond", pattern: "half", animal: "🦁" } },
-      { id: 3, name: "Time 4", tokens: 100, passesLeft: 3, lineup: { GOL: null, DEF1: null, DEF2: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null }, badge: { c1: "#8b5cf6", c2: "#ffffff", shape: "shield", pattern: "stripes", animal: "🦅" } },
-      { id: 4, name: "Time 5", tokens: 100, passesLeft: 3, lineup: { GOL: null, DEF1: null, DEF2: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null }, badge: { c1: "#06b6d4", c2: "#ffffff", shape: "circle", pattern: "stars", animal: "🐉" } },
-      { id: 5, name: "Time 6", tokens: 100, passesLeft: 3, lineup: { GOL: null, DEF1: null, DEF2: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null }, badge: { c1: "#ec4899", c2: "#ffffff", shape: "shield", pattern: "solid", animal: "🐺" } },
-      { id: 6, name: "Time 7", tokens: 100, passesLeft: 3, lineup: { GOL: null, DEF1: null, DEF2: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null }, badge: { c1: "#e11d48", c2: "#000000", shape: "diamond", pattern: "stripes", animal: "🐅" } },
-      { id: 7, name: "Time 8", tokens: 100, passesLeft: 3, lineup: { GOL: null, DEF1: null, DEF2: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null }, badge: { c1: "#84cc16", c2: "#0f172a", shape: "circle", pattern: "half", animal: "🦁" } }
+      { id: 0, name: "Time 1", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null }, badge: { c1: "#3b82f6", c2: "#0f172a", shape: "shield", pattern: "solid", animal: "🦅" } },
+      { id: 1, name: "Time 2", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null }, badge: { c1: "#10b981", c2: "#ffffff", shape: "circle", pattern: "solid", animal: "🟢" } },
+      { id: 2, name: "Time 3", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null }, badge: { c1: "#f59e0b", c2: "#000000", shape: "diamond", pattern: "half", animal: "🦁" } },
+      { id: 3, name: "Time 4", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null }, badge: { c1: "#8b5cf6", c2: "#ffffff", shape: "shield", pattern: "stripes", animal: "🦅" } },
+      { id: 4, name: "Time 5", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null }, badge: { c1: "#06b6d4", c2: "#ffffff", shape: "circle", pattern: "stars", animal: "🐉" } },
+      { id: 5, name: "Time 6", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null }, badge: { c1: "#ec4899", c2: "#ffffff", shape: "shield", pattern: "solid", animal: "🐺" } },
+      { id: 6, name: "Time 7", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null }, badge: { c1: "#e11d48", c2: "#000000", shape: "diamond", pattern: "stripes", animal: "🐅" } },
+      { id: 7, name: "Time 8", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null }, badge: { c1: "#84cc16", c2: "#0f172a", shape: "circle", pattern: "half", animal: "🦁" } }
     ];
 
     let teams = JSON.parse(JSON.stringify(defaultTeamsMaster.slice(0, playerCount)));
 
     let currentDeck = [];
     let rejectedQueue = [];
+    let usedPlayerNames = new Set(); // Histórico para não repetir os jogadores leiloados da 1ª temporada
     let currentPlayerCard = null;
     let turnOrder = [];
     let activeTurnIndex = 0;
@@ -1282,6 +1347,7 @@
       else if (action === 'BID') handleBidLogic(payload.amount, senderId);
       else if (action === 'PASS') handlePassLogic(senderId);
       else if (action === 'NEXT_SEASON') startSeason2Auction();
+      else if (action === 'CONFIRM_SWAP') executeSwapInTeam(payload.teamId, payload.targetSlot, payload.newCard);
       broadcastState();
     }
 
@@ -1290,7 +1356,9 @@
       updateBadgePreviews();
 
       const state = {
-        playerCount, teams, currentDeck, rejectedQueue, currentPlayerCard, turnOrder, activeTurnIndex, highestBid,
+        playerCount, teams, currentDeck, rejectedQueue,
+        usedPlayerNames: Array.from(usedPlayerNames),
+        currentPlayerCard, turnOrder, activeTurnIndex, highestBid,
         highestBidderId, activeBidders, playersActedThisCard: Array.from(playersActedThisCard), isAuctionStarted, isDiceRolled, isTransitioning, currentSeason, season2DraftCount, tournamentStage,
         diceResultText: document.getElementById('dice-result').innerText,
         setupHidden: document.getElementById('setup-screen').style.display === 'none',
@@ -1312,6 +1380,7 @@
       teams = state.teams; 
       currentDeck = state.currentDeck; 
       rejectedQueue = state.rejectedQueue || [];
+      usedPlayerNames = new Set(state.usedPlayerNames || []);
       currentPlayerCard = state.currentPlayerCard;
       turnOrder = state.turnOrder; 
       activeTurnIndex = state.activeTurnIndex; 
@@ -1371,6 +1440,7 @@
       currentSeason = 1;
       season2DraftCount = 0;
       tournamentStage = 'COPA';
+      usedPlayerNames.clear();
       updateBadgePreviews();
 
       document.getElementById('main-menu-screen').style.display = 'none';
@@ -1389,7 +1459,9 @@
         ...database.DEF.map(p => ({ ...p, pos: 'DEF' })),
         ...database.ATA.map(p => ({ ...p, pos: 'ALA/PIVÔ' }))
       ];
-      currentDeck = fullList.sort(() => Math.random() - 0.5);
+      // NÃO REPETIR JOGADORES DA 1ª TEMPORADA
+      const filtered = fullList.filter(p => !usedPlayerNames.has(p.name));
+      currentDeck = filtered.sort(() => Math.random() - 0.5);
     }
 
     function startSeason2Auction() {
@@ -1400,6 +1472,7 @@
       teams.forEach(t => {
         t.tokens += 100;
         t.passesLeft = 3;
+        t.season2SwapsLeft = 2; // Exatamente 2 trocas/reforços por jogador
       });
 
       document.getElementById('league-screen').style.display = 'none';
@@ -1413,18 +1486,21 @@
     }
 
     function drawNextPlayer() {
-      let allFull = true;
-      for (let i = 0; i < playerCount; i++) {
-        if (!isTeamFull(i)) { allFull = false; break; }
-      }
+      let allDone = true;
 
       if (currentSeason === 1) {
-        if (allFull) {
+        for (let i = 0; i < playerCount; i++) {
+          if (!isTeamFull(i)) { allDone = false; break; }
+        }
+        if (allDone) {
           startTournamentSim();
           return;
         }
       } else if (currentSeason === 2) {
-        if (season2DraftCount >= playerCount) {
+        for (let i = 0; i < playerCount; i++) {
+          if (teams[i].season2SwapsLeft > 0) { allDone = false; break; }
+        }
+        if (allDone) {
           startTournamentSim();
           return;
         }
@@ -1476,7 +1552,8 @@
       if (currentSeason === 1) {
         turnOrder = activeIndices.filter(id => !isTeamFull(id)).sort(() => Math.random() - 0.5);
       } else {
-        turnOrder = activeIndices.sort(() => Math.random() - 0.5);
+        // Na 2ª temporada só entram quem ainda tem limite de trocas/reforços (máximo 2)
+        turnOrder = activeIndices.filter(id => teams[id].season2SwapsLeft > 0).sort(() => Math.random() - 0.5);
       }
       activeBidders = [...turnOrder];
       activeTurnIndex = 0;
@@ -1609,16 +1686,17 @@
     function finishAuction(winnerId) {
       const winner = teams[winnerId];
       winner.tokens -= (highestBid > 0 ? highestBid : 0);
+      usedPlayerNames.add(currentPlayerCard.name); // Registrar para não repetir lances de temporadas passadas
       
       if (currentSeason === 2) {
-        season2DraftCount++;
-        replacePlayerInTeam(winnerId, currentPlayerCard);
+        winner.season2SwapsLeft--;
+        // ABRE O MODAL PARA O JOGADOR VENCEDOR ESCOLHER QUEM SUBSTITUIR NA ESCALAÇÃO
+        promptSwapPlayerSelection(winnerId, currentPlayerCard);
       } else {
         assignPlayerToTeam(winnerId, currentPlayerCard);
+        renderTeamPanels();
+        setTimeout(() => { drawNextPlayer(); broadcastState(); }, 1200);
       }
-
-      renderTeamPanels();
-      setTimeout(() => { drawNextPlayer(); broadcastState(); }, 1200);
     }
 
     function assignPlayerToTeam(teamId, card) {
@@ -1636,29 +1714,59 @@
       }
     }
 
-    function replacePlayerInTeam(teamId, card) {
+    /* MODAL E TROCA DE JOGADOR ESPECÍFICO NA 2ª TEMPORADA */
+    function promptSwapPlayerSelection(winnerId, card) {
+      if (winnerId === myPlayerId) {
+        openSwapModal(winnerId, card);
+      } else {
+        // Se for outro jogador na rede/host, ou se for bot
+        renderTeamPanels();
+        // Em multiplayer remoto, o evento CONFIRM_SWAP enviará a escolha ao host
+      }
+    }
+
+    function openSwapModal(teamId, card) {
       const winner = teams[teamId];
-      let targetSlots = [];
-      if (card.pos === 'GOL') targetSlots = ['GOL'];
-      if (card.pos === 'DEF') targetSlots = ['DEF1', 'DEF2'];
-      if (card.pos === 'ALA/PIVÔ') targetSlots = ['ALA_PIVO1', 'ALA_PIVO2', 'ALA_PIVO3', 'ALA_PIVO4'];
+      const slotLabels = {
+        GOL: 'GOL', DEF1: 'DEF 1', DEF2: 'DEF 2',
+        ALA_PIVO1: 'ALA/PIVÔ 1', ALA_PIVO2: 'ALA/PIVÔ 2', ALA_PIVO3: 'ALA/PIVÔ 3', ALA_PIVO4: 'ALA/PIVÔ 4'
+      };
 
-      let minOvr = 999;
-      let minSlot = targetSlots[0];
+      const overlay = document.getElementById('swap-modal-overlay');
+      const listContainer = document.getElementById('swap-modal-list');
+      document.getElementById('swap-modal-subtitle').innerText = `Escolha quem sai para a entrada de ${card.name} (${card.ovr}):`;
+      
+      listContainer.innerHTML = '';
 
-      for (let s of targetSlots) {
-        if (winner.lineup[s] === null) {
-          winner.lineup[s] = card;
-          return;
-        }
-        if (winner.lineup[s].ovr < minOvr) {
-          minOvr = winner.lineup[s].ovr;
-          minSlot = s;
+      for (let slotKey in winner.lineup) {
+        const p = winner.lineup[slotKey];
+        if (p) {
+          const item = document.createElement('div');
+          item.className = 'swap-item';
+          item.innerHTML = `
+            <div>
+              <div class="swap-item-name">${p.name} (${p.ovr})</div>
+              <div class="swap-item-pos">Posição: ${slotLabels[slotKey]}</div>
+            </div>
+            <button class="btn-action btn-bid" style="padding:6px 10px; font-size:0.75rem;">Substituir</button>
+          `;
+          item.onclick = () => {
+            overlay.style.display = 'none';
+            sendActionToHost('CONFIRM_SWAP', { teamId: teamId, targetSlot: slotKey, newCard: card });
+          };
+          listContainer.appendChild(item);
         }
       }
-      if (card.ovr > minOvr) {
-        winner.lineup[minSlot] = card;
+
+      overlay.style.display = 'flex';
+    }
+
+    function executeSwapInTeam(teamId, slotKey, newCard) {
+      if (teams[teamId]) {
+        teams[teamId].lineup[slotKey] = newCard;
       }
+      renderTeamPanels();
+      setTimeout(() => { drawNextPlayer(); broadcastState(); }, 1200);
     }
 
     function renderTeamPanels() {
@@ -1681,6 +1789,7 @@
             <div>
               <span class="team-tokens">${team.tokens} TK</span>
               <span class="passes-left">${team.passesLeft}x Rec.</span>
+              ${currentSeason === 2 ? `<span style="background:#3b82f6; color:#fff; padding:2px 6px; border-radius:4px; font-size:0.65rem; font-weight:bold; margin-left:2px;">${team.season2SwapsLeft} Trocas</span>` : ''}
             </div>
           </div>
           <div class="lineup-slots">
@@ -1761,7 +1870,8 @@
         currentMatchIndex: 0,
         currentMatchMinute: 0,
         bracket: [],
-        bracketPhase: ''
+        bracketPhase: '',
+        semiLosers: [] // Guardar os perdedores da semi para a disputa de 3º lugar
       };
 
       generateGroupRoundMatches();
@@ -1818,9 +1928,6 @@
       const match = state.roundMatches[state.currentMatchIndex];
       const hasHuman = match.home.isHuman || match.away.isHuman;
 
-      // REQUISITO DE TEMPO:
-      // Com pelo menos 1 jogador: 10 segundos no total, atualizado de 5 em 5 minutos (18 ticks * 555ms = 10s)
-      // Sem jogadores humanos (IAs): simula em 5 segundos no total (18 ticks * 277ms = 5s)
       const intervalTime = hasHuman ? 555 : 277; 
       state.currentMatchMinute = 0;
 
@@ -1893,96 +2000,146 @@
       const qualified = [];
       state.groupNames.forEach(g => {
         const top2 = state.groups[g].slice(0, 2);
-        qualified.push(...top2);
+        qualified.push(top2[0], top2[1]);
       });
 
-      // Sorteio das Oitavas de Final entre os 16 classificados
-      const shuffled = qualified.sort(() => Math.random() - 0.5);
+      state.bracket = [];
+      for (let i = 0; i < qualified.length; i += 2) {
+        state.bracket.push({
+          home: qualified[i],
+          away: qualified[i+1],
+          winner: null
+        });
+      }
+
+      generateKnockoutRoundMatches();
+      runCurrentMatchSimulation();
+    }
+
+    function generateKnockoutRoundMatches() {
+      const state = currentBrasfootState;
       state.roundMatches = [];
 
-      for (let i = 0; i < shuffled.length; i += 2) {
+      state.bracket.forEach(b => {
         state.roundMatches.push({
-          phaseName: 'OITAVAS DE FINAL',
-          home: shuffled[i],
-          away: shuffled[i + 1],
+          home: b.home,
+          away: b.away,
           scoreHome: 0,
           scoreAway: 0,
           events: [],
           done: false
         });
-      }
+      });
 
-      state.bracket.push({ phase: 'OITAVAS DE FINAL', matches: [...state.roundMatches] });
       state.currentMatchIndex = 0;
-      broadcastState();
-      setTimeout(runCurrentMatchSimulation, 1200);
     }
 
+    /* CORREÇÃO COMPLETA DA SEQUÊNCIA DAS FASES DA COPA:
+       SEMIFINAIS -> DISPUTA DE 3º LUGAR -> GRANDE FINAL -> PÓDIO */
     function processKnockoutPhaseCompletion() {
       const state = currentBrasfootState;
-      const winners = state.roundMatches.map(m => m.scoreHome > m.scoreAway ? m.home : m.away);
 
-      if (winners.length === 8) {
+      // 1. Atualizar vencedores da rodada atual
+      for (let i = 0; i < state.bracket.length; i++) {
+        const m = state.roundMatches[i];
+        if (m.scoreHome > m.scoreAway) {
+          state.bracket[i].winner = m.home;
+          state.bracket[i].loser = m.away;
+        } else {
+          state.bracket[i].winner = m.away;
+          state.bracket[i].loser = m.home;
+        }
+      }
+
+      if (state.bracketPhase === 'OITAVAS DE FINAL') {
         state.bracketPhase = 'QUARTAS DE FINAL';
-        state.roundMatches = [];
+        let winners = state.bracket.map(b => b.winner);
+        state.bracket = [];
         for (let i = 0; i < winners.length; i += 2) {
-          state.roundMatches.push({
-            phaseName: 'QUARTAS DE FINAL',
-            home: winners[i],
-            away: winners[i + 1],
-            scoreHome: 0,
-            scoreAway: 0,
-            events: [],
-            done: false
-          });
+          state.bracket.push({ home: winners[i], away: winners[i+1], winner: null });
         }
-        state.bracket.push({ phase: 'QUARTAS DE FINAL', matches: [...state.roundMatches] });
-        state.currentMatchIndex = 0;
+        generateKnockoutRoundMatches();
         broadcastState();
-        setTimeout(runCurrentMatchSimulation, 1200);
-      } else if (winners.length === 4) {
+        setTimeout(runCurrentMatchSimulation, 1000);
+      } 
+      else if (state.bracketPhase === 'QUARTAS DE FINAL') {
         state.bracketPhase = 'SEMIFINAIS';
-        state.roundMatches = [];
+        let winners = state.bracket.map(b => b.winner);
+        state.bracket = [];
         for (let i = 0; i < winners.length; i += 2) {
-          state.roundMatches.push({
-            phaseName: 'SEMIFINAIS',
-            home: winners[i],
-            away: winners[i + 1],
-            scoreHome: 0,
-            scoreAway: 0,
-            events: [],
-            done: false
-          });
+          state.bracket.push({ home: winners[i], away: winners[i+1], winner: null });
         }
-        state.bracket.push({ phase: 'SEMIFINAIS', matches: [...state.roundMatches] });
-        state.currentMatchIndex = 0;
+        generateKnockoutRoundMatches();
         broadcastState();
-        setTimeout(runCurrentMatchSimulation, 1200);
-      } else if (winners.length === 2) {
-        // Disputa do 3º Lugar e a Grande Final
-        const semifinalMatches = state.bracket[state.bracket.length - 1].matches;
-        const losers = semifinalMatches.map(m => m.scoreHome > m.scoreAway ? m.away : m.home);
+        setTimeout(runCurrentMatchSimulation, 1000);
+      } 
+      else if (state.bracketPhase === 'SEMIFINAIS') {
+        // Guarda os 2 perdedores das semifinais para realizarem a Disputa de 3º Lugar
+        state.semiLosers = state.bracket.map(b => b.loser);
+        state.finalists = state.bracket.map(b => b.winner);
 
-        state.bracketPhase = 'FINAL';
-        state.roundMatches = [
-          { phaseName: 'DECISÃO 3º LUGAR', home: losers[0], away: losers[1], scoreHome: 0, scoreAway: 0, events: [], done: false },
-          { phaseName: 'GRANDE FINAL', home: winners[0], away: winners[1], scoreHome: 0, scoreAway: 0, events: [], done: false }
-        ];
-        state.bracket.push({ phase: 'FINAL', matches: [...state.roundMatches] });
-        state.currentMatchIndex = 0;
+        // Avança para a Disputa de 3º Lugar (Apenas 1 Jogo Único)
+        state.bracketPhase = 'DISPUTA DE 3º LUGAR';
+        state.bracket = [{ home: state.semiLosers[0], away: state.semiLosers[1], winner: null }];
+        
+        generateKnockoutRoundMatches();
         broadcastState();
-        setTimeout(runCurrentMatchSimulation, 1200);
-      } else if (winners.length === 1) {
-        // Encerramento da Copa e exibição do Pódio
-        const finalMatches = state.roundMatches;
-        const thirdMatch = finalMatches.find(m => m.phaseName === 'DECISÃO 3º LUGAR');
-        const championMatch = finalMatches.find(m => m.phaseName === 'GRANDE FINAL');
+        setTimeout(runCurrentMatchSimulation, 1000);
+      } 
+      else if (state.bracketPhase === 'DISPUTA DE 3º LUGAR') {
+        // O vencedor da disputa garante o 3º Lugar
+        state.thirdPlaceTeam = state.bracket[0].winner;
 
-        const champion = championMatch.scoreHome > championMatch.scoreAway ? championMatch.home : championMatch.away;
-        const vice = championMatch.scoreHome > championMatch.scoreAway ? championMatch.away : championMatch.home;
-        const third = thirdMatch.scoreHome > thirdMatch.scoreAway ? thirdMatch.home : thirdMatch.away;
+        // Avança para a GRANDE FINAL (Apenas 1 Jogo Único)
+        state.bracketPhase = 'GRANDE FINAL';
+        state.bracket = [{ home: state.finalists[0], away: state.finalists[1], winner: null }];
 
-        showPodiumScreen(champion, vice, third);
+        generateKnockoutRoundMatches();
+        broadcastState();
+        setTimeout(runCurrentMatchSimulation, 1000);
+      } 
+      else if (state.bracketPhase === 'GRANDE FINAL') {
+        // Final encerrada -> Exibir Pódio
+        const champion = state.bracket[0].winner;
+        const runnerUp = state.bracket[0].loser;
+        const thirdPlace = state.thirdPlaceTeam;
+
+        showPodium(champion, runnerUp, thirdPlace);
+      }
+    }
+
+    function showPodium(champion, runnerUp, thirdPlace) {
+      document.getElementById('league-screen').style.display = 'none';
+      document.getElementById('podium-screen').style.display = 'flex';
+
+      document.getElementById('podium-name-1').innerText = champion.name;
+      document.getElementById('podium-badge-1').innerHTML = getTeamLogoHTML(champion.name, champion.badge);
+
+      document.getElementById('podium-name-2').innerText = runnerUp.name;
+      document.getElementById('podium-badge-2').innerHTML = getTeamLogoHTML(runnerUp.name, runnerUp.badge);
+
+      document.getElementById('podium-name-3').innerText = thirdPlace.name;
+      document.getElementById('podium-badge-3').innerHTML = getTeamLogoHTML(thirdPlace.name, thirdPlace.badge);
+
+      setTimeout(() => { document.getElementById('step-1').classList.add('show'); }, 300);
+      setTimeout(() => { document.getElementById('step-2').classList.add('show'); }, 600);
+      setTimeout(() => { document.getElementById('step-3').classList.add('show'); }, 900);
+
+      const btnNext = document.getElementById('btn-next-phase');
+      if (currentSeason === 1) {
+        btnNext.innerText = "Avançar para a 2ª Temporada (Reforços)";
+        btnNext.onclick = () => { sendActionToHost('NEXT_SEASON'); };
+      } else {
+        btnNext.innerText = "Voltar ao Menu Principal";
+        btnNext.onclick = () => { location.reload(); };
+      }
+    }
+
+    function handlePodiumNextPhase() {
+      if (currentSeason === 1) {
+        sendActionToHost('NEXT_SEASON');
+      } else {
+        location.reload();
       }
     }
 
@@ -1990,23 +2147,56 @@
       const state = currentBrasfootState;
       if (!state.active) return;
 
-      const phaseInd = document.getElementById('phase-indicator');
-      const roundInd = document.getElementById('round-indicator');
-      const groupsCont = document.getElementById('groups-container');
-      const bracketCont = document.getElementById('bracket-list-container');
-      const sideTitle = document.getElementById('side-panel-title');
-      const broadcastCont = document.getElementById('matches-broadcast-container');
+      document.getElementById('phase-indicator').innerText = `🏆 COPA DOS 32 - ${state.phase === 'GROUPS' ? `FASE DE GRUPOS (RODADA ${state.currentRound}/${state.totalRounds})` : state.bracketPhase}`;
+
+      const matchesContainer = document.getElementById('matches-broadcast-container');
+      matchesContainer.innerHTML = '';
+
+      if (state.roundMatches && state.roundMatches.length > 0) {
+        const match = state.roundMatches[state.currentMatchIndex] || state.roundMatches[state.roundMatches.length - 1];
+        if (match) {
+          const eventsHTML = match.events.map(e => `<div>${e}</div>`).join('');
+          matchesContainer.innerHTML = `
+            <div class="match-box active">
+              <div class="match-time">${match.done ? 'FIM DE JOGO' : `${state.currentMatchMinute}' MIN`}</div>
+              <div class="match-teams">
+                <div class="team-display home">
+                  ${getTeamLogoHTML(match.home.name, match.home.badge)}
+                  <span>${match.home.name}</span>
+                </div>
+                <div class="match-score">${match.scoreHome} - ${match.scoreAway}</div>
+                <div class="team-display away">
+                  <span>${match.away.name}</span>
+                  ${getTeamLogoHTML(match.away.name, match.away.badge)}
+                </div>
+              </div>
+              <div class="match-events">${eventsHTML || '<div>Aguardando início da partida...</div>'}</div>
+            </div>
+          `;
+        }
+      }
+
+      const groupsContainer = document.getElementById('groups-container');
+      const bracketContainer = document.getElementById('bracket-list-container');
 
       if (state.phase === 'GROUPS') {
-        phaseInd.innerText = `🏆 COPA DOS 32 - FASE DE GRUPOS`;
-        roundInd.innerText = `Rodada ${state.currentRound} de ${state.totalRounds}`;
-        groupsCont.style.display = 'grid';
-        bracketCont.style.display = 'none';
-        sideTitle.innerText = "Classificação dos Grupos";
+        groupsContainer.style.display = 'grid';
+        bracketContainer.style.display = 'none';
+        groupsContainer.innerHTML = '';
 
-        let gHtml = '';
         state.groupNames.forEach(g => {
-          gHtml += `
+          const tList = state.groups[g];
+          let rows = tList.map((t, idx) => `
+            <tr class="${idx < 2 ? 'qualified-row' : ''}">
+              <td class="team-cell">${getTeamLogoHTML(t.name, t.badge)} ${t.name}</td>
+              <td><b>${t.pts}</b></td>
+              <td>${t.pj}</td>
+              <td>${t.v}</td>
+              <td>${t.sg}</td>
+            </tr>
+          `).join('');
+
+          groupsContainer.innerHTML += `
             <div class="group-card">
               <div class="group-card-title">GRUPO ${g}</div>
               <table>
@@ -2016,117 +2206,37 @@
                     <th>P</th>
                     <th>J</th>
                     <th>V</th>
-                    <th>E</th>
-                    <th>D</th>
                     <th>SG</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody>${rows}</tbody>
+              </table>
+            </div>
           `;
-          state.groups[g].forEach((t, idx) => {
-            const isQual = idx < 2 ? 'qualified-row' : '';
-            gHtml += `
-              <tr class="${isQual}">
-                <td class="team-cell">${getTeamLogoHTML(t.name, t.badge)} <span>${t.name}</span></td>
-                <td><b>${t.pts}</b></td>
-                <td>${t.pj}</td>
-                <td>${t.v}</td>
-                <td>${t.e}</td>
-                <td>${t.d}</td>
-                <td>${t.sg}</td>
-              </tr>
-            `;
-          });
-          gHtml += `</tbody></table></div>`;
         });
-        groupsCont.innerHTML = gHtml;
       } else {
-        phaseInd.innerText = `🏆 COPA DOS 32 - MATA-MATA (${state.bracketPhase})`;
-        roundInd.innerText = `Confrontos Diretos`;
-        groupsCont.style.display = 'none';
-        bracketCont.style.display = 'flex';
-        sideTitle.innerText = "Chaveamento / Resultados";
+        groupsContainer.style.display = 'none';
+        bracketContainer.style.display = 'flex';
+        bracketContainer.innerHTML = `<div class="bracket-phase-title">${state.bracketPhase}</div>`;
 
-        let bHtml = '';
-        state.bracket.forEach(bPhase => {
-          bHtml += `<div class="bracket-phase-title">${bPhase.phase}</div>`;
-          bPhase.matches.forEach(m => {
-            const hWin = m.done && m.scoreHome > m.scoreAway ? 'winner' : '';
-            const aWin = m.done && m.scoreAway > m.scoreHome ? 'winner' : '';
-            bHtml += `
-              <div class="bracket-match-item">
-                <div class="bracket-team ${hWin}">
-                  <span style="display:flex; align-items:center; gap:6px;">${getTeamLogoHTML(m.home.name, m.home.badge)} ${m.home.name}</span>
-                  <b>${m.done ? m.scoreHome : '-'}</b>
-                </div>
-                <div class="bracket-team ${aWin}">
-                  <span style="display:flex; align-items:center; gap:6px;">${getTeamLogoHTML(m.away.name, m.away.badge)} ${m.away.name}</span>
-                  <b>${m.done ? m.scoreAway : '-'}</b>
+        state.bracket.forEach(b => {
+          bracketContainer.innerHTML += `
+            <div class="bracket-match-item">
+              <div class="bracket-team ${b.winner && b.winner.name === b.home.name ? 'winner' : ''}">
+                <div style="display:flex; align-items:center; gap:6px;">
+                  ${getTeamLogoHTML(b.home.name, b.home.badge)}
+                  <span>${b.home.name}</span>
                 </div>
               </div>
-            `;
-          });
+              <div class="bracket-team ${b.winner && b.winner.name === b.away.name ? 'winner' : ''}">
+                <div style="display:flex; align-items:center; gap:6px;">
+                  ${getTeamLogoHTML(b.away.name, b.away.badge)}
+                  <span>${b.away.name}</span>
+                </div>
+              </div>
+            </div>
+          `;
         });
-        bracketCont.innerHTML = bHtml;
-      }
-
-      // RENDERIZAÇÃO DA PARTIDA TRANSMITIDA EM TEMPO REAL COM OS MINUTOS VISÍVEIS
-      if (state.roundMatches && state.roundMatches[state.currentMatchIndex]) {
-        const curMatch = state.roundMatches[state.currentMatchIndex];
-        broadcastCont.innerHTML = `
-          <div class="match-box active">
-            <div class="match-time" id="match-time">${curMatch.done ? "FIM" : state.currentMatchMinute + "'"}</div>
-            <div class="match-teams">
-              <div class="team-display home">
-                ${getTeamLogoHTML(curMatch.home.name, curMatch.home.badge)}
-                <span>${curMatch.home.name}</span>
-              </div>
-              <div class="match-score">${curMatch.scoreHome} - ${curMatch.scoreAway}</div>
-              <div class="team-display away">
-                <span>${curMatch.away.name}</span>
-                ${getTeamLogoHTML(curMatch.away.name, curMatch.away.badge)}
-              </div>
-            </div>
-            <div class="match-events">
-              ${curMatch.events.length > 0 ? curMatch.events.join('<br>') : '<i>Aguardando início da partida...</i>'}
-            </div>
-          </div>
-        `;
-      }
-    }
-
-    function showPodiumScreen(champ, vice, third) {
-      document.getElementById('league-screen').style.display = 'none';
-      document.getElementById('podium-screen').style.display = 'flex';
-
-      document.getElementById('podium-name-1').innerText = champ.name;
-      document.getElementById('podium-badge-1').innerHTML = getTeamLogoHTML(champ.name, champ.badge);
-
-      document.getElementById('podium-name-2').innerText = vice.name;
-      document.getElementById('podium-badge-2').innerHTML = getTeamLogoHTML(vice.name, vice.badge);
-
-      document.getElementById('podium-name-3').innerText = third.name;
-      document.getElementById('podium-badge-3').innerHTML = getTeamLogoHTML(third.name, third.badge);
-
-      setTimeout(() => document.getElementById('step-1').classList.add('show'), 300);
-      setTimeout(() => document.getElementById('step-2').classList.add('show'), 600);
-      setTimeout(() => document.getElementById('step-3').classList.add('show'), 900);
-
-      const btnNext = document.getElementById('btn-next-phase');
-      if (currentSeason === 1) {
-        btnNext.innerText = "Avançar para a 2ª Temporada (Leilão de Reforços)";
-        btnNext.onclick = () => sendActionToHost('NEXT_SEASON');
-      } else {
-        btnNext.innerText = "Voltar ao Menu Principal";
-        btnNext.onclick = () => location.reload();
-      }
-    }
-
-    function handlePodiumNextPhase() {
-      if (currentSeason === 1) {
-        startSeason2Auction();
-      } else {
-        location.reload();
       }
     }
   </script>
