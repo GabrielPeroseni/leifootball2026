@@ -448,17 +448,20 @@
     .brasfoot-grid { display: grid; grid-template-columns: 1fr 420px; gap: 12px; flex: 1; overflow: hidden; }
     
     .matches-broadcast { display: flex; flex-direction: column; gap: 10px; height: 100%; overflow-y: auto; justify-content: flex-start; align-items: center; padding-right: 4px; }
-    .match-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; max-width: 600px; }
-    .match-box.active { border-color: var(--accent-blue); box-shadow: 0 0 12px rgba(59, 130, 246, 0.3); }
-    .match-time { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); padding: 3px 10px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; letter-spacing: 1px; }
-    .match-teams { display: flex; justify-content: space-between; width: 100%; align-items: center; font-weight: 600; font-size: 1rem; }
-    .team-display { display: flex; align-items: center; gap: 8px; width: 42%; font-size: 0.95rem; }
+    .group-broadcast-card { width: 100%; max-width: 650px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .group-broadcast-title { color: #60a5fa; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; }
+
+    .match-box { background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; }
+    .match-box.active { border-color: var(--accent-blue); box-shadow: 0 0 8px rgba(59, 130, 246, 0.3); }
+    .match-time { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); padding: 2px 8px; border-radius: 10px; font-weight: 700; font-size: 0.75rem; letter-spacing: 1px; }
+    .match-teams { display: flex; justify-content: space-between; width: 100%; align-items: center; font-weight: 600; font-size: 0.9rem; }
+    .team-display { display: flex; align-items: center; gap: 6px; width: 42%; font-size: 0.85rem; }
     .team-display.home { justify-content: flex-start; }
     .team-display.away { justify-content: flex-end; }
     
     .team-badge-icon { 
-      width: 22px; 
-      height: 22px; 
+      width: 20px; 
+      height: 20px; 
       flex-shrink: 0; 
       object-fit: contain; 
       display: inline-block;
@@ -466,30 +469,30 @@
     }
 
     .badge-inline-svg {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       flex-shrink: 0;
       display: inline-block;
       vertical-align: middle;
     }
     
-    .match-score { font-size: 1.5rem; color: #60a5fa; background: var(--bg-input); border: 1px solid var(--border-color); padding: 4px 12px; border-radius: 4px; font-family: monospace; letter-spacing: 2px; }
-    .match-events { width: 100%; height: 110px; background: var(--bg-input); border-radius: 4px; padding: 8px; font-size: 0.8rem; color: var(--text-main); overflow-y: auto; font-family: monospace; border: 1px solid var(--border-color); }
+    .match-score { font-size: 1.2rem; color: #60a5fa; background: var(--bg-primary); border: 1px solid var(--border-color); padding: 2px 8px; border-radius: 4px; font-family: monospace; letter-spacing: 2px; }
+    .match-events { width: 100%; height: 60px; background: var(--bg-primary); border-radius: 4px; padding: 6px; font-size: 0.75rem; color: var(--text-main); overflow-y: auto; font-family: monospace; border: 1px solid var(--border-color); }
 
     .league-table-container { background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-color); padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
     .bracket-list { display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem; overflow-y: auto; }
 
     .group-tables-grid { display: grid; grid-template-columns: 1fr; gap: 12px; overflow-y: auto; }
-    .group-card { background: var(--bg-input); padding: 10px; border-radius: 6px; font-size: 0.9rem; border: 1px solid var(--border-color); }
-    .group-card-title { font-weight: 700; color: #60a5fa; font-size: 0.95rem; margin-bottom: 6px; text-transform: uppercase; border-bottom: 1px solid var(--border-color); padding-bottom: 2px; }
+    .group-card { background: var(--bg-input); padding: 10px; border-radius: 6px; font-size: 0.85rem; border: 1px solid var(--border-color); }
+    .group-card-title { font-weight: 700; color: #60a5fa; font-size: 0.9rem; margin-bottom: 6px; text-transform: uppercase; border-bottom: 1px solid var(--border-color); padding-bottom: 2px; }
     .group-card table { width: 100%; border-collapse: collapse; text-align: center; }
-    .group-card th, .group-card td { padding: 5px 3px; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; }
-    .group-card td.team-cell { text-align: left; display: flex; align-items: center; gap: 6px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .group-card th, .group-card td { padding: 4px 2px; border-bottom: 1px solid var(--border-color); font-size: 0.78rem; }
+    .group-card td.team-cell { text-align: left; display: flex; align-items: center; gap: 4px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     /* ESTILOS DA CHAVE MATA-MATA */
-    .bracket-phase-title { color: #60a5fa; font-weight: 700; font-size: 0.95rem; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; margin-top: 8px; text-transform: uppercase; }
-    .bracket-match-item { background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
-    .bracket-team { display: flex; justify-content: space-between; align-items: center; padding: 4px 6px; border-radius: 4px; font-size: 0.88rem; }
+    .bracket-phase-title { color: #60a5fa; font-weight: 700; font-size: 0.9rem; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; margin-top: 8px; text-transform: uppercase; }
+    .bracket-match-item { background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; display: flex; flex-direction: column; gap: 4px; margin-bottom: 6px; }
+    .bracket-team { display: flex; justify-content: space-between; align-items: center; padding: 3px 6px; border-radius: 4px; font-size: 0.8rem; }
     .bracket-team.winner { background: rgba(16, 185, 129, 0.2); font-weight: bold; color: var(--success-color); border: 1px solid rgba(16, 185, 129, 0.4); }
 
     /* PÓDIO */
@@ -897,7 +900,7 @@
   <div id="league-screen" class="screen" style="display: none;">
     <div class="brasfoot-header">
       <h2 style="color:var(--text-main); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px;" id="phase-indicator">🏆 COPA DOS 32 - FASE DE GRUPOS</h2>
-      <p id="round-indicator" style="color:var(--text-muted); font-size:0.85rem; margin-top:2px;">Simulação de Partidas (90 Segundos)</p>
+      <p id="round-indicator" style="color:var(--text-muted); font-size:0.85rem; margin-top:2px;">Simulação de Partidas em Tempo Real</p>
     </div>
 
     <div class="brasfoot-grid">
@@ -1814,13 +1817,44 @@
       }
     }
 
-    /* SIMULAÇÃO DE PARTIDAS DURANDO EXATAMENTE 90 SEGUNDOS */
+    /* SIMULAÇÃO DE PARTIDAS REALISTAS (MÉDIA DE 0 A 7 GOLS) COM 3 RODADAS NA FASE DE GRUPOS */
     function calculateTeamOvr(team) {
       let total = 0, count = 0;
       for (let k in team.lineup) {
         if (team.lineup[k]) { total += team.lineup[k].ovr; count++; }
       }
       return count > 0 ? Math.round(total / count) : 80;
+    }
+
+    // Gerador probabilístico realista de gols (de 0 a 7 gols)
+    function generateRealisticGoals(ovrDiff) {
+      // Base de probabilidade em porcentagem para 0, 1, 2, 3, 4, 5, 6, 7 gols
+      let weights = [30, 35, 20, 10, 3, 1.2, 0.6, 0.2];
+      
+      // Ajusta os pesos conforme a vantagem de OVR
+      if (ovrDiff > 0) {
+        let bonus = Math.min(ovrDiff * 1.5, 15);
+        weights[0] = Math.max(10, weights[0] - bonus);
+        weights[1] = Math.max(15, weights[1] - bonus/2);
+        weights[2] += bonus * 0.6;
+        weights[3] += bonus * 0.4;
+        weights[4] += bonus * 0.2;
+      } else if (ovrDiff < 0) {
+        let penalty = Math.min(Math.abs(ovrDiff) * 1.5, 15);
+        weights[0] += penalty;
+        weights[1] = Math.max(10, weights[1] - penalty/2);
+        weights[2] = Math.max(5, weights[2] - penalty/3);
+      }
+
+      let totalWeight = weights.reduce((a, b) => a + b, 0);
+      let randomVal = Math.random() * totalWeight;
+      let cumulative = 0;
+
+      for (let i = 0; i < weights.length; i++) {
+        cumulative += weights[i];
+        if (randomVal <= cumulative) return i;
+      }
+      return 0;
     }
 
     function startTournamentSim() {
@@ -1882,310 +1916,386 @@
         const r = tournamentData.groupRound;
         for (let gKey in tournamentData.groups) {
           const g = tournamentData.groups[gKey];
-          let home, away;
-          if (r === 1) { home = g[0]; away = g[1]; }
-          else if (r === 2) { home = g[2]; away = g[3]; }
-          else if (r === 3) { home = g[0]; away = g[2]; }
-          else if (r === 4) { home = g[1]; away = g[3]; }
-          else if (r === 5) { home = g[3]; away = g[0]; }
-          else if (r === 6) { home = g[1]; away = g[2]; }
+          let home1, away1, home2, away2;
+          
+          if (r === 1) {
+            home1 = g[0]; away1 = g[1];
+            home2 = g[2]; away2 = g[3];
+          } else if (r === 2) {
+            home1 = g[0]; away1 = g[2];
+            home2 = g[1]; away2 = g[3];
+          } else { // Rodada 3
+            home1 = g[0]; away1 = g[3];
+            home2 = g[1]; away2 = g[2];
+          }
+
+          const h1Goals = generateRealisticGoals(home1.ovr - away1.ovr);
+          const a1Goals = generateRealisticGoals(away1.ovr - home1.ovr);
+          const h2Goals = generateRealisticGoals(home2.ovr - away2.ovr);
+          const a2Goals = generateRealisticGoals(away2.ovr - home2.ovr);
 
           currentBrasfootState.currentMatches.push({
-            group: gKey, home: home, away: away, homeScore: 0, awayScore: 0, events: [], stats: { homeShots: 0, awayShots: 0, homePos: 50, awayPos: 50 }
+            groupKey: gKey,
+            home: home1, away: away1,
+            homeScore: 0, awayScore: 0,
+            targetHomeScore: h1Goals, targetAwayScore: a1Goals,
+            events: []
+          });
+
+          currentBrasfootState.currentMatches.push({
+            groupKey: gKey,
+            home: home2, away: away2,
+            homeScore: 0, awayScore: 0,
+            targetHomeScore: h2Goals, targetAwayScore: a2Goals,
+            events: []
           });
         }
       } else {
-        const phaseMatches = tournamentData.bracket[tournamentData.currentPhase];
+        let phaseMatches = tournamentData.bracket[tournamentData.currentPhase];
         phaseMatches.forEach(m => {
+          let targetH = generateRealisticGoals(m.home.ovr - m.away.ovr);
+          let targetA = generateRealisticGoals(m.away.ovr - m.home.ovr);
+
+          // Mata-mata não pode terminar empatado
+          if (targetH === targetA) {
+            if (m.home.ovr >= m.away.ovr) targetH += 1;
+            else targetA += 1;
+          }
+
           currentBrasfootState.currentMatches.push({
-            home: m.home, away: m.away, homeScore: 0, awayScore: 0, events: [], stats: { homeShots: 0, awayShots: 0, homePos: 50, awayPos: 50 }
+            home: m.home, away: m.away,
+            homeScore: 0, awayScore: 0,
+            targetHomeScore: targetH, targetAwayScore: targetA,
+            events: []
           });
         });
       }
+
+      currentBrasfootState.active = true;
     }
 
     function runBrasfootEngine() {
       if (simInterval) clearInterval(simInterval);
-      currentBrasfootState.active = true;
 
-      // DURAÇÃO DE 90 SEGUNDOS (1 segundo real = 1 minuto de jogo)
       simInterval = setInterval(() => {
         if (!isHost) return;
 
-        currentBrasfootState.currentMatchMinute++;
+        currentBrasfootState.currentMatchMinute += 3;
+        const min = currentBrasfootState.currentMatchMinute;
 
         currentBrasfootState.currentMatches.forEach(m => {
-          const ovrDiff = m.home.ovr - m.away.ovr;
-          const homeProb = 0.05 + (ovrDiff * 0.002);
-          const awayProb = 0.05 - (ovrDiff * 0.002);
+          if (min <= 90) {
+            // Distribuição progressiva do placar com base no tempo de jogo
+            let hGoals = Math.floor((min / 90) * m.targetHomeScore);
+            let aGoals = Math.floor((min / 90) * m.targetAwayScore);
 
-          if (Math.random() < homeProb) {
-            m.homeScore++;
-            m.stats.homeShots++;
-            m.events.unshift(`⚽ ${currentBrasfootState.currentMatchMinute}' GOL DO ${m.home.name.toUpperCase()}!`);
-          } else if (Math.random() < 0.12) {
-            m.stats.homeShots++;
+            if (hGoals > m.homeScore) {
+              m.homeScore = hGoals;
+              m.events.unshift(`⚽ ${min}' GOL DO ${m.home.name.toUpperCase()}!`);
+            }
+            if (aGoals > m.awayScore) {
+              m.awayScore = aGoals;
+              m.events.unshift(`⚽ ${min}' GOL DO ${m.away.name.toUpperCase()}!`);
+            }
           }
-
-          if (Math.random() < awayProb) {
-            m.awayScore++;
-            m.stats.awayShots++;
-            m.events.unshift(`⚽ ${currentBrasfootState.currentMatchMinute}' GOL DO ${m.away.name.toUpperCase()}!`);
-          } else if (Math.random() < 0.12) {
-            m.stats.awayShots++;
-          }
-
-          m.stats.homePos = Math.min(75, Math.max(25, 50 + Math.floor(ovrDiff * 1.2) + Math.floor(Math.random() * 7 - 3)));
-          m.stats.awayPos = 100 - m.stats.homePos;
         });
 
-        if (currentBrasfootState.currentMatchMinute >= 90) {
-          clearInterval(simInterval);
-          finishCurrentMatches();
-        }
-
         broadcastState();
-      }, 1000); // 90 segundos exatos de duração
+
+        if (min >= 90) {
+          clearInterval(simInterval);
+          setTimeout(() => finishCurrentPhaseRound(), 2500);
+        }
+      }, 300);
     }
 
-    function finishCurrentMatches() {
+    function finishCurrentPhaseRound() {
+      if (!isHost) return;
+
       if (tournamentData.currentPhase === 'GROUPS') {
         currentBrasfootState.currentMatches.forEach(m => {
-          const g = tournamentData.groups[m.group];
+          const g = tournamentData.groups[m.groupKey];
           const hTeam = g.find(t => t.id === m.home.id);
           const aTeam = g.find(t => t.id === m.away.id);
 
-          hTeam.pj++; aTeam.pj++;
-          hTeam.gp += m.homeScore; hTeam.gc += m.awayScore;
-          aTeam.gp += m.awayScore; aTeam.gc += m.homeScore;
-          hTeam.sg = hTeam.gp - hTeam.gc;
-          aTeam.sg = aTeam.gp - aTeam.gc;
+          if (hTeam && aTeam) {
+            hTeam.pj++; aTeam.pj++;
+            hTeam.gp += m.homeScore; hTeam.gc += m.awayScore;
+            aTeam.gp += m.awayScore; aTeam.gc += m.homeScore;
+            hTeam.sg = hTeam.gp - hTeam.gc;
+            aTeam.sg = aTeam.gp - aTeam.gc;
 
-          if (m.homeScore > m.awayScore) { hTeam.pts += 3; hTeam.v++; aTeam.d++; }
-          else if (m.awayScore > m.homeScore) { aTeam.pts += 3; aTeam.v++; hTeam.d++; }
-          else { hTeam.pts += 1; aTeam.pts += 1; hTeam.e++; aTeam.e++; }
+            if (m.homeScore > m.awayScore) {
+              hTeam.pts += 3; hTeam.v++; aTeam.d++;
+            } else if (m.awayScore > m.homeScore) {
+              aTeam.pts += 3; aTeam.v++; hTeam.d++;
+            } else {
+              hTeam.pts += 1; hTeam.e++;
+              aTeam.pts += 1; aTeam.e++;
+            }
+          }
         });
 
+        // Reordenar tabelas dos grupos
         for (let gKey in tournamentData.groups) {
           tournamentData.groups[gKey].sort((a, b) => b.pts - a.pts || b.sg - a.sg || b.gp - a.gp);
         }
 
-        tournamentData.groupRound++;
-        if (tournamentData.groupRound <= 6) {
-          setTimeout(() => { setupCurrentMatches(); runBrasfootEngine(); }, 3000);
+        if (tournamentData.groupRound < 3) {
+          tournamentData.groupRound++;
+          setupCurrentMatches();
+          broadcastState();
+          runBrasfootEngine();
         } else {
-          setupRoundOf16();
+          buildKnockoutBracket();
+          tournamentData.currentPhase = 'ROUND_16';
+          setupCurrentMatches();
+          broadcastState();
+          runBrasfootEngine();
         }
       } else {
-        const phaseMatches = tournamentData.bracket[tournamentData.currentPhase];
-        phaseMatches.forEach((m, idx) => {
-          const liveM = currentBrasfootState.currentMatches[idx];
-          let winner = null;
-          
-          if (liveM.homeScore > liveM.awayScore) winner = liveM.home;
-          else if (liveM.awayScore > liveM.homeScore) winner = liveM.away;
-          else {
-            winner = Math.random() < 0.5 ? liveM.home : liveM.away;
-            liveM.events.unshift(`🚨 PENALTIS: ${winner.name.toUpperCase()} AVANÇA!`);
-          }
-
-          m.winner = winner;
-          m.homeScore = liveM.homeScore;
-          m.awayScore = liveM.awayScore;
+        // Atualizar resultados Mata-Mata
+        let currentList = tournamentData.bracket[tournamentData.currentPhase];
+        currentBrasfootState.currentMatches.forEach((m, idx) => {
+          currentList[idx].homeScore = m.homeScore;
+          currentList[idx].awayScore = m.awayScore;
+          currentList[idx].winner = m.homeScore > m.awayScore ? m.home : m.away;
+          currentList[idx].loser = m.homeScore > m.awayScore ? m.away : m.home;
         });
 
-        setTimeout(() => { advanceBracketPhase(); }, 3500);
+        if (tournamentData.currentPhase === 'ROUND_16') {
+          const w = currentList.map(m => m.winner);
+          tournamentData.bracket.QUARTERS = [];
+          for (let i = 0; i < 8; i += 2) {
+            tournamentData.bracket.QUARTERS.push({ home: w[i], away: w[i+1] });
+          }
+          tournamentData.currentPhase = 'QUARTERS';
+          setupCurrentMatches();
+          broadcastState();
+          runBrasfootEngine();
+        } else if (tournamentData.currentPhase === 'QUARTERS') {
+          const w = currentList.map(m => m.winner);
+          tournamentData.bracket.SEMIS = [];
+          for (let i = 0; i < 4; i += 2) {
+            tournamentData.bracket.SEMIS.push({ home: w[i], away: w[i+1] });
+          }
+          tournamentData.currentPhase = 'SEMIS';
+          setupCurrentMatches();
+          broadcastState();
+          runBrasfootEngine();
+        } else if (tournamentData.currentPhase === 'SEMIS') {
+          const w = currentList.map(m => m.winner);
+          const l = currentList.map(m => m.loser);
+          tournamentData.bracket.THIRD = [{ home: l[0], away: l[1] }];
+          tournamentData.bracket.FINAL = [{ home: w[0], away: w[1] }];
+          tournamentData.currentPhase = 'THIRD';
+          setupCurrentMatches();
+          broadcastState();
+          runBrasfootEngine();
+        } else if (tournamentData.currentPhase === 'THIRD') {
+          tournamentData.currentPhase = 'FINAL';
+          setupCurrentMatches();
+          broadcastState();
+          runBrasfootEngine();
+        } else if (tournamentData.currentPhase === 'FINAL') {
+          showPodium();
+        }
       }
     }
 
-    /* MONTAGEM DO MATA-MATA COMPLETO (OITAVAS, QUARTAS, SEMI E FINAL) */
-    function setupRoundOf16() {
-      tournamentData.currentPhase = 'ROUND_16';
+    function buildKnockoutBracket() {
       const g = tournamentData.groups;
-      
       tournamentData.bracket.ROUND_16 = [
-        { home: g['A'][0], away: g['B'][1], winner: null },
-        { home: g['C'][0], away: g['D'][1], winner: null },
-        { home: g['E'][0], away: g['F'][1], winner: null },
-        { home: g['G'][0], away: g['H'][1], winner: null },
-        { home: g['B'][0], away: g['A'][1], winner: null },
-        { home: g['D'][0], away: g['C'][1], winner: null },
-        { home: g['F'][0], away: g['E'][1], winner: null },
-        { home: g['H'][0], away: g['G'][1], winner: null }
+        { home: g['A'][0], away: g['B'][1] },
+        { home: g['C'][0], away: g['D'][1] },
+        { home: g['E'][0], away: g['F'][1] },
+        { home: g['G'][0], away: g['H'][1] },
+        { home: g['B'][0], away: g['A'][1] },
+        { home: g['D'][0], away: g['C'][1] },
+        { home: g['F'][0], away: g['E'][1] },
+        { home: g['H'][0], away: g['G'][1] }
       ];
-
-      setupCurrentMatches();
-      runBrasfootEngine();
-    }
-
-    function advanceBracketPhase() {
-      const current = tournamentData.currentPhase;
-
-      if (current === 'ROUND_16') {
-        const r16 = tournamentData.bracket.ROUND_16;
-        tournamentData.bracket.QUARTERS = [
-          { home: r16[0].winner, away: r16[1].winner, winner: null },
-          { home: r16[2].winner, away: r16[3].winner, winner: null },
-          { home: r16[4].winner, away: r16[5].winner, winner: null },
-          { home: r16[6].winner, away: r16[7].winner, winner: null }
-        ];
-        tournamentData.currentPhase = 'QUARTERS';
-        setupCurrentMatches();
-        runBrasfootEngine();
-      } 
-      else if (current === 'QUARTERS') {
-        const q = tournamentData.bracket.QUARTERS;
-        tournamentData.bracket.SEMIS = [
-          { home: q[0].winner, away: q[1].winner, winner: null },
-          { home: q[2].winner, away: q[3].winner, winner: null }
-        ];
-        tournamentData.currentPhase = 'SEMIS';
-        setupCurrentMatches();
-        runBrasfootEngine();
-      } 
-      else if (current === 'SEMIS') {
-        const s = tournamentData.bracket.SEMIS;
-        const loser1 = s[0].winner.id === s[0].home.id ? s[0].away : s[0].home;
-        const loser2 = s[1].winner.id === s[1].home.id ? s[1].away : s[1].home;
-
-        tournamentData.bracket.THIRD = [
-          { home: loser1, away: loser2, winner: null }
-        ];
-        tournamentData.bracket.FINAL = [
-          { home: s[0].winner, away: s[1].winner, winner: null }
-        ];
-        tournamentData.currentPhase = 'FINAL';
-        setupCurrentMatches();
-        runBrasfootEngine();
-      } 
-      else if (current === 'FINAL') {
-        showPodium();
-      }
     }
 
     function renderTournamentUI() {
       const phaseNames = {
-        GROUPS: `🏆 FASE DE GRUPOS - RODADA ${tournamentData.groupRound - 1}/6`,
+        GROUPS: `🏆 FASE DE GRUPOS - RODADA ${tournamentData.groupRound} DE 3`,
         ROUND_16: "🔥 OITAVAS DE FINAL",
         QUARTERS: "⚡ QUARTAS DE FINAL",
-        SEMIS: "🌟 SEMIFINAIS",
+        SEMIS: "🌟 SEMIFINAL",
+        THIRD: "🥉 DISPUTA DE 3º LUGAR",
         FINAL: "👑 GRANDE FINAL"
       };
 
-      document.getElementById('phase-indicator').innerText = phaseNames[tournamentData.currentPhase] || "🏆 CAMPEONATO";
-
-      const container = document.getElementById('matches-broadcast-container');
-      container.innerHTML = '';
-
-      currentBrasfootState.currentMatches.forEach(m => {
-        const matchCard = document.createElement('div');
-        matchCard.className = 'match-box active';
-        matchCard.innerHTML = `
-          <div class="match-time">⏱️ ${currentBrasfootState.currentMatchMinute}' MIN</div>
-          <div class="match-teams">
-            <div class="team-display home">
-              ${getTeamLogoHTML(m.home.name, m.home.badge)}
-              <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${m.home.name}</span>
-            </div>
-            <div class="match-score">${m.homeScore} - ${m.awayScore}</div>
-            <div class="team-display away">
-              <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${m.away.name}</span>
-              ${getTeamLogoHTML(m.away.name, m.away.badge)}
-            </div>
-          </div>
-          <div class="match-stats-panel">
-            <div class="stat-row">
-              <span class="stat-val">${m.stats.homeShots}</span>
-              <span class="stat-label">Finalizações</span>
-              <span class="stat-val">${m.stats.awayShots}</span>
-            </div>
-            <div class="stat-row">
-              <span class="stat-val">${m.stats.homePos}%</span>
-              <span class="stat-label">Posse de Bola</span>
-              <span class="stat-val">${m.stats.awayPos}%</span>
-            </div>
-          </div>
-          <div class="match-events">
-            ${m.events.map(e => `<div>${e}</div>`).join('')}
-          </div>
-        `;
-        container.appendChild(matchCard);
-      });
-
-      const sideTitle = document.getElementById('side-panel-title');
-      const groupsDiv = document.getElementById('groups-container');
-      const bracketDiv = document.getElementById('bracket-list-container');
+      document.getElementById('phase-indicator').innerText = phaseNames[tournamentData.currentPhase] || "COMPETIÇÃO";
+      
+      const bContainer = document.getElementById('matches-broadcast-container');
+      bContainer.innerHTML = '';
 
       if (tournamentData.currentPhase === 'GROUPS') {
-        sideTitle.innerText = "Tabelas de Grupos";
-        groupsDiv.style.display = 'grid';
-        bracketDiv.style.display = 'none';
-        groupsDiv.innerHTML = '';
+        document.getElementById('side-panel-title').innerText = "Classificação dos Grupos";
+        document.getElementById('groups-container').style.display = 'grid';
+        document.getElementById('bracket-list-container').style.display = 'none';
 
-        for (let gKey in tournamentData.groups) {
-          const gCard = document.createElement('div');
-          gCard.className = 'group-card';
-          let rows = tournamentData.groups[gKey].map((t, idx) => `
+        // Agrupar e renderizar jogos por Grupo (A a H)
+        const matchesByGroup = {};
+        currentBrasfootState.currentMatches.forEach(m => {
+          if (!matchesByGroup[m.groupKey]) matchesByGroup[m.groupKey] = [];
+          matchesByGroup[m.groupKey].push(m);
+        });
+
+        for (let gKey in matchesByGroup) {
+          const groupCard = document.createElement('div');
+          groupCard.className = 'group-broadcast-card';
+          
+          let cardHtml = `<div class="group-broadcast-title">GRUPO ${gKey} - RODADA ${tournamentData.groupRound}</div>`;
+
+          matchesByGroup[gKey].forEach(m => {
+            cardHtml += `
+              <div class="match-box active">
+                <div class="match-time">${currentBrasfootState.currentMatchMinute}'</div>
+                <div class="match-teams">
+                  <div class="team-display home">
+                    ${getTeamLogoHTML(m.home.name, m.home.badge)}
+                    <span>${m.home.name}</span>
+                  </div>
+                  <div class="match-score">${m.homeScore} x ${m.awayScore}</div>
+                  <div class="team-display away">
+                    <span>${m.away.name}</span>
+                    ${getTeamLogoHTML(m.away.name, m.away.badge)}
+                  </div>
+                </div>
+                <div class="match-events">${m.events.length > 0 ? m.events.map(e => `<div>${e}</div>`).join('') : '<div style="color:var(--text-muted); text-align:center;">Em andamento...</div>'}</div>
+              </div>
+            `;
+          });
+
+          groupCard.innerHTML = cardHtml;
+          bContainer.appendChild(groupCard);
+        }
+
+        renderGroupTables();
+      } else {
+        document.getElementById('side-panel-title').innerText = "Chave do Mata-Mata";
+        document.getElementById('groups-container').style.display = 'none';
+        document.getElementById('bracket-list-container').style.display = 'flex';
+
+        currentBrasfootState.currentMatches.forEach(m => {
+          const matchBox = document.createElement('div');
+          matchBox.className = 'match-box active';
+          matchBox.style.maxWidth = '600px';
+          matchBox.innerHTML = `
+            <div class="match-time">${currentBrasfootState.currentMatchMinute}'</div>
+            <div class="match-teams">
+              <div class="team-display home">
+                ${getTeamLogoHTML(m.home.name, m.home.badge)}
+                <span>${m.home.name}</span>
+              </div>
+              <div class="match-score">${m.homeScore} x ${m.awayScore}</div>
+              <div class="team-display away">
+                <span>${m.away.name}</span>
+                ${getTeamLogoHTML(m.away.name, m.away.badge)}
+              </div>
+            </div>
+            <div class="match-events">${m.events.length > 0 ? m.events.map(e => `<div>${e}</div>`).join('') : '<div style="color:var(--text-muted); text-align:center;">Em andamento...</div>'}</div>
+          `;
+          bContainer.appendChild(matchBox);
+        });
+
+        renderBracketTree();
+      }
+    }
+
+    function renderGroupTables() {
+      const gContainer = document.getElementById('groups-container');
+      gContainer.innerHTML = '';
+
+      for (let gKey in tournamentData.groups) {
+        const group = tournamentData.groups[gKey];
+        const card = document.createElement('div');
+        card.className = 'group-card';
+
+        let html = `
+          <div class="group-card-title">GRUPO ${gKey}</div>
+          <table>
+            <thead>
+              <tr>
+                <th style="text-align:left;">Clube</th>
+                <th>P</th>
+                <th>J</th>
+                <th>V</th>
+                <th>SG</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+
+        group.forEach(t => {
+          html += `
             <tr>
-              <td style="font-weight:bold; color:${idx < 2 ? '#10b981' : 'inherit'};">${idx + 1}</td>
-              <td class="team-cell">${getTeamLogoHTML(t.name, t.badge)} ${t.name}</td>
-              <td><b>${t.pts}</b></td>
+              <td class="team-cell">
+                ${getTeamLogoHTML(t.name, t.badge)}
+                <span>${t.name}</span>
+              </td>
+              <td><strong>${t.pts}</strong></td>
               <td>${t.pj}</td>
+              <td>${t.v}</td>
               <td>${t.sg}</td>
             </tr>
-          `).join('');
-
-          gCard.innerHTML = `
-            <div class="group-card-title">Grupo ${gKey}</div>
-            <table>
-              <thead>
-                <tr><th>#</th><th style="text-align:left;">Time</th><th>P</th><th>J</th><th>SG</th></tr>
-              </thead>
-              <tbody>${rows}</tbody>
-            </table>
           `;
-          groupsDiv.appendChild(gCard);
-        }
-      } else {
-        sideTitle.innerText = "Chave do Mata-Mata";
-        groupsDiv.style.display = 'none';
-        bracketDiv.style.display = 'flex';
-        bracketDiv.innerHTML = '';
+        });
 
-        const phases = [
-          { key: 'ROUND_16', label: 'Oitavas de Final' },
-          { key: 'QUARTERS', label: 'Quartas de Final' },
-          { key: 'SEMIS', label: 'Semifinais' },
-          { key: 'FINAL', label: 'Grande Final' }
-        ];
+        html += `</tbody></table>`;
+        card.innerHTML = html;
+        gContainer.appendChild(card);
+      }
+    }
 
-        phases.forEach(p => {
-          const matches = tournamentData.bracket[p.key];
-          if (matches && matches.length > 0) {
-            const phaseHeader = document.createElement('div');
-            phaseHeader.className = 'bracket-phase-title';
-            phaseHeader.innerText = p.label;
-            bracketDiv.appendChild(phaseHeader);
+    function renderBracketTree() {
+      const bList = document.getElementById('bracket-list-container');
+      bList.innerHTML = '';
 
-            matches.forEach(m => {
-              const item = document.createElement('div');
-              item.className = 'bracket-match-item';
-              const homeClass = (m.winner && m.winner.id === m.home.id) ? 'bracket-team winner' : 'bracket-team';
-              const awayClass = (m.winner && m.winner.id === m.away.id) ? 'bracket-team winner' : 'bracket-team';
+      const labels = {
+        ROUND_16: "Oitavas de Final",
+        QUARTERS: "Quartas de Final",
+        SEMIS: "Semifinais",
+        THIRD: "3º Lugar",
+        FINAL: "Grande Final"
+      };
 
-              item.innerHTML = `
-                <div class="${homeClass}">
-                  <span style="display:flex; align-items:center; gap:4px;">${getTeamLogoHTML(m.home.name, m.home.badge)} ${m.home.name}</span>
-                  <span>${m.homeScore !== undefined ? m.homeScore : ''} ${m.winner && m.winner.id === m.home.id ? '✔ (Classificado)' : ''}</span>
-                </div>
-                <div class="${awayClass}">
-                  <span style="display:flex; align-items:center; gap:4px;">${getTeamLogoHTML(m.away.name, m.away.badge)} ${m.away.name}</span>
-                  <span>${m.awayScore !== undefined ? m.awayScore : ''} ${m.winner && m.winner.id === m.away.id ? '✔ (Classificado)' : ''}</span>
-                </div>
-              `;
-              bracketDiv.appendChild(item);
-            });
-          }
+      for (let phaseKey in tournamentData.bracket) {
+        const matches = tournamentData.bracket[phaseKey];
+        if (!matches || matches.length === 0) continue;
+
+        const title = document.createElement('div');
+        title.className = 'bracket-phase-title';
+        title.innerText = labels[phaseKey] || phaseKey;
+        bList.appendChild(title);
+
+        matches.forEach(m => {
+          const item = document.createElement('div');
+          item.className = 'bracket-match-item';
+
+          const homeWinner = m.winner && m.winner.id === m.home.id;
+          const awayWinner = m.winner && m.winner.id === m.away.id;
+
+          item.innerHTML = `
+            <div class="bracket-team ${homeWinner ? 'winner' : ''}">
+              <div style="display:flex; align-items:center; gap:6px;">
+                ${getTeamLogoHTML(m.home.name, m.home.badge)}
+                <span>${m.home.name}</span>
+              </div>
+              <span>${m.homeScore !== undefined ? m.homeScore : '-'}</span>
+            </div>
+            <div class="bracket-team ${awayWinner ? 'winner' : ''}">
+              <div style="display:flex; align-items:center; gap:6px;">
+                ${getTeamLogoHTML(m.away.name, m.away.badge)}
+                <span>${m.away.name}</span>
+              </div>
+              <span>${m.awayScore !== undefined ? m.awayScore : '-'}</span>
+            </div>
+          `;
+          bList.appendChild(item);
         });
       }
     }
@@ -2194,20 +2304,17 @@
       document.getElementById('league-screen').style.display = 'none';
       document.getElementById('podium-screen').style.display = 'flex';
 
-      const finalMatch = tournamentData.bracket.FINAL[0];
-      const champ = finalMatch.winner;
-      const runnerUp = finalMatch.winner.id === finalMatch.home.id ? finalMatch.away : finalMatch.home;
-      const thirdMatch = tournamentData.bracket.THIRD ? tournamentData.bracket.THIRD[0] : null;
-      const thirdPlace = thirdMatch ? thirdMatch.winner : runnerUp;
+      const champion = tournamentData.bracket.FINAL[0].winner;
+      const runnerUp = tournamentData.bracket.FINAL[0].loser;
+      const thirdPlace = tournamentData.bracket.THIRD[0].winner;
 
-      document.getElementById('podium-name-1').innerText = champ.name;
-      document.getElementById('podium-badge-1').innerHTML = generateBadgeSVG(champ.badge);
+      document.getElementById('podium-name-1').innerText = champion ? champion.name : '--';
+      document.getElementById('podium-name-2').innerText = runnerUp ? runnerUp.name : '--';
+      document.getElementById('podium-name-3').innerText = thirdPlace ? thirdPlace.name : '--';
 
-      document.getElementById('podium-name-2').innerText = runnerUp.name;
-      document.getElementById('podium-badge-2').innerHTML = generateBadgeSVG(runnerUp.badge);
-
-      document.getElementById('podium-name-3').innerText = thirdPlace.name;
-      document.getElementById('podium-badge-3').innerHTML = generateBadgeSVG(thirdPlace.badge);
+      document.getElementById('podium-badge-1').innerHTML = champion ? getTeamLogoHTML(champion.name, champion.badge) : '';
+      document.getElementById('podium-badge-2').innerHTML = runnerUp ? getTeamLogoHTML(runnerUp.name, runnerUp.badge) : '';
+      document.getElementById('podium-badge-3').innerHTML = thirdPlace ? getTeamLogoHTML(thirdPlace.name, thirdPlace.badge) : '';
 
       setTimeout(() => {
         document.getElementById('step-1').classList.add('show');
@@ -2217,17 +2324,18 @@
 
       const btnNext = document.getElementById('btn-next-phase');
       if (currentSeason === 1) {
-        btnNext.innerText = "Iniciar 2ª Temporada (Reforços)";
-        btnNext.onclick = () => { sendActionToHost('NEXT_SEASON'); };
+        btnNext.innerText = "Avançar para a 2ª Temporada (Leilão de Reforços)";
       } else {
-        btnNext.innerText = "Encerrar Torneio e Voltar ao Menu";
-        btnNext.onclick = () => { location.reload(); };
+        btnNext.innerText = "Voltar ao Menu Principal";
       }
+
+      broadcastState();
     }
 
     function handlePodiumNextPhase() {
+      if (!isHost) return;
       if (currentSeason === 1) {
-        sendActionToHost('NEXT_SEASON');
+        startSeason2Auction();
       } else {
         location.reload();
       }
