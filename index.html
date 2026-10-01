@@ -1132,6 +1132,12 @@
 
     let peer = null, connections = [], hostConn = null, isHost = true, myPlayerId = 0;
 
+    // Troca pendente da 2ª temporada (sincronizada para todos) e controle do modal local
+    let pendingSwap = null;      // { teamId, card }
+    let swapModalKey = null;     // evita reabrir o modal a cada sincronização
+    let matchTimer = null;       // timer da simulação das partidas (host)
+    const MATCH_DURATION_MS = 60000; // TODAS as partidas duram 60s reais
+
     function switchSetupTab(tab) {
       const tabHost = document.getElementById('tab-host');
       const tabJoin = document.getElementById('tab-join');
@@ -1369,8 +1375,17 @@
       if (action === 'ROLL_DICE') rollDiceLogic();
       else if (action === 'BID') handleBidLogic(payload.amount, senderId);
       else if (action === 'PASS') handlePassLogic(senderId);
-      else if (action === 'NEXT_SEASON') startSeason2Auction();
-      else if (action === 'CONFIRM_SWAP') executeSwapInTeam(payload.teamId, payload.targetSlot, payload.newCard);
+      else if (action === 'NEXT_SEASON') { if (currentSeason === 1) startSeason2Auction(); }
+      else if (action === 'CONFIRM_SWAP') {
+        // Só o jogador que ganhou o reforço pode confirmar a troca
+        if (pendingSwap && senderId === pendingSwap.teamId &&
+            teams[senderId] && teams[senderId].lineup[payload.targetSlot]) {
+          const swapTeamId = pendingSwap.teamId;
+          const swapCard = pendingSwap.card;
+          pendingSwap = null;
+          executeSwapInTeam(swapTeamId, payload.targetSlot, swapCard);
+        }
+      }
       broadcastState();
     }
 
@@ -1383,6 +1398,7 @@
         usedPlayerNames: Array.from(usedPlayerNames),
         currentPlayerCard, turnOrder, activeTurnIndex, highestBid,
         highestBidderId, activeBidders, playersActedThisCard: Array.from(playersActedThisCard), isAuctionStarted, isDiceRolled, isTransitioning, currentSeason, season2DraftCount, tournamentStage, tournamentData,
+        pendingSwap: pendingSwap,
         diceResultText: document.getElementById('dice-result').innerText,
         setupHidden: document.getElementById('setup-screen').style.display === 'none',
         menuHidden: document.getElementById('main-menu-screen').style.display === 'none',
@@ -1417,6 +1433,7 @@
       currentSeason = state.currentSeason || 1;
       season2DraftCount = state.season2DraftCount || 0;
       tournamentStage = state.tournamentStage || 'COPA';
+      pendingSwap = state.pendingSwap || null;
       if (state.tournamentData) tournamentData = state.tournamentData;
 
       for (let i = 0; i < playerCount; i++) {
@@ -1453,6 +1470,23 @@
 
       renderTeamPanels();
       updateTurnUI();
+      if (state.podiumScreenVisible) renderPodium();
+      syncSwapModal();
+    }
+
+    // Abre/fecha o modal de troca conforme a troca pendente (vale para HOST e CLIENTES)
+    function syncSwapModal() {
+      const overlay = document.getElementById('swap-modal-overlay');
+      if (pendingSwap && pendingSwap.teamId === myPlayerId) {
+        const key = `${pendingSwap.teamId}:${pendingSwap.card.name}`;
+        if (swapModalKey !== key) {
+          swapModalKey = key;
+          openSwapModal(pendingSwap.teamId, pendingSwap.card);
+        }
+      } else {
+        overlay.style.display = 'none';
+        if (!pendingSwap) swapModalKey = null;
+      }
     }
 
     window.onload = initPeer;
@@ -1490,6 +1524,7 @@
     function startSeason2Auction() {
       currentSeason = 2;
       season2DraftCount = 0;
+      pendingSwap = null;
       tournamentStage = 'LIGA';
       
       teams.forEach(t => {
@@ -1545,6 +1580,7 @@
         ? currentPlayerCard.photo 
         : "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50%' y='55%' font-size='50' text-anchor='middle' dominant-baseline='central' fill='%23fff'>👤</text></svg>";
 
+      pendingSwap = null;
       highestBid = -1; 
       highestBidderId = null; 
       isAuctionStarted = false; 
@@ -1617,7 +1653,13 @@
       if (activeBidders.length === 1 && isAuctionStarted) {
         toggleBidButtons(false);
         const winnerId = activeBidders[0];
-        document.getElementById('turn-indicator').innerText = `Vendido para ${teams[winnerId].name}!`;
+        if (pendingSwap) {
+          document.getElementById('turn-indicator').innerText = pendingSwap.teamId === myPlayerId
+            ? `Vendido para você! Escolha quem sai.`
+            : `Vendido para ${teams[winnerId].name}! Aguardando a troca...`;
+        } else {
+          document.getElementById('turn-indicator').innerText = `Vendido para ${teams[winnerId].name}!`;
+        }
         if (isHost && !isTransitioning) {
           isTransitioning = true;
           finishAuction(winnerId);
@@ -1737,11 +1779,10 @@
 
     /* CORREÇÃO DO BUG DE TROCA DE JOGADORES NA TEMPORADA 2 */
     function promptSwapPlayerSelection(winnerId, card) {
-      if (winnerId === myPlayerId) {
-        openSwapModal(winnerId, card);
-      } else {
-        renderTeamPanels();
-      }
+      // Executado no host: registra a troca pendente; o broadcast abre o modal
+      // no dispositivo do jogador que ganhou (seja o host ou um convidado).
+      pendingSwap = { teamId: winnerId, card: card };
+      renderTeamPanels();
     }
 
     function openSwapModal(teamId, card) {
@@ -1771,7 +1812,7 @@
           `;
           item.onclick = () => {
             overlay.style.display = 'none';
-            sendActionToHost('CONFIRM_SWAP', { teamId: teamId, targetSlot: slotKey, newCard: card });
+            sendActionToHost('CONFIRM_SWAP', { targetSlot: slotKey });
           };
           listContainer.appendChild(item);
         }
@@ -1940,37 +1981,41 @@
       };
     }
 
-    /* AJUSTE DOS TEMPOS DOS JOGOS (5s NA FASE DE GRUPOS E 10s NO MATA-MATA) */
+    /* TODAS AS PARTIDAS DURAM 60 SEGUNDOS REAIS (90 minutos simulados) */
     function runCurrentMatchesLoop() {
       if (!isHost) return;
+      if (matchTimer) { clearInterval(matchTimer); matchTimer = null; }
 
-      const isGroupPhase = (tournamentData.currentPhase === 'GROUPS');
-      // Fase de grupos: 5 segundos no total | Mata-Mata: 10 segundos no total
-      const matchDurationMs = isGroupPhase ? 5000 : 10000;
-      const totalSimMinutes = 90;
-      const intervalDelayMs = matchDurationMs / totalSimMinutes;
+      const startTime = Date.now();
 
-      let minuteTimer = setInterval(() => {
+      matchTimer = setInterval(() => {
         if (!currentBrasfootState.active) {
-          clearInterval(minuteTimer);
+          clearInterval(matchTimer);
+          matchTimer = null;
           return;
         }
 
-        currentBrasfootState.currentMatchMinute++;
+        // Minuto calculado pelo relógio real, então sempre fecha em 60s,
+        // mesmo se a aba do navegador ficar em segundo plano.
+        const elapsed = Date.now() - startTime;
+        const targetMinute = Math.min(90, Math.floor((elapsed / MATCH_DURATION_MS) * 90));
+        if (targetMinute <= currentBrasfootState.currentMatchMinute) return;
 
-        currentBrasfootState.currentMatches.forEach(m => {
-          simulateMatchMinute(m, currentBrasfootState.currentMatchMinute);
-        });
+        while (currentBrasfootState.currentMatchMinute < targetMinute) {
+          currentBrasfootState.currentMatchMinute++;
+          currentBrasfootState.currentMatches.forEach(m => {
+            simulateMatchMinute(m, currentBrasfootState.currentMatchMinute);
+          });
+        }
 
         broadcastState();
 
         if (currentBrasfootState.currentMatchMinute >= 90) {
-          clearInterval(minuteTimer);
-          setTimeout(() => {
-            finishCurrentMatchesBatch();
-          }, 1500);
+          clearInterval(matchTimer);
+          matchTimer = null;
+          setTimeout(() => { finishCurrentMatchesBatch(); }, 1500);
         }
-      }, intervalDelayMs);
+      }, 250);
     }
 
     function simulateMatchMinute(match, min) {
@@ -2104,22 +2149,26 @@
 
     function showPodiumScreen() {
       currentBrasfootState.active = false;
-      const finalMatch = tournamentData.bracket.FINAL[0];
-      const thirdMatch = tournamentData.bracket.THIRD[0];
+      document.getElementById('league-screen').style.display = 'none';
+      document.getElementById('podium-screen').style.display = 'flex';
+      renderPodium();
+      broadcastState();
+    }
+
+    // Desenha o pódio a partir dos dados sincronizados (host e convidados)
+    function renderPodium() {
+      const finalMatch = tournamentData.bracket && tournamentData.bracket.FINAL && tournamentData.bracket.FINAL[0];
+      const thirdMatch = tournamentData.bracket && tournamentData.bracket.THIRD && tournamentData.bracket.THIRD[0];
+      if (!finalMatch || !thirdMatch) return;
 
       const winner1 = finalMatch.homeScore > finalMatch.awayScore ? finalMatch.home : finalMatch.away;
       const winner2 = finalMatch.homeScore > finalMatch.awayScore ? finalMatch.away : finalMatch.home;
       const winner3 = thirdMatch.homeScore > thirdMatch.awayScore ? thirdMatch.home : thirdMatch.away;
 
-      document.getElementById('league-screen').style.display = 'none';
-      document.getElementById('podium-screen').style.display = 'flex';
-
       document.getElementById('podium-name-1').innerText = winner1.name;
       document.getElementById('podium-badge-1').innerHTML = getTeamLogoHTML(winner1.name, winner1.badge);
-
       document.getElementById('podium-name-2').innerText = winner2.name;
       document.getElementById('podium-badge-2').innerHTML = getTeamLogoHTML(winner2.name, winner2.badge);
-
       document.getElementById('podium-name-3').innerText = winner3.name;
       document.getElementById('podium-badge-3').innerHTML = getTeamLogoHTML(winner3.name, winner3.badge);
 
@@ -2130,15 +2179,10 @@
       }, 300);
 
       const btnNext = document.getElementById('btn-next-phase');
-      if (currentSeason === 1) {
-        btnNext.innerText = "Avançar para a 2ª Temporada (Reforços)";
-        btnNext.onclick = () => sendActionToHost('NEXT_SEASON');
-      } else {
-        btnNext.innerText = "Voltar ao Menu Principal";
-        btnNext.onclick = () => backToMainMenu();
-      }
-
-      broadcastState();
+      btnNext.onclick = handlePodiumNextPhase;
+      btnNext.innerText = currentSeason === 1
+        ? "Avançar para a 2ª Temporada (Reforços)"
+        : "Voltar ao Menu Principal";
     }
 
     function handlePodiumNextPhase() {
