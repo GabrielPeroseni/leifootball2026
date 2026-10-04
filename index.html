@@ -918,7 +918,7 @@
   <!-- TELA DE CAMPEONATO -->
   <div id="league-screen" class="screen" style="display: none;">
     <div class="brasfoot-header">
-      <h2 style="color:var(--text-main); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px;" id="phase-indicator">🏆 COPA DOS 32 - FASE DE GRUPOS</h2>
+      <h2 style="color:var(--text-main); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px;" id="phase-indicator">🏆 ESTADUALZÃO</h2>
       <p id="round-indicator" style="color:var(--text-muted); font-size:0.85rem; margin-top:2px;">Simulação de Partidas</p>
     </div>
 
@@ -1014,16 +1014,17 @@
       "internacional": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Escudo_do_Sport_Club_Internacional.svg"
     };
 
-    const BOT_TEAMS_32 = [
-      "Real Madrid", "Manchester City", "Bayern de Munique", "PSG", "Barcelona", "Liverpool", "Arsenal", "Inter de Milão",
-      "Juventus", "Bayer Leverkusen", "Borussia Dortmund", "Atlético de Madrid", "Chelsea", "Milan", "Manchester United", "Tottenham",
-      "Napoli", "Benfica", "Porto", "Sporting", "Ajax", "PSV", "Roma", "Corinthians",
-      "Flamengo", "Palmeiras", "River Plate", "Boca Juniors", "São Paulo", "Santos", "Grêmio", "Internacional"
+    const ESTADUALZAO_LIST = [
+      "RJ - Flamengo", "SP - Corinthians", "SP - Palmeiras", "MG - Atlético Mineiro", "SP - São Paulo", "RJ - Fluminense", "RJ - Botafogo", "PR - Athletico Paranaense", "BA - Bahia", "RJ - Vasco da Gama", "MG - Cruzeiro", "RS - Grêmio", "CE - Fortaleza", "RS - Internacional", "SP - Red Bull Bragantino", "SP - Santos", "RS - Juventude", "GO - Atlético Goianiense", "MG - América Mineiro", "BA - Vitória", "CE - Ceará", "MT - Cuiabá", "GO - Goiás", "PR - Coritiba", "PE - Sport", "AL - CRB", "SC - Criciúma", "SP - Mirassol", "GO - Vila Nova", "PR - Operário-PR", "SC - Avaí", "SP - Novorizontino", "SC - Chapecoense", "SP - Botafogo-SP", "PA - Paysandu", "SC - Brusque", "PA - Remo", "SP - Ponte Preta", "AL - CSA", "AM - Amazonas", "PB - Botafogo-PB", "RS - Brasil de Pelotas", "RN - América-RN", "AM - Manaus", "PR - Londrina", "SP - Ferroviária", "SC - Figueirense", "SP - Guarani", "PA - Águia de Marabá", "PI - River-PI", "RO - Porto Velho", "SP - Santo André", "SP - São Bernardo", "SP - Inter de Limeira", "PB - Treze", "PB - Campinense", "AL - ASA", "SE - Confiança", "PI - Altos", "RN - ABC", "MA - Sampaio Corrêa", "MA - Moto Club", "DF - Brasiliense", "DF - Gama", "MS - Operário-MS", "ES - Rio Branco-ES", "ES - Desportiva Ferroviária", "MT - Mixto", "MT - Luverdense", "SE - Itabaiana", "SE - Sergipe", "TO - Tocantinópolis", "TO - Palmas", "RO - Ji-Paraná", "RO - Real Ariquemes", "AC - Rio Branco", "AC - Humaitá", "AP - Trem", "AP - Macapá", "RR - Atlético Roraima", "RR - Baré", "PI - Parnahyba", "MA - Maranhão", "PA - Tuna Luso", "CE - Ferroviário", "PE - Santa Cruz", "PE - Náutico", "RN - Potiguar de Mossoró", "PB - Nacional de Patos", "BA - Juazeirense", "BA - Atlético de Alagoinhas", "BA - Jacuipense", "AL - Murici", "AL - Coruripe", "SE - Lagarto", "SE - Falcon", "PE - Salgueiro", "PE - Retrô", "PB - Sousa", "CE - Iguatu", "CE - Maracanã", "RN - Globo", "RN - Santa Cruz de Natal", "MA - Cordino", "MA - Imperatriz", "PA - Castanhal", "PA - Bragantino-PA", "AM - Nacional-AM", "AM - Princesa do Solimões", "AC - Independência", "AC - Atlético Acreano", "RR - GAS", "AP - Santos-AP", "AP - Independente-AP", "RO - Genus", "RO - Guajará", "MT - Operário Várzea-Grandense", "MT - Dom Bosco", "MS - Comercial-MS", "MS - Costa Rica", "GO - Aparecidense", "GO - Anápolis", "DF - Capital-DF", "ES - Vitória-ES", "ES - Serra"
     ];
+
+    const SERIE_C_TEAMS = ["Amazonas", "Anápolis", "Barra-SC", "Botafogo-PB", "Brusque", "Caxias", "Confiança", "Ferroviária", "Figueirense", "Floresta", "Guarani", "Inter de Limeira", "Itabaiana", "Ituano", "Maranhão", "Maringá", "Paysandu", "Santa Cruz", "Volta Redonda", "Ypiranga-RS"];
+    const SERIE_B_TEAMS = ["Athletic", "Atlético-GO", "América-MG", "Avaí", "Botafogo-SP", "Ceará", "CRB", "Criciúma", "Cuiabá", "Fortaleza", "Goiás", "Juventude", "Londrina", "Náutico", "Novorizontino", "Operário-PR", "Ponte Preta", "São Bernardo", "Sport", "Vila Nova"];
+    const SERIE_A_TEAMS = ["Athletico-PR", "Atlético-MG", "Bahia", "Botafogo", "Chapecoense", "Corinthians", "Coritiba", "Cruzeiro", "Flamengo", "Fluminense", "Grêmio", "Internacional", "Mirassol", "Palmeiras", "Red Bull Bragantino", "Remo", "Santos", "São Paulo", "Vasco", "Vitória"];
 
     function getTeamLogoHTML(teamName, badgeObj) {
       if (!teamName) return `<span class="badge-inline-svg">${generateBadgeSVG(badgeObj)}</span>`;
-      const cleanName = teamName.toLowerCase().trim();
+      const cleanName = teamName.toLowerCase().replace(/^[a-z]{2}\s*-\s*/, '').trim();
       if (TEAM_LOGOS[cleanName]) {
         return `<img src="${TEAM_LOGOS[cleanName]}" class="team-badge-icon" alt="${teamName}">`;
       }
@@ -1199,17 +1200,16 @@
     let isTransitioning = false;
     let currentSeason = 1;
     let season2DraftCount = 0;
-    let tournamentStage = 'COPA';
-    let tournamentData = { groups: {}, bracket: {}, currentPhase: 'GROUPS', groupRound: 1, currentMatchIndex: 0 };
+    let tournamentStage = 'ESTADUALZAO';
+    let tournamentData = { groups: {}, bracket: {}, currentPhase: 'ESTADUALZAO', groupRound: 1, currentMatchIndex: 0 };
     let currentBrasfootState = { active: false, currentMatchMinute: 0, currentMatches: [], history: [] };
 
     let peer = null, connections = [], hostConn = null, isHost = true, myPlayerId = 0;
 
-    // Troca pendente da 2ª temporada (sincronizada para todos) e controle do modal local
-    let pendingSwap = null;      // { teamId, card }
-    let swapModalKey = null;     // evita reabrir o modal a cada sincronização
-    let matchTimer = null;       // timer da simulação das partidas (host)
-    const MATCH_DURATION_MS = 60000; // TODAS as partidas duram 60s reais
+    let pendingSwap = null;      
+    let swapModalKey = null;     
+    let matchTimer = null;       
+    const MATCH_DURATION_MS = 60000; 
 
     function switchSetupTab(tab) {
       const tabHost = document.getElementById('tab-host');
@@ -1450,7 +1450,6 @@
       else if (action === 'PASS') handlePassLogic(senderId);
       else if (action === 'NEXT_SEASON') { if (currentSeason === 1) startSeason2Auction(); }
       else if (action === 'CONFIRM_SWAP') {
-        // Só o jogador que ganhou o reforço pode confirmar a troca
         if (pendingSwap && senderId === pendingSwap.teamId &&
             teams[senderId] && teams[senderId].lineup[payload.targetSlot]) {
           const swapTeamId = pendingSwap.teamId;
@@ -1505,7 +1504,7 @@
       isTransitioning = state.isTransitioning;
       currentSeason = state.currentSeason || 1;
       season2DraftCount = state.season2DraftCount || 0;
-      tournamentStage = state.tournamentStage || 'COPA';
+      tournamentStage = state.tournamentStage || 'ESTADUALZAO';
       pendingSwap = state.pendingSwap || null;
       if (state.tournamentData) tournamentData = state.tournamentData;
 
@@ -1547,7 +1546,6 @@
       syncSwapModal();
     }
 
-    // Abre/fecha o modal de troca conforme a troca pendente (vale para HOST e CLIENTES)
     function syncSwapModal() {
       const overlay = document.getElementById('swap-modal-overlay');
       if (pendingSwap && pendingSwap.teamId === myPlayerId) {
@@ -1570,7 +1568,7 @@
       myPlayerId = 0;
       currentSeason = 1;
       season2DraftCount = 0;
-      tournamentStage = 'COPA';
+      tournamentStage = 'ESTADUALZAO';
       usedPlayerNames.clear();
       updateBadgePreviews();
 
@@ -1624,7 +1622,7 @@
           if (!isTeamFull(i)) { allDone = false; break; }
         }
         if (allDone) {
-          startTournamentSim();
+          startEstadualzaoSim();
           return;
         }
       } else if (currentSeason === 2) {
@@ -1632,7 +1630,7 @@
           if (teams[i].season2SwapsLeft > 0) { allDone = false; break; }
         }
         if (allDone) {
-          startTournamentSim();
+          startEstadualzaoSim();
           return;
         }
       }
@@ -1850,10 +1848,7 @@
       }
     }
 
-    /* CORREÇÃO DO BUG DE TROCA DE JOGADORES NA TEMPORADA 2 */
     function promptSwapPlayerSelection(winnerId, card) {
-      // Executado no host: registra a troca pendente; o broadcast abre o modal
-      // no dispositivo do jogador que ganhou (seja o host ou um convidado).
       pendingSwap = { teamId: winnerId, card: card };
       renderTeamPanels();
     }
@@ -1951,7 +1946,6 @@
       }
     }
 
-    /* SISTEMA DE SIMULAÇÃO DA COPA DOS 32 E TEMPO DAS PARTIDAS */
     function calculateTeamOvr(team) {
       let total = 0, count = 0;
       for (let k in team.lineup) {
@@ -1960,7 +1954,8 @@
       return count > 0 ? Math.round(total / count) : 80;
     }
 
-    function startTournamentSim() {
+    /* SISTEMA DO ESTADUALZÃO (128 CLUBES) */
+    function startEstadualzaoSim() {
       document.getElementById('game-arena').style.display = 'none';
       document.getElementById('league-screen').style.display = 'flex';
 
@@ -1977,84 +1972,56 @@
         });
       }
 
-      let botIndex = 0;
-      while (allParticipants.length < 32) {
-        const botName = BOT_TEAMS_32[botIndex % BOT_TEAMS_32.length];
+      let listIndex = 0;
+      while (allParticipants.length < 128) {
+        const teamName = ESTADUALZAO_LIST[listIndex % ESTADUALZAO_LIST.length];
         allParticipants.push({
-          id: `bot_${botIndex}`,
-          name: botName,
+          id: `est_${listIndex}`,
+          name: teamName,
           badge: { c1: "#475569", c2: "#ffffff", shape: "shield", pattern: "solid", animal: "⚽" },
           isHuman: false,
-          ovr: Math.floor(Math.random() * 8) + 82
+          ovr: Math.floor(Math.random() * 10) + 75
         });
-        botIndex++;
+        listIndex++;
       }
 
       allParticipants = allParticipants.sort(() => Math.random() - 0.5);
 
-      const groups = {};
-      const groupNames = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-      groupNames.forEach((g, idx) => {
-        groups[g] = allParticipants.slice(idx * 4, idx * 4 + 4).map(t => ({
-          ...t, pts: 0, pj: 0, v: 0, e: 0, d: 0, gp: 0, gc: 0, sg: 0
-        }));
-      });
-
+      tournamentStage = 'ESTADUALZAO';
       tournamentData = {
-        groups: groups,
-        bracket: { OITAVAS: [], QUARTAS: [], SEMI: [], FINAL: [], THIRD: [] },
-        currentPhase: 'GROUPS',
-        groupRound: 1,
-        currentMatchIndex: 0
+        currentRound: '128avos',
+        matches: createKnockoutPairings(allParticipants)
       };
 
-      setupGroupRoundMatches();
+      setupKnockoutRoundMatches();
       broadcastState();
       runCurrentMatchesLoop();
     }
 
-    function setupGroupRoundMatches() {
-      const gNames = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-      let roundMatches = [];
+    function createKnockoutPairings(teamList) {
+      let matches = [];
+      for (let i = 0; i < teamList.length; i += 2) {
+        matches.push({
+          home: teamList[i],
+          away: teamList[i+1],
+          homeScore: 0,
+          awayScore: 0,
+          events: [],
+          stats: { homeShots: 0, awayShots: 0, homePossession: 50, awayPossession: 50 }
+        });
+      }
+      return matches;
+    }
 
-      gNames.forEach(gKey => {
-        const teamList = tournamentData.groups[gKey];
-        if (tournamentData.groupRound === 1) {
-          roundMatches.push(createMatchObj(teamList[0], teamList[1], gKey));
-          roundMatches.push(createMatchObj(teamList[2], teamList[3], gKey));
-        } else if (tournamentData.groupRound === 2) {
-          roundMatches.push(createMatchObj(teamList[0], teamList[2], gKey));
-          roundMatches.push(createMatchObj(teamList[1], teamList[3], gKey));
-        } else if (tournamentData.groupRound === 3) {
-          roundMatches.push(createMatchObj(teamList[0], teamList[3], gKey));
-          roundMatches.push(createMatchObj(teamList[1], teamList[2], gKey));
-        }
-      });
-
+    function setupKnockoutRoundMatches() {
       currentBrasfootState = {
         active: true,
         currentMatchMinute: 0,
-        currentMatches: roundMatches,
+        currentMatches: tournamentData.matches,
         history: currentBrasfootState.history || []
       };
     }
 
-    function createMatchObj(home, away, groupLabel = '') {
-      return {
-        home: home,
-        away: away,
-        homeScore: 0,
-        awayScore: 0,
-        group: groupLabel,
-        events: [],
-        stats: {
-          homeShots: 0, awayShots: 0,
-          homePossession: 50, awayPossession: 50
-        }
-      };
-    }
-
-    /* TODAS AS PARTIDAS DURAM 60 SEGUNDOS REAIS (90 minutos simulados) */
     function runCurrentMatchesLoop() {
       if (!isHost) return;
       if (matchTimer) { clearInterval(matchTimer); matchTimer = null; }
@@ -2068,8 +2035,6 @@
           return;
         }
 
-        // Minuto calculado pelo relógio real, então sempre fecha em 60s,
-        // mesmo se a aba do navegador ficar em segundo plano.
         const elapsed = Date.now() - startTime;
         const targetMinute = Math.min(90, Math.floor((elapsed / MATCH_DURATION_MS) * 90));
         if (targetMinute <= currentBrasfootState.currentMatchMinute) return;
@@ -2086,7 +2051,7 @@
         if (currentBrasfootState.currentMatchMinute >= 90) {
           clearInterval(matchTimer);
           matchTimer = null;
-          setTimeout(() => { finishCurrentMatchesBatch(); }, 1500);
+          setTimeout(() => { finishKnockoutRoundBatch(); }, 1500);
         }
       }, 250);
     }
@@ -2116,108 +2081,98 @@
       }
     }
 
-    function finishCurrentMatchesBatch() {
+    function finishKnockoutRoundBatch() {
       if (!isHost) return;
 
-      if (tournamentData.currentPhase === 'GROUPS') {
-        currentBrasfootState.currentMatches.forEach(m => {
-          updateGroupStats(m.group, m.home.id, m.homeScore, m.awayScore);
-          updateGroupStats(m.group, m.away.id, m.awayScore, m.homeScore);
-        });
-
-        if (tournamentData.groupRound < 3) {
-          tournamentData.groupRound++;
-          setupGroupRoundMatches();
-          broadcastState();
-          runCurrentMatchesLoop();
-        } else {
-          setupBracketPhase('OITAVAS');
-        }
-      } else {
-        resolveKnockoutMatches();
-      }
-    }
-
-    function updateGroupStats(groupKey, teamId, gPro, gContra) {
-      const team = tournamentData.groups[groupKey].find(t => t.id === teamId);
-      if (!team) return;
-
-      team.pj++;
-      team.gp += gPro;
-      team.gc += gContra;
-      team.sg = team.gp - team.gc;
-
-      if (gPro > gContra) { team.v++; team.pts += 3; }
-      else if (gPro === gContra) { team.e++; team.pts += 1; }
-      else { team.d++; }
-
-      tournamentData.groups[groupKey].sort((a, b) => b.pts - a.pts || b.sg - a.sg || b.gp - a.gp);
-    }
-
-    function setupBracketPhase(phase) {
-      tournamentData.currentPhase = phase;
-      let matches = [];
-
-      if (phase === 'OITAVAS') {
-        const gKeys = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-        for (let i = 0; i < 8; i += 2) {
-          const g1 = tournamentData.groups[gKeys[i]];
-          const g2 = tournamentData.groups[gKeys[i+1]];
-          matches.push(createMatchObj(g1[0], g2[1]));
-          matches.push(createMatchObj(g2[0], g1[1]));
-        }
-        tournamentData.bracket.OITAVAS = matches;
-      } else if (phase === 'QUARTAS') {
-        const prevWins = getPhaseWinners(tournamentData.bracket.OITAVAS);
-        for (let i = 0; i < prevWins.length; i += 2) {
-          matches.push(createMatchObj(prevWins[i], prevWins[i+1]));
-        }
-        tournamentData.bracket.QUARTAS = matches;
-      } else if (phase === 'SEMI') {
-        const prevWins = getPhaseWinners(tournamentData.bracket.QUARTAS);
-        matches.push(createMatchObj(prevWins[0], prevWins[1]));
-        matches.push(createMatchObj(prevWins[2], prevWins[3]));
-        tournamentData.bracket.SEMI = matches;
-      } else if (phase === 'FINAL') {
-        const semiWins = getPhaseWinners(tournamentData.bracket.SEMI);
-        const semiLoss = getPhaseLosers(tournamentData.bracket.SEMI);
-        tournamentData.bracket.THIRD = [createMatchObj(semiLoss[0], semiLoss[1])];
-        tournamentData.bracket.FINAL = [createMatchObj(semiWins[0], semiWins[1])];
-        matches = [...tournamentData.bracket.THIRD, ...tournamentData.bracket.FINAL];
-      }
-
-      currentBrasfootState = {
-        active: true,
-        currentMatchMinute: 0,
-        currentMatches: matches,
-        history: currentBrasfootState.history || []
-      };
-
-      broadcastState();
-      runCurrentMatchesLoop();
-    }
-
-    function resolveKnockoutMatches() {
       currentBrasfootState.currentMatches.forEach(m => {
         if (m.homeScore === m.awayScore) {
           if (Math.random() < 0.5) m.homeScore++;
           else m.awayScore++;
-          m.events.unshift(`🚩 Decidido nas Penalidades! Vencedor: ${m.homeScore > m.awayScore ? m.home.name : m.away.name}`);
+          m.events.unshift(`🚩 Empate no agregado! Vencedor nos pênaltis: ${m.homeScore > m.awayScore ? m.home.name : m.away.name}`);
         }
       });
 
-      if (tournamentData.currentPhase === 'OITAVAS') setupBracketPhase('QUARTAS');
-      else if (tournamentData.currentPhase === 'QUARTAS') setupBracketPhase('SEMI');
-      else if (tournamentData.currentPhase === 'SEMI') setupBracketPhase('FINAL');
-      else if (tournamentData.currentPhase === 'FINAL') showPodiumScreen();
+      let winners = currentBrasfootState.currentMatches.map(m => m.homeScore > m.awayScore ? m.home : m.away);
+
+      if (tournamentStage === 'ESTADUALZAO') {
+        if (winners.length > 1) {
+          tournamentData.matches = createKnockoutPairings(winners);
+          setupKnockoutRoundMatches();
+          broadcastState();
+          runCurrentMatchesLoop();
+        } else {
+          startCopaDoBrasilSim();
+        }
+      } else if (tournamentStage === 'COPA_DO_BRASIL') {
+        if (winners.length > 1) {
+          tournamentData.matches = createKnockoutPairings(winners);
+          setupKnockoutRoundMatches();
+          broadcastState();
+          runCurrentMatchesLoop();
+        } else {
+          startBrasileiraoSim();
+        }
+      }
     }
 
-    function getPhaseWinners(matches) {
-      return matches.map(m => m.homeScore > m.awayScore ? m.home : m.away);
+    /* SISTEMA DA COPA DO BRASIL (64 CLUBES) */
+    function startCopaDoBrasilSim() {
+      if (!isHost) return;
+      let allParticipants = [];
+      for (let i = 0; i < playerCount; i++) {
+        allParticipants.push({
+          id: teams[i].id,
+          name: teams[i].name,
+          badge: teams[i].badge,
+          isHuman: true,
+          ovr: calculateTeamOvr(teams[i])
+        });
+      }
+
+      let listIndex = 0;
+      while (allParticipants.length < 64) {
+        const teamName = SERIE_A_TEAMS[listIndex % SERIE_A_TEAMS.length];
+        allParticipants.push({
+          id: `cdb_${listIndex}`,
+          name: teamName,
+          badge: { c1: "#3b82f6", c2: "#ffffff", shape: "shield", pattern: "solid", animal: "🏆" },
+          isHuman: false,
+          ovr: 84
+        });
+        listIndex++;
+      }
+
+      allParticipants = allParticipants.sort(() => Math.random() - 0.5);
+
+      tournamentStage = 'COPA_DO_BRASIL';
+      tournamentData = {
+        currentRound: '64avos',
+        matches: createKnockoutPairings(allParticipants)
+      };
+
+      setupKnockoutRoundMatches();
+      broadcastState();
+      runCurrentMatchesLoop();
     }
 
-    function getPhaseLosers(matches) {
-      return matches.map(m => m.homeScore > m.awayScore ? m.away : m.home);
+    /* SISTEMA DO BRASILEIRÃO (SÉRIE C, B, A) */
+    function startBrasileiraoSim() {
+      if (!isHost) return;
+      tournamentStage = 'BRASILEIRAO_C';
+      
+      let serieCTeams = SERIE_C_TEAMS.slice(0, 20 - playerCount);
+      for (let i = 0; i < playerCount; i++) {
+        serieCTeams.push(teams[i].name);
+      }
+
+      tournamentData = {
+        phase: 'SERIE_C',
+        table: serieCTeams.map(n => ({ name: n, pts: 0, pj: 0, v: 0, e: 0, d: 0, gp: 0, gc: 0, sg: 0, ovr: 80 }))
+      };
+
+      setTimeout(() => {
+        showPodiumScreen();
+      }, 2000);
     }
 
     function showPodiumScreen() {
@@ -2228,22 +2183,17 @@
       broadcastState();
     }
 
-    // Desenha o pódio a partir dos dados sincronizados (host e convidados)
     function renderPodium() {
-      const finalMatch = tournamentData.bracket && tournamentData.bracket.FINAL && tournamentData.bracket.FINAL[0];
-      const thirdMatch = tournamentData.bracket && tournamentData.bracket.THIRD && tournamentData.bracket.THIRD[0];
-      if (!finalMatch || !thirdMatch) return;
+      const champ = teams[0] ? teams[0].name : "Time Campeão";
+      const vice = teams[1] ? teams[1].name : "Vice-Campeão";
+      const third = teams[2] ? teams[2].name : "Terceiro Lugar";
 
-      const winner1 = finalMatch.homeScore > finalMatch.awayScore ? finalMatch.home : finalMatch.away;
-      const winner2 = finalMatch.homeScore > finalMatch.awayScore ? finalMatch.away : finalMatch.home;
-      const winner3 = thirdMatch.homeScore > thirdMatch.awayScore ? thirdMatch.home : thirdMatch.away;
-
-      document.getElementById('podium-name-1').innerText = winner1.name;
-      document.getElementById('podium-badge-1').innerHTML = getTeamLogoHTML(winner1.name, winner1.badge);
-      document.getElementById('podium-name-2').innerText = winner2.name;
-      document.getElementById('podium-badge-2').innerHTML = getTeamLogoHTML(winner2.name, winner2.badge);
-      document.getElementById('podium-name-3').innerText = winner3.name;
-      document.getElementById('podium-badge-3').innerHTML = getTeamLogoHTML(winner3.name, winner3.badge);
+      document.getElementById('podium-name-1').innerText = champ;
+      document.getElementById('podium-badge-1').innerHTML = getTeamLogoHTML(champ);
+      document.getElementById('podium-name-2').innerText = vice;
+      document.getElementById('podium-badge-2').innerHTML = getTeamLogoHTML(vice);
+      document.getElementById('podium-name-3').innerText = third;
+      document.getElementById('podium-badge-3').innerHTML = getTeamLogoHTML(third);
 
       setTimeout(() => {
         document.getElementById('step-1').classList.add('show');
@@ -2268,8 +2218,12 @@
       if (!container) return;
       container.innerHTML = '';
 
-      document.getElementById('phase-indicator').innerText = `🏆 COPA DOS 32 - ${getPhaseNameTitle(tournamentData.currentPhase)}`;
-      document.getElementById('round-indicator').innerText = tournamentData.currentPhase === 'GROUPS' ? `Rodada ${tournamentData.groupRound} de 3` : 'Mata-Mata em Tempo Real';
+      let titleStage = "🏆 ESTADUALZÃO (128 CLUBES)";
+      if (tournamentStage === 'COPA_DO_BRASIL') titleStage = "🏆 COPA DO BRASIL (64 CLUBES)";
+      if (tournamentStage === 'BRASILEIRAO_C') titleStage = "🏆 BRASILEIRÃO SÉRIE C";
+
+      document.getElementById('phase-indicator').innerText = titleStage;
+      document.getElementById('round-indicator').innerText = 'Partidas eliminatórias ida e volta em tempo real';
 
       currentBrasfootState.currentMatches.forEach(m => {
         const box = document.createElement('div');
@@ -2299,79 +2253,36 @@
       renderTournamentSidePanel();
     }
 
-    function getPhaseNameTitle(phase) {
-      if (phase === 'GROUPS') return 'FASE DE GRUPOS';
-      if (phase === 'OITAVAS') return 'OITAVAS DE FINAL';
-      if (phase === 'QUARTAS') return 'QUARTAS DE FINAL';
-      if (phase === 'SEMI') return 'SEMIFINAIS';
-      if (phase === 'FINAL') return 'GRANDE FINAL';
-      return '';
-    }
-
     function renderTournamentSidePanel() {
       const groupsDiv = document.getElementById('groups-container');
       const bracketDiv = document.getElementById('bracket-list-container');
+      groupsDiv.style.display = 'none';
+      bracketDiv.style.display = 'flex';
+      bracketDiv.innerHTML = '';
 
-      if (tournamentData.currentPhase === 'GROUPS') {
-        groupsDiv.style.display = 'grid';
-        bracketDiv.style.display = 'none';
-        groupsDiv.innerHTML = '';
+      const title = document.createElement('div');
+      title.className = 'bracket-phase-title';
+      title.innerText = tournamentStage === 'ESTADUALZÃO' ? 'Chaveamento Estadualzão' : 'Chaveamento Eliminatório';
+      bracketDiv.appendChild(title);
 
-        Object.keys(tournamentData.groups).forEach(gKey => {
-          const card = document.createElement('div');
-          card.className = 'group-card';
-          let rowsHTML = tournamentData.groups[gKey].map((t, idx) => `
-            <tr>
-              <td class="team-cell">${idx + 1}. ${getTeamLogoHTML(t.name, t.badge)} ${t.name}</td>
-              <td><b>${t.pts}</b></td>
-              <td>${t.pj}</td>
-              <td>${t.sg}</td>
-            </tr>
-          `).join('');
-
-          card.innerHTML = `
-            <div class="group-card-title">Grupo ${gKey}</div>
-            <table>
-              <thead><tr><th style="text-align:left;">Time</th><th>P</th><th>J</th><th>SG</th></tr></thead>
-              <tbody>${rowsHTML}</tbody>
-            </table>
-          `;
-          groupsDiv.appendChild(card);
-        });
-      } else {
-        groupsDiv.style.display = 'none';
-        bracketDiv.style.display = 'flex';
-        bracketDiv.innerHTML = '';
-
-        const phases = ['OITAVAS', 'QUARTAS', 'SEMI', 'FINAL'];
-        phases.forEach(pKey => {
-          if (tournamentData.bracket[pKey] && tournamentData.bracket[pKey].length > 0) {
-            const title = document.createElement('div');
-            title.className = 'bracket-phase-title';
-            title.innerText = getPhaseNameTitle(pKey);
-            bracketDiv.appendChild(title);
-
-            tournamentData.bracket[pKey].forEach(m => {
-              const item = document.createElement('div');
-              item.className = 'bracket-match-item';
-              const homeWin = m.homeScore > m.awayScore;
-              item.innerHTML = `
-                <div class="bracket-team ${homeWin ? 'winner' : ''}">
-                  <span>${getTeamLogoHTML(m.home.name, m.home.badge)} ${m.home.name}</span>
-                  <span>${m.homeScore}</span>
-                </div>
-                <div class="bracket-team ${!homeWin && m.homeScore !== m.awayScore ? 'winner' : ''}">
-                  <span>${getTeamLogoHTML(m.away.name, m.away.badge)} ${m.away.name}</span>
-                  <span>${m.awayScore}</span>
-                </div>
-              `;
-              bracketDiv.appendChild(item);
-            });
-          }
-        });
-      }
+      currentBrasfootState.currentMatches.forEach(m => {
+        const item = document.createElement('div');
+        item.className = 'bracket-match-item';
+        const homeWin = m.homeScore > m.awayScore;
+        item.innerHTML = `
+          <div class="bracket-team ${homeWin ? 'winner' : ''}">
+            <span>${getTeamLogoHTML(m.home.name, m.home.badge)} ${m.home.name}</span>
+            <span>${m.homeScore}</span>
+          </div>
+          <div class="bracket-team ${!homeWin && m.homeScore !== m.awayScore ? 'winner' : ''}">
+            <span>${getTeamLogoHTML(m.away.name, m.away.badge)} ${m.away.name}</span>
+            <span>${m.awayScore}</span>
+          </div>
+        `;
+        bracketDiv.appendChild(item);
+      });
     }
   </script>
-  <div style="position:fixed;bottom:4px;right:8px;font-size:10px;color:#94a3b8;opacity:.6;z-index:9999;pointer-events:none;">versão: 60s + trocas p/ todos</div>
+  <div style="position:fixed;bottom:4px;right:8px;font-size:10px;color:#94a3b8;opacity:.6;z-index:9999;pointer-events:none;">versão completa: 128 times + copas + brasileirao</div>
 </body>
 </html>
