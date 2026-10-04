@@ -20,7 +20,6 @@
       --accent-green: #10b981;
       --accent-slate: #475569;
       --accent-gold: #38bdf8;
-      --accent-gold-text: #f8fafc;
       --danger-color: #ef4444;
       --success-color: #10b981;
     }
@@ -970,57 +969,163 @@
   </div>
 
   <script>
-    // MAPEAMENTO DE LOGOS
+    // MAPEAMENTO COMPLETO DE LOGOS COM OS TIMES REQUISITADOS
     const TEAM_LOGOS = {
-      "real madrid": "https://logopng.com.br/logos/real-madrid-174.png",
-      "manchester city": "https://upload.wikimedia.org/wikipedia/pt/0/02/Manchester_City_Football_Club.png",
-      "bayern de munique": "https://1000logos.net/wp-content/uploads/2018/05/Bayern-Munchen-Logo.png",
-      "bayern munchen": "https://1000logos.net/wp-content/uploads/2018/05/Bayern-Munchen-Logo.png",
-      "psg": "https://thumb.wikimedia.org/wikipedia/en/thumb/a/a7/Paris_Saint-Germain_F.C..svg/330px-Paris_Saint-Germain_F.C..svg.png",
-      "paris saint-germain": "https://thumb.wikimedia.org/wikipedia/en/thumb/a/a7/Paris_Saint-Germain_F.C..svg/330px-Paris_Saint-Germain_F.C..svg.png",
-      "barcelona": "https://thumb.wikimedia.org/wikipedia/pt/thumb/4/43/FCBarcelona.svg/3840px-FCBarcelona.svg.png",
-      "liverpool": "https://thumb.wikimedia.org/wikipedia/pt/thumb/0/0c/Liverpool_FC.svg/1920px-Liverpool_FC.svg.png",
-      "arsenal": "https://thumb.wikimedia.org/wikipedia/pt/thumb/5/53/Arsenal_FC.svg/1280px-Arsenal_FC.svg.png",
-      "inter de milão": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/05/FC_Internazionale_Milano_2021.svg/3840px-FC_Internazionale_Milano_2021.svg.png",
-      "inter de milao": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/05/FC_Internazionale_Milano_2021.svg/3840px-FC_Internazionale_Milano_2021.svg.png",
-      "inter milan": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/05/FC_Internazionale_Milano_2021.svg/3840px-FC_Internazionale_Milano_2021.svg.png",
-      "juventus": "https://upload.wikimedia.org/wikipedia/commons/5/51/Juventus_FC_2017_logo.png",
-      "bayer leverkusen": "https://upload.wikimedia.org/wikipedia/pt/a/a2/Bayer_Leverkusen.png",
-      "borussia dortmund": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Borussia_Dortmund_logo.svg/250px-Borussia_Dortmund_logo.svg.png",
-      "atletico de madrid": "https://upload.wikimedia.org/wikipedia/pt/1/19/AtleticoMadrid2017.png",
-      "atlético de madrid": "https://upload.wikimedia.org/wikipedia/pt/1/19/AtleticoMadrid2017.png",
-      "chelsea": "https://thumb.wikimedia.org/wikipedia/pt/thumb/c/cc/Chelsea_FC.svg/1280px-Chelsea_FC.svg.png",
-      "milan": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/17/AC_Milan.png/330px-AC_Milan.png",
-      "ac milan": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/17/AC_Milan.png/330px-AC_Milan.png",
-      "manchester united": "https://upload.wikimedia.org/wikipedia/pt/b/b6/Manchester_United_FC_logo.png",
-      "tottenham": "https://upload.wikimedia.org/wikipedia/pt/6/6d/Tottenham_Hotspur.png",
-      "napoli": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/SSC_Napoli.svg/500px-SSC_Napoli.svg.png",
-      "benfica": "https://thumb.wikimedia.org/wikipedia/pt/thumb/d/de/Sport_Lisboa_e_Benfica.svg/330px-Sport_Lisboa_e_Benfica.svg.png",
-      "porto": "https://upload.wikimedia.org/wikipedia/pt/c/c5/F.C._Porto_logo.png",
-      "sporting": "https://upload.wikimedia.org/wikipedia/pt/3/3e/Sporting_Clube_de_Portugal.png",
-      "ajax": "https://thumb.wikimedia.org/wikipedia/pt/thumb/b/b8/AFC_Ajax_Amsterdam.svg/3840px-AFC_Ajax_Amsterdam.svg.png",
-      "psv": "https://upload.wikimedia.org/wikipedia/pt/c/ca/PSV_Eindhoven_escudo.png",
-      "roma": "https://upload.wikimedia.org/wikipedia/pt/8/8c/AS_Roma_logo.png",
-      "corinthians": "https://thumb.wikimedia.org/wikipedia/pt/thumb/b/b4/Corinthians_simbolo.png/250px-Corinthians_simbolo.png",
       "flamengo": "https://upload.wikimedia.org/wikipedia/commons/9/93/Flamengo-RJ_%28BRA%29.png",
+      "corinthians": "https://thumb.wikimedia.org/wikipedia/pt/thumb/b/b4/Corinthians_simbolo.png/250px-Corinthians_simbolo.png",
       "palmeiras": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/10/Palmeiras_logo.svg/500px-Palmeiras_logo.svg.png",
-      "river plate": "https://upload.wikimedia.org/wikipedia/commons/f/f1/River_Plate.png",
-      "boca juniors": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Boca_escudo.png",
-      "sao paulo": "https://upload.wikimedia.org/wikipedia/commons/4/4b/S%C3%A3o_Paulo_Futebol_Clube.png",
+      "atlético mineiro": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Atletico_mineiro_galo.png",
+      "atletico mineiro": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Atletico_mineiro_galo.png",
       "são paulo": "https://upload.wikimedia.org/wikipedia/commons/4/4b/S%C3%A3o_Paulo_Futebol_Clube.png",
-      "santos": "https://upload.wikimedia.org/wikipedia/commons/1/15/Santos_Logo.png",
-      "gremio": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/Gremio_logo.svg/1280px-Gremio_logo.svg.png",
+      "sao paulo": "https://upload.wikimedia.org/wikipedia/commons/4/4b/S%C3%A3o_Paulo_Futebol_Clube.png",
+      "fluminense": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/Fluminense_Football_Club.svg/1920px-Fluminense_Football_Club.svg.png",
+      "botafogo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/52/Botafogo_de_Futebol_e_Regatas_logo.svg/1280px-Botafogo_de_Futebol_e_Regatas_logo.svg.png",
+      "athletico paranaense": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Athletico_Paranaense_%28Logo_2019%29.svg/1920px-Athletico_Paranaense_%28Logo_2019%29.svg.png",
+      "bahia": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Esporte_Clube_Bahia_logo.svg/250px-Esporte_Clube_Bahia_logo.svg.png",
+      "vasco da gama": "https://thumb.wikimedia.org/wikipedia/pt/thumb/8/8b/EscudoDoVascoDaGama.svg/960px-EscudoDoVascoDaGama.svg.png",
+      "cruzeiro": "https://images.seeklogo.com/logo-png/25/2/escudo-oficial-cruzeiro-esporte-clube-logo-png_seeklogo-250164.png",
       "grêmio": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/Gremio_logo.svg/1280px-Gremio_logo.svg.png",
-      "internacional": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Escudo_do_Sport_Club_Internacional.svg"
+      "gremio": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/Gremio_logo.svg/1280px-Gremio_logo.svg.png",
+      "fortaleza": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Fortaleza_Esporte_Clube_logo.png",
+      "internacional": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Escudo_do_Sport_Club_Internacional.svg",
+      "red bull bragantino": "https://upload.wikimedia.org/wikipedia/pt/9/9e/RedBullBragantino.png",
+      "santos": "https://upload.wikimedia.org/wikipedia/commons/1/15/Santos_Logo.png",
+      "juventude": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/51/EC_Juventude.svg/960px-EC_Juventude.svg.png",
+      "atlético goianiense": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/10357.png",
+      "atletico goianiense": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/10357.png",
+      "américa mineiro": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Escudo_Am%C3%A9rica_de_Minas.png",
+      "america mineiro": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Escudo_Am%C3%A9rica_de_Minas.png",
+      "vitória": "https://cdn.freebiesupply.com/logos/thumbs/2x/esporte-clube-vitoria-de-salvador-ba-logo.png",
+      "vitoria": "https://cdn.freebiesupply.com/logos/thumbs/2x/esporte-clube-vitoria-de-salvador-ba-logo.png",
+      "ceará": "https://upload.wikimedia.org/wikipedia/commons/0/01/Cear%C3%A1_Sporting_Club_logo.png",
+      "ceara": "https://upload.wikimedia.org/wikipedia/commons/0/01/Cear%C3%A1_Sporting_Club_logo.png",
+      "cuiabá": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Cuiab%C3%A1_2020_logo.png",
+      "cuiaba": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Cuiab%C3%A1_2020_logo.png",
+      "goiás": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Goi%C3%A1sLogo21.png",
+      "goias": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Goi%C3%A1sLogo21.png",
+      "coritiba": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/Coritiba_Foot_Ball_Club_logo.svg/1920px-Coritiba_Foot_Ball_Club_logo.svg.png",
+      "sport": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2fDmt_iSma-8CJi0TGtypc4Gm01A3q632Lmir3_EtUg&s=10",
+      "crb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fe/Clube_de_Regatas_Brasil_logo.svg/500px-Clube_de_Regatas_Brasil_logo.svg.png",
+      "criciúma": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/Crici%C3%BAma_Esporte_Clube_logo_%28until_2025%29.svg/3840px-Crici%C3%BAma_Esporte_Clube_logo_%28until_2025%29.svg.png",
+      "criciuma": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/Crici%C3%BAma_Esporte_Clube_logo_%28until_2025%29.svg/3840px-Crici%C3%BAma_Esporte_Clube_logo_%28until_2025%29.svg.png",
+      "mirassol": "https://upload.wikimedia.org/wikipedia/commons/5/5b/Mirassol_FC_logo.png",
+      "vila nova": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Vila_Nova_Logo_Oficial.svg/960px-Vila_Nova_Logo_Oficial.svg.png",
+      "operário-pr": "https://upload.wikimedia.org/wikipedia/commons/9/90/Oper%C3%A1rio_Ferrovi%C3%A1rio_EC_%28no_stars%29.png",
+      "operario-pr": "https://upload.wikimedia.org/wikipedia/commons/9/90/Oper%C3%A1rio_Ferrovi%C3%A1rio_EC_%28no_stars%29.png",
+      "avaí": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8c/Ava%C3%AD_Futebol_Clube_logo.svg/1920px-Ava%C3%AD_Futebol_Clube_logo.svg.png",
+      "avai": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8c/Ava%C3%AD_Futebol_Clube_logo.svg/1920px-Ava%C3%AD_Futebol_Clube_logo.svg.png",
+      "novorizontino": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1b/Gr%C3%AAmio_Novorizontino.svg/3840px-Gr%C3%AAmio_Novorizontino.svg.png",
+      "chapecoense": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4e/Logo_Associa%C3%A7%C3%A3o_Chapecoense_de_Futebol.svg/500px-Logo_Associa%C3%A7%C3%A3o_Chapecoense_de_Futebol.svg.png",
+      "botafogo-sp": "https://upload.wikimedia.org/wikipedia/commons/b/b4/Botafogo_Ribeirao_Preto_SP.png",
+      "paysandu": "https://images.seeklogo.com/logo-png/32/2/paysandu-sport-club-logo-png_seeklogo-324541.png",
+      "brusque": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Brusque_Futebol_Clube_logo_%282023%29.png",
+      "remo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/70/Clube_do_Remo.svg/3840px-Clube_do_Remo.svg.png",
+      "ponte preta": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Associa%C3%A7%C3%A3o_Atl%C3%A9tica_Ponte_Preta_logo.png",
+      "csa": "https://assets.footylogos.com/previews/csa-logo-footylogos-1200.webp",
+      "amazonas": "https://upload.wikimedia.org/wikipedia/pt/7/74/AmazonasFC.png",
+      "botafogo-pb": "https://upload.wikimedia.org/wikipedia/commons/b/b8/BotafogoPB_logo.png",
+      "brasil de pelotas": "https://upload.wikimedia.org/wikipedia/pt/e/e0/Escudo_do_Brasil.png",
+      "américa-rn": "https://upload.wikimedia.org/wikipedia/commons/6/61/Am%C3%A9rica_Futebol_Clube_%28Natal%29_logo_%282023%29.png",
+      "america-rn": "https://upload.wikimedia.org/wikipedia/commons/6/61/Am%C3%A9rica_Futebol_Clube_%28Natal%29_logo_%282023%29.png",
+      "manaus": "https://upload.wikimedia.org/wikipedia/pt/a/a3/Escudo_do_Manaus_Futebol_Clube.png",
+      "londrina": "https://upload.wikimedia.org/wikipedia/pt/9/96/Londrina_EC.png",
+      "ferroviária": "https://images.seeklogo.com/logo-png/33/2/associacao-ferroviaria-de-esportes-logo-png_seeklogo-330856.png",
+      "ferroviaria": "https://images.seeklogo.com/logo-png/33/2/associacao-ferroviaria-de-esportes-logo-png_seeklogo-330856.png",
+      "figueirense": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/05/Figueirense_Futebol_Clube.svg/1280px-Figueirense_Futebol_Clube.svg.png",
+      "guarani": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/04/Guarani_Futebol_Clube_logo.svg/1920px-Guarani_Futebol_Clube_logo.svg.png",
+      "águia de marabá": "https://upload.wikimedia.org/wikipedia/pt/3/3d/%C3%81guia_de_Marab%C3%A1.png",
+      "aguia de maraba": "https://upload.wikimedia.org/wikipedia/pt/3/3d/%C3%81guia_de_Marab%C3%A1.png",
+      "river-pi": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f4/R_PIAUI.png/500px-R_PIAUI.png",
+      "ituano": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Ituano_Futebol_Clube_logo.svg",
+      "santo andré": "https://upload.wikimedia.org/wikipedia/pt/5/50/Santo_Andre_escudo.png",
+      "santo andre": "https://upload.wikimedia.org/wikipedia/pt/5/50/Santo_Andre_escudo.png",
+      "são bernardo": "https://upload.wikimedia.org/wikipedia/commons/8/88/S%C3%A3o_Bernardo_FC_2020_crest.png",
+      "sao bernardo": "https://upload.wikimedia.org/wikipedia/commons/8/88/S%C3%A3o_Bernardo_FC_2020_crest.png",
+      "inter de limeira": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyaZzvjG_9rnjeFsN4EjH60jTbUAe-3ez1r_3ZC7GxjA&s=10",
+      "treze": "https://upload.wikimedia.org/wikipedia/commons/0/04/Treze_Futebol_Clube_logo.svg",
+      "anápolis": "https://thumb.wikimedia.org/wikipedia/pt/thumb/8/85/An%C3%A1polis-GO_%28BRA%29.png/250px-An%C3%A1polis-GO_%28BRA%29.png",
+      "anapolis": "https://thumb.wikimedia.org/wikipedia/pt/thumb/8/85/An%C3%A1polis-GO_%28BRA%29.png/250px-An%C3%A1polis-GO_%28BRA%29.png",
+      "asa": "https://upload.wikimedia.org/wikipedia/pt/d/db/EscudoASA.svg",
+      "confiança": "https://upload.wikimedia.org/wikipedia/commons/c/ce/AD_Confianca.png",
+      "confianca": "https://upload.wikimedia.org/wikipedia/commons/c/ce/AD_Confianca.png",
+      "altos": "https://upload.wikimedia.org/wikipedia/pt/d/df/Associa%C3%A7%C3%A3o_Atl%C3%A9tica_de_Altos.png",
+      "abc": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/df/ABC_FC_-_RN.svg/1280px-ABC_FC_-_RN.svg.png",
+      "sampaio corrêa": "https://upload.wikimedia.org/wikipedia/commons/1/14/NOVO_ESCUDO_SAMPAIO_CORR%C3%8AA.png",
+      "sampaio correa": "https://upload.wikimedia.org/wikipedia/commons/1/14/NOVO_ESCUDO_SAMPAIO_CORR%C3%8AA.png",
+      "moto club": "https://upload.wikimedia.org/wikipedia/pt/6/64/Moto_Club_logo.png",
+      "brasiliense": "https://upload.wikimedia.org/wikipedia/pt/3/3a/Brasiliense_Futebol_Clube.png",
+      "gama": "https://upload.wikimedia.org/wikipedia/pt/2/20/SEGama.png",
+      "operário-ms": "https://upload.wikimedia.org/wikipedia/commons/6/68/Escudo_OPER%C3%81RIO_FC-MS.png",
+      "operario-ms": "https://upload.wikimedia.org/wikipedia/commons/6/68/Escudo_OPER%C3%81RIO_FC-MS.png",
+      "barra": "https://upload.wikimedia.org/wikipedia/commons/4/40/Barra_FC_2021_crest.png",
+      "maringá": "https://upload.wikimedia.org/wikipedia/commons/9/9d/Mfc_monocromia_positiva.png",
+      "maringa": "https://upload.wikimedia.org/wikipedia/commons/9/9d/Mfc_monocromia_positiva.png",
+      "mixto": "https://upload.wikimedia.org/wikipedia/commons/6/66/Club_Mixto_Esporte_Clube_%28escudo_antigo%29.png",
+      "luverdense": "https://upload.wikimedia.org/wikipedia/commons/5/59/Luverdense_%283_stars%29.png",
+      "itabaiana": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Escudo_Oficial_da_Associa%C3%A7%C3%A3o_Ol%C3%ADmpica_de_Itabaiana.svg",
+      "sergipe": "https://cdn.freebiesupply.com/logos/large/2x/club-sportivo-sergipe-de-aracaju-se-logo-png-transparent.png",
+      "tocantinópolis": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d6/Tocantinopolis_EC.svg/3840px-Tocantinopolis_EC.svg.png",
+      "tocantinopolis": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d6/Tocantinopolis_EC.svg/3840px-Tocantinopolis_EC.svg.png",
+      "palmas": "https://upload.wikimedia.org/wikipedia/commons/9/9d/Escudo_Palmas_Futebol_e_Regatas.png",
+      "ypiranga": "https://upload.wikimedia.org/wikipedia/commons/1/14/Ypiranga_Futebol_Clube.png",
+      "primavera": "https://upload.wikimedia.org/wikipedia/pt/0/0c/Esporte_Clube_Primavera_logo.png",
+      "rio branco": "https://upload.wikimedia.org/wikipedia/commons/f/fb/Rio_Branco_Atl%C3%A9tico_Clube.png",
+      "xv piracicaba": "https://upload.wikimedia.org/wikipedia/commons/e/e5/Esporte_Clube_XV_de_Novembro_de_Piracicaba_logo.png",
+      "trem": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Trem_Desportivo_Clube.png",
+      "madureira": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ed/Madureira_EC_%28RJ%29.svg/1920px-Madureira_EC_%28RJ%29.svg.png",
+      "cianorte": "https://assets.football-logos.cc/logos/brazil/700x700/cianorte.b4bce48b.png",
+      "portuguesa": "https://upload.wikimedia.org/wikipedia/commons/d/db/Portuguesa_de_Desportos.png",
+      "capivariano": "https://upload.wikimedia.org/wikipedia/commons/4/43/Capivariano_FC.png",
+      "maranhão": "https://upload.wikimedia.org/wikipedia/pt/6/6d/Maranh%C3%A3o_Atl%C3%A9tico_Clube.png",
+      "maranhao": "https://upload.wikimedia.org/wikipedia/pt/6/6d/Maranh%C3%A3o_Atl%C3%A9tico_Clube.png",
+      "tuna luso": "https://upload.wikimedia.org/wikipedia/commons/6/67/TunaLusoB.png",
+      "ferroviário": "https://upload.wikimedia.org/wikipedia/commons/2/20/Escudo_do_Ferrovi%C3%A1rio_Atl%C3%A9tico_Clube.png",
+      "ferroviario": "https://upload.wikimedia.org/wikipedia/commons/2/20/Escudo_do_Ferrovi%C3%A1rio_Atl%C3%A9tico_Clube.png",
+      "santa cruz": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Santa_Cruz_Futebol_Clube_%281915-99%29.png",
+      "náutico": "https://upload.wikimedia.org/wikipedia/pt/d/de/Simbolo-escudo-nautico.png",
+      "nautico": "https://upload.wikimedia.org/wikipedia/pt/d/de/Simbolo-escudo-nautico.png",
+      "agua santa": "https://upload.wikimedia.org/wikipedia/pt/b/b8/Ecaguasanta.png",
+      "athletic club": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Athletic_Club_%28Minas_Gerais%29.svg/3840px-Athletic_Club_%28Minas_Gerais%29.svg.png",
+      "juazeirense": "https://upload.wikimedia.org/wikipedia/pt/1/14/SDJuazeirense.png",
+      "bangu": "https://upload.wikimedia.org/wikipedia/commons/7/70/Bangu_escudo.png",
+      "jacuipense": "https://upload.wikimedia.org/wikipedia/pt/3/3d/ECJacuipense.png",
+      "floresta": "https://upload.wikimedia.org/wikipedia/pt/8/86/Floresta_Esporte_Clube.png",
+      "icasa": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/Escudo_da_Associa%C3%A7%C3%A3o_Desportiva_Recreativa_Cultural_Icasa.svg/960px-Escudo_da_Associa%C3%A7%C3%A3o_Desportiva_Recreativa_Cultural_Icasa.svg.png",
+      "falcon": "https://upload.wikimedia.org/wikipedia/pt/6/6f/Falcon_FC.png",
+      "salgueiro": "https://upload.wikimedia.org/wikipedia/pt/b/ba/SalgueiroAC2020.png",
+      "retrô": "https://upload.wikimedia.org/wikipedia/pt/4/4b/Retr%C3%B4_FC_Brasil-PE_%28BRA%29.png",
+      "retro": "https://upload.wikimedia.org/wikipedia/pt/4/4b/Retr%C3%B4_FC_Brasil-PE_%28BRA%29.png",
+      "sousa": "https://upload.wikimedia.org/wikipedia/pt/b/ba/SousaEC.png",
+      "joinville": "https://thumb.wikimedia.org/wikipedia/pt/thumb/3/31/Joinville-SC.png/250px-Joinville-SC.png",
+      "juventus mooca": "https://upload.wikimedia.org/wikipedia/commons/7/7a/CA_JUVENTUS.png",
+      "globo": "https://upload.wikimedia.org/wikipedia/pt/0/08/GloboFC2020.png",
+      "oeste": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a6/Oeste_FC_Badge.svg/250px-Oeste_FC_Badge.svg.png",
+      "paulista": "https://upload.wikimedia.org/wikipedia/pt/0/06/PaulistaFC.png",
+      "imperatriz": "https://assets.football-logos.cc/logos/brazil/700x700/imperatriz.369c3edf.png",
+      "volta redonda": "https://upload.wikimedia.org/wikipedia/commons/5/55/Escudo_Oficial_do_Volta_Redonda_Futebol_Clube.png",
+      "tombense": "https://upload.wikimedia.org/wikipedia/pt/8/85/TombenseFC.png",
+      "noroeste": "https://vectorseek.com/wp-content/uploads/2024/01/Noroeste-Futebl-Clube-Bauru-Sp-Logo-Vector.svg-.png",
+      "velo clube": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/74/Escudo_Oficial_da_Associa%C3%A7%C3%A3o_Esportiva_Velo_Clube_Rioclarense.svg/1920px-Escudo_Oficial_da_Associa%C3%A7%C3%A3o_Esportiva_Velo_Clube_Rioclarense.svg.png",
+      "independência": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Escudoindependenciafc.png",
+      "independencia": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Escudoindependenciafc.png",
+      "são bento": "https://upload.wikimedia.org/wikipedia/commons/e/e3/Esporte_Clube_S%C3%A3o_Bento_logo_%282014%29.png",
+      "sao bento": "https://upload.wikimedia.org/wikipedia/commons/e/e3/Esporte_Clube_S%C3%A3o_Bento_logo_%282014%29.png",
+      "desportivo brasil": "https://upload.wikimedia.org/wikipedia/commons/9/91/Desportivo_Brasil.png",
+      "salto": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKOrMa0Epf0QUlTn448xQJjiV_M4iOg5jxb8nrXmFdXifYzKEfQwvEtT4&s=10",
+      "união suzano": "https://upload.wikimedia.org/wikipedia/pt/9/91/Uni%C3%A3o_Suzano_Atl%C3%A9tico_Clube_logo.png",
+      "uniao suzano": "https://upload.wikimedia.org/wikipedia/pt/9/91/Uni%C3%A3o_Suzano_Atl%C3%A9tico_Clube_logo.png",
+      "sfera": "https://img1.wsimg.com/blobby/go/602fd448-a583-4069-8c89-b55787a4a331/downloads/1b8d0f22-d481-4c8f-8e54-2686a4772046/ESCUDO_SFERA.png?ver=1790168231038",
+      "comercial": "https://upload.wikimedia.org/wikipedia/pt/d/d8/Comercial_FC.png",
+      "boa vista": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Boavista_Sport_Club_SAF_logo.png",
+      "resende": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Resende_FC_logo.png",
+      "nações": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6E4ldo5_jlrJdP8N9pCF95mpKXKYUmnXe_ObECA5l4GUaHSQ5c8Ma2fs&s=10",
+      "nacoes": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6E4ldo5_jlrJdP8N9pCF95mpKXKYUmnXe_ObECA5l4GUaHSQ5c8Ma2fs&s=10",
+      "serra": "https://upload.wikimedia.org/wikipedia/commons/1/18/Escudo_do_Serra_-_2017_PNG.png"
     };
 
     const ESTADUALZAO_LIST = [
-      "RJ - Flamengo", "SP - Corinthians", "SP - Palmeiras", "MG - Atlético Mineiro", "SP - São Paulo", "RJ - Fluminense", "RJ - Botafogo", "PR - Athletico Paranaense", "BA - Bahia", "RJ - Vasco da Gama", "MG - Cruzeiro", "RS - Grêmio", "CE - Fortaleza", "RS - Internacional", "SP - Red Bull Bragantino", "SP - Santos", "RS - Juventude", "GO - Atlético Goianiense", "MG - América Mineiro", "BA - Vitória", "CE - Ceará", "MT - Cuiabá", "GO - Goiás", "PR - Coritiba", "PE - Sport", "AL - CRB", "SC - Criciúma", "SP - Mirassol", "GO - Vila Nova", "PR - Operário-PR", "SC - Avaí", "SP - Novorizontino", "SC - Chapecoense", "SP - Botafogo-SP", "PA - Paysandu", "SC - Brusque", "PA - Remo", "SP - Ponte Preta", "AL - CSA", "AM - Amazonas", "PB - Botafogo-PB", "RS - Brasil de Pelotas", "RN - América-RN", "AM - Manaus", "PR - Londrina", "SP - Ferroviária", "SC - Figueirense", "SP - Guarani", "PA - Águia de Marabá", "PI - River-PI", "RO - Porto Velho", "SP - Santo André", "SP - São Bernardo", "SP - Inter de Limeira", "PB - Treze", "PB - Campinense", "AL - ASA", "SE - Confiança", "PI - Altos", "RN - ABC", "MA - Sampaio Corrêa", "MA - Moto Club", "DF - Brasiliense", "DF - Gama", "MS - Operário-MS", "ES - Rio Branco-ES", "ES - Desportiva Ferroviária", "MT - Mixto", "MT - Luverdense", "SE - Itabaiana", "SE - Sergipe", "TO - Tocantinópolis", "TO - Palmas", "RO - Ji-Paraná", "RO - Real Ariquemes", "AC - Rio Branco", "AC - Humaitá", "AP - Trem", "AP - Macapá", "RR - Atlético Roraima", "RR - Baré", "PI - Parnahyba", "MA - Maranhão", "PA - Tuna Luso", "CE - Ferroviário", "PE - Santa Cruz", "PE - Náutico", "RN - Potiguar de Mossoró", "PB - Nacional de Patos", "BA - Juazeirense", "BA - Atlético de Alagoinhas", "BA - Jacuipense", "AL - Murici", "AL - Coruripe", "SE - Lagarto", "SE - Falcon", "PE - Salgueiro", "PE - Retrô", "PB - Sousa", "CE - Iguatu", "CE - Maracanã", "RN - Globo", "RN - Santa Cruz de Natal", "MA - Cordino", "MA - Imperatriz", "PA - Castanhal", "PA - Bragantino-PA", "AM - Nacional-AM", "AM - Princesa do Solimões", "AC - Independência", "AC - Atlético Acreano", "RR - GAS", "AP - Santos-AP", "AP - Independente-AP", "RO - Genus", "RO - Guajará", "MT - Operário Várzea-Grandense", "MT - Dom Bosco", "MS - Comercial-MS", "MS - Costa Rica", "GO - Aparecidense", "GO - Anápolis", "DF - Capital-DF", "ES - Vitória-ES", "ES - Serra"
+      "RJ - Flamengo", "SP - Corinthians", "SP - Palmeiras", "MG - Atlético Mineiro", "SP - São Paulo", "RJ - Fluminense", "RJ - Botafogo", "PR - Athletico Paranaense", "BA - Bahia", "RJ - Vasco da Gama", "MG - Cruzeiro", "RS - Grêmio", "CE - Fortaleza", "RS - Internacional", "SP - Red Bull Bragantino", "SP - Santos", "RS - Juventude", "GO - Atlético Goianiense", "MG - América Mineiro", "BA - Vitória", "CE - Ceará", "MT - Cuiabá", "GO - Goiás", "PR - Coritiba", "PE - Sport", "AL - CRB", "SC - Criciúma", "SP - Mirassol", "GO - Vila Nova", "PR - Operário-PR", "SC - Avaí", "SP - Novorizontino", "SC - Chapecoense", "SP - Botafogo-SP", "PA - Paysandu", "SC - Brusque", "PA - Remo", "SP - Ponte Preta", "AL - CSA", "AM - Amazonas", "PB - Botafogo-PB", "RS - Brasil de Pelotas", "RN - América-RN", "AM - Manaus", "PR - Londrina", "SP - Ferroviária", "SC - Figueirense", "SP - Guarani", "PA - Águia de Marabá", "PI - River-PI", "SP - Santo André", "SP - São Bernardo", "SP - Inter de Limeira", "PB - Treze", "Anápolis", "AL - ASA", "SE - Confiança", "PI - Altos", "RN - ABC", "MA - Sampaio Corrêa", "MA - Moto Club", "DF - Brasiliense", "DF - Gama", "MS - Operário-MS", "Barra", "Maringá", "MT - Mixto", "MT - Luverdense", "SE - Itabaiana", "SE - Sergipe", "TO - Tocantinópolis", "TO - Palmas", "Ypiranga", "Primavera", "AC - Rio Branco", "XV Piracicaba", "AP - Trem", "Madureira", "Cianorte", "Portuguesa", "Capivariano", "MA - Maranhão", "PA - Tuna Luso", "CE - Ferroviário", "PE - Santa Cruz", "PE - Náutico", "Agua santa", "Athletic club", "BA - Juazeirense", "Bangu", "BA - Jacuipense", "Floresta", "Icasa", "SE - Falcon", "PE - Salgueiro", "PE - Retrô", "PB - Sousa", "Joinville", "Juventus Mooca", "RN - Globo", "Oeste", "Paulista", "MA - Imperatriz", "Volta redonda", "Tombense", "Noroeste", "Velo clube", "AC - Independência", "São bento", "Desportivo Brasil", "Salto", "União Suzano", "Sfera", "Comercial", "Boa vista", "Resende", "Nações", "ES - Serra"
     ];
-
-    const SERIE_C_TEAMS = ["Amazonas", "Anápolis", "Barra-SC", "Botafogo-PB", "Brusque", "Caxias", "Confiança", "Ferroviária", "Figueirense", "Floresta", "Guarani", "Inter de Limeira", "Itabaiana", "Ituano", "Maranhão", "Maringá", "Paysandu", "Santa Cruz", "Volta Redonda", "Ypiranga-RS"];
-    const SERIE_B_TEAMS = ["Athletic", "Atlético-GO", "América-MG", "Avaí", "Botafogo-SP", "Ceará", "CRB", "Criciúma", "Cuiabá", "Fortaleza", "Goiás", "Juventude", "Londrina", "Náutico", "Novorizontino", "Operário-PR", "Ponte Preta", "São Bernardo", "Sport", "Vila Nova"];
-    const SERIE_A_TEAMS = ["Athletico-PR", "Atlético-MG", "Bahia", "Botafogo", "Chapecoense", "Corinthians", "Coritiba", "Cruzeiro", "Flamengo", "Fluminense", "Grêmio", "Internacional", "Mirassol", "Palmeiras", "Red Bull Bragantino", "Remo", "Santos", "São Paulo", "Vasco", "Vitória"];
 
     function getTeamLogoHTML(teamName, badgeObj) {
       if (!teamName) return `<span class="badge-inline-svg">${generateBadgeSVG(badgeObj)}</span>`;
@@ -1200,8 +1305,8 @@
     let isTransitioning = false;
     let currentSeason = 1;
     let season2DraftCount = 0;
-    let tournamentStage = 'ESTADUALZAO';
-    let tournamentData = { groups: {}, bracket: {}, currentPhase: 'ESTADUALZAO', groupRound: 1, currentMatchIndex: 0 };
+    let tournamentStage = 'ESTADUALZAO_PHASE1';
+    let tournamentData = { groups: {}, round: 1, maxRounds: 7, bracket: {} };
     let currentBrasfootState = { active: false, currentMatchMinute: 0, currentMatches: [], history: [] };
 
     let peer = null, connections = [], hostConn = null, isHost = true, myPlayerId = 0;
@@ -1504,7 +1609,7 @@
       isTransitioning = state.isTransitioning;
       currentSeason = state.currentSeason || 1;
       season2DraftCount = state.season2DraftCount || 0;
-      tournamentStage = state.tournamentStage || 'ESTADUALZAO';
+      tournamentStage = state.tournamentStage || 'ESTADUALZAO_PHASE1';
       pendingSwap = state.pendingSwap || null;
       if (state.tournamentData) tournamentData = state.tournamentData;
 
@@ -1568,7 +1673,7 @@
       myPlayerId = 0;
       currentSeason = 1;
       season2DraftCount = 0;
-      tournamentStage = 'ESTADUALZAO';
+      tournamentStage = 'ESTADUALZAO_PHASE1';
       usedPlayerNames.clear();
       updateBadgePreviews();
 
@@ -1622,7 +1727,7 @@
           if (!isTeamFull(i)) { allDone = false; break; }
         }
         if (allDone) {
-          startEstadualzaoSim();
+          startEstadualzaoPhase1();
           return;
         }
       } else if (currentSeason === 2) {
@@ -1630,7 +1735,7 @@
           if (teams[i].season2SwapsLeft > 0) { allDone = false; break; }
         }
         if (allDone) {
-          startEstadualzaoSim();
+          startEstadualzaoPhase1();
           return;
         }
       }
@@ -1954,8 +2059,7 @@
       return count > 0 ? Math.round(total / count) : 80;
     }
 
-    /* SISTEMA DO ESTADUALZÃO (128 CLUBES) */
-    function startEstadualzaoSim() {
+    function startEstadualzaoPhase1() {
       document.getElementById('game-arena').style.display = 'none';
       document.getElementById('league-screen').style.display = 'flex';
 
@@ -1980,45 +2084,67 @@
           name: teamName,
           badge: { c1: "#475569", c2: "#ffffff", shape: "shield", pattern: "solid", animal: "⚽" },
           isHuman: false,
-          ovr: Math.floor(Math.random() * 10) + 75
+          ovr: Math.floor(Math.random() * 12) + 74
         });
         listIndex++;
       }
 
       allParticipants = allParticipants.sort(() => Math.random() - 0.5);
 
-      tournamentStage = 'ESTADUALZAO';
+      const groups = {};
+      const groupLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
+      groupLetters.forEach((gLetter, idx) => {
+        groups[gLetter] = allParticipants.slice(idx * 8, idx * 8 + 8).map(t => ({
+          ...t, pts: 0, pj: 0, v: 0, e: 0, d: 0, gp: 0, gc: 0, sg: 0
+        }));
+      });
+
+      tournamentStage = 'ESTADUALZAO_PHASE1';
       tournamentData = {
-        currentRound: '128avos',
-        matches: createKnockoutPairings(allParticipants)
+        groups: groups,
+        round: 1,
+        maxRounds: 7,
+        bracket: {}
       };
 
-      setupKnockoutRoundMatches();
+      setupPhase1RoundMatches();
       broadcastState();
       runCurrentMatchesLoop();
     }
 
-    function createKnockoutPairings(teamList) {
-      let matches = [];
-      for (let i = 0; i < teamList.length; i += 2) {
-        matches.push({
-          home: teamList[i],
-          away: teamList[i+1],
-          homeScore: 0,
-          awayScore: 0,
-          events: [],
-          stats: { homeShots: 0, awayShots: 0, homePossession: 50, awayPossession: 50 }
-        });
-      }
-      return matches;
-    }
+    function setupPhase1RoundMatches() {
+      let roundMatches = [];
+      const groupKeys = Object.keys(tournamentData.groups);
 
-    function setupKnockoutRoundMatches() {
+      groupKeys.forEach(gKey => {
+        const list = tournamentData.groups[gKey];
+        const r = tournamentData.round;
+        for (let i = 0; i < 4; i++) {
+          let homeIdx = (r - 1 + i) % 7;
+          let awayIdx = (7 - i + r - 1) % 7;
+          if (i === 0) awayIdx = 7;
+          
+          roundMatches.push(createMatchObj(list[homeIdx], list[awayIdx], gKey));
+        }
+      });
+
       currentBrasfootState = {
         active: true,
         currentMatchMinute: 0,
-        currentMatches: tournamentData.matches,
+        currentMatches: roundMatches,
         history: currentBrasfootState.history || []
+      };
+    }
+
+    function createMatchObj(home, away, groupLabel = '') {
+      return {
+        home: home,
+        away: away,
+        homeScore: 0,
+        awayScore: 0,
+        group: groupLabel,
+        events: [],
+        stats: { homeShots: 0, awayShots: 0, homePossession: 50, awayPossession: 50 }
       };
     }
 
@@ -2051,7 +2177,7 @@
         if (currentBrasfootState.currentMatchMinute >= 90) {
           clearInterval(matchTimer);
           matchTimer = null;
-          setTimeout(() => { finishKnockoutRoundBatch(); }, 1500);
+          setTimeout(() => { finishCurrentBatch(); }, 1500);
         }
       }, 250);
     }
@@ -2081,98 +2207,195 @@
       }
     }
 
-    function finishKnockoutRoundBatch() {
+    function finishCurrentBatch() {
       if (!isHost) return;
 
-      currentBrasfootState.currentMatches.forEach(m => {
-        if (m.homeScore === m.awayScore) {
-          if (Math.random() < 0.5) m.homeScore++;
-          else m.awayScore++;
-          m.events.unshift(`🚩 Empate no agregado! Vencedor nos pênaltis: ${m.homeScore > m.awayScore ? m.home.name : m.away.name}`);
-        }
-      });
+      if (tournamentStage === 'ESTADUALZAO_PHASE1') {
+        currentBrasfootState.currentMatches.forEach(m => {
+          updateGroupStats(m.group, m.home.id, m.homeScore, m.awayScore);
+          updateGroupStats(m.group, m.away.id, m.awayScore, m.homeScore);
+        });
 
-      let winners = currentBrasfootState.currentMatches.map(m => m.homeScore > m.awayScore ? m.home : m.away);
-
-      if (tournamentStage === 'ESTADUALZAO') {
-        if (winners.length > 1) {
-          tournamentData.matches = createKnockoutPairings(winners);
-          setupKnockoutRoundMatches();
+        if (tournamentData.round < tournamentData.maxRounds) {
+          tournamentData.round++;
+          setupPhase1RoundMatches();
           broadcastState();
           runCurrentMatchesLoop();
         } else {
-          startCopaDoBrasilSim();
+          startEstadualzaoPhase2();
         }
-      } else if (tournamentStage === 'COPA_DO_BRASIL') {
-        if (winners.length > 1) {
-          tournamentData.matches = createKnockoutPairings(winners);
-          setupKnockoutRoundMatches();
+      } else if (tournamentStage === 'ESTADUALZAO_PHASE2') {
+        currentBrasfootState.currentMatches.forEach(m => {
+          updateGroupStats(m.group, m.home.id, m.homeScore, m.awayScore);
+          updateGroupStats(m.group, m.away.id, m.awayScore, m.homeScore);
+        });
+
+        if (tournamentData.round < tournamentData.maxRounds) {
+          tournamentData.round++;
+          setupPhase2RoundMatches();
           broadcastState();
           runCurrentMatchesLoop();
         } else {
-          startBrasileiraoSim();
+          startEstadualzaoPlayoffs();
+        }
+      } else if (tournamentStage === 'PLAYOFFS') {
+        currentBrasfootState.currentMatches.forEach(m => {
+          if (m.homeScore === m.awayScore) {
+            if (Math.random() < 0.5) m.homeScore++;
+            else m.awayScore++;
+            m.events.unshift(`🚩 Pênaltis! Vencedor: ${m.homeScore > m.awayScore ? m.home.name : m.away.name}`);
+          }
+        });
+
+        let winners = currentBrasfootState.currentMatches.map(m => m.homeScore > m.awayScore ? m.home : m.away);
+        if (winners.length > 1) {
+          tournamentData.bracket.matches = createKnockoutPairings(winners);
+          setupPlayoffRoundMatches();
+          broadcastState();
+          runCurrentMatchesLoop();
+        } else {
+          showPodiumScreen();
         }
       }
     }
 
-    /* SISTEMA DA COPA DO BRASIL (64 CLUBES) */
-    function startCopaDoBrasilSim() {
-      if (!isHost) return;
-      let allParticipants = [];
-      for (let i = 0; i < playerCount; i++) {
-        allParticipants.push({
-          id: teams[i].id,
-          name: teams[i].name,
-          badge: teams[i].badge,
-          isHuman: true,
-          ovr: calculateTeamOvr(teams[i])
-        });
-      }
+    function updateGroupStats(groupKey, teamId, gPro, gContra) {
+      const team = tournamentData.groups[groupKey].find(t => t.id === teamId);
+      if (!team) return;
 
-      let listIndex = 0;
-      while (allParticipants.length < 64) {
-        const teamName = SERIE_A_TEAMS[listIndex % SERIE_A_TEAMS.length];
-        allParticipants.push({
-          id: `cdb_${listIndex}`,
-          name: teamName,
-          badge: { c1: "#3b82f6", c2: "#ffffff", shape: "shield", pattern: "solid", animal: "🏆" },
-          isHuman: false,
-          ovr: 84
-        });
-        listIndex++;
-      }
+      team.pj++;
+      team.gp += gPro;
+      team.gc += gContra;
+      team.sg = team.gp - team.gc;
 
-      allParticipants = allParticipants.sort(() => Math.random() - 0.5);
+      if (gPro > gContra) { team.v++; team.pts += 3; }
+      else if (gPro === gContra) { team.e++; team.pts += 1; }
+      else { team.d++; }
 
-      tournamentStage = 'COPA_DO_BRASIL';
+      tournamentData.groups[groupKey].sort((a, b) => b.pts - a.pts || b.sg - a.sg || b.gp - a.gp);
+    }
+
+    function startEstadualzaoPhase2() {
+      let qualified64 = [];
+      Object.keys(tournamentData.groups).forEach(gKey => {
+        const sorted = tournamentData.groups[gKey];
+        for (let i = 0; i < 4; i++) {
+          if (sorted[i]) {
+            qualified64.push({
+              id: sorted[i].id,
+              name: sorted[i].name,
+              badge: sorted[i].badge,
+              ovr: sorted[i].ovr,
+              isHuman: sorted[i].isHuman
+            });
+          }
+        }
+      });
+
+      qualified64 = qualified64.sort(() => Math.random() - 0.5);
+      const groups = {};
+      const groupLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
+      groupLetters.forEach((gLetter, idx) => {
+        groups[gLetter] = qualified64.slice(idx * 4, idx * 4 + 4).map(t => ({
+          ...t, pts: 0, pj: 0, v: 0, e: 0, d: 0, gp: 0, gc: 0, sg: 0
+        }));
+      });
+
+      tournamentStage = 'ESTADUALZAO_PHASE2';
       tournamentData = {
-        currentRound: '64avos',
-        matches: createKnockoutPairings(allParticipants)
+        groups: groups,
+        round: 1,
+        maxRounds: 6,
+        bracket: {}
       };
 
-      setupKnockoutRoundMatches();
+      setupPhase2RoundMatches();
       broadcastState();
       runCurrentMatchesLoop();
     }
 
-    /* SISTEMA DO BRASILEIRÃO (SÉRIE C, B, A) */
-    function startBrasileiraoSim() {
-      if (!isHost) return;
-      tournamentStage = 'BRASILEIRAO_C';
-      
-      let serieCTeams = SERIE_C_TEAMS.slice(0, 20 - playerCount);
-      for (let i = 0; i < playerCount; i++) {
-        serieCTeams.push(teams[i].name);
-      }
+    function setupPhase2RoundMatches() {
+      let roundMatches = [];
+      const groupKeys = Object.keys(tournamentData.groups);
+      const r = tournamentData.round;
 
+      groupKeys.forEach(gKey => {
+        const list = tournamentData.groups[gKey];
+        let pairings = [];
+        if (r === 1) pairings = [[0,1], [2,3]];
+        if (r === 2) pairings = [[0,2], [1,3]];
+        if (r === 3) pairings = [[0,3], [1,2]];
+        if (r === 4) pairings = [[1,0], [3,2]];
+        if (r === 5) pairings = [[2,0], [3,1]];
+        if (r === 6) pairings = [[3,0], [2,1]];
+
+        pairings.forEach(p => {
+          roundMatches.push(createMatchObj(list[p[0]], list[p[1]], gKey));
+        });
+      });
+
+      currentBrasfootState = {
+        active: true,
+        currentMatchMinute: 0,
+        currentMatches: roundMatches,
+        history: currentBrasfootState.history || []
+      };
+    }
+
+    function startEstadualzaoPlayoffs() {
+      let qualified32 = [];
+      Object.keys(tournamentData.groups).forEach(gKey => {
+        const sorted = tournamentData.groups[gKey];
+        for (let i = 0; i < 2; i++) {
+          if (sorted[i]) {
+            qualified32.push({
+              id: sorted[i].id,
+              name: sorted[i].name,
+              badge: sorted[i].badge,
+              ovr: sorted[i].ovr,
+              isHuman: sorted[i].isHuman
+            });
+          }
+        }
+      });
+
+      qualified32 = qualified32.sort(() => Math.random() - 0.5);
+
+      tournamentStage = 'PLAYOFFS';
       tournamentData = {
-        phase: 'SERIE_C',
-        table: serieCTeams.map(n => ({ name: n, pts: 0, pj: 0, v: 0, e: 0, d: 0, gp: 0, gc: 0, sg: 0, ovr: 80 }))
+        groups: {},
+        bracket: {
+          matches: createKnockoutPairings(qualified32)
+        }
       };
 
-      setTimeout(() => {
-        showPodiumScreen();
-      }, 2000);
+      setupPlayoffRoundMatches();
+      broadcastState();
+      runCurrentMatchesLoop();
+    }
+
+    function createKnockoutPairings(teamList) {
+      let matches = [];
+      for (let i = 0; i < teamList.length; i += 2) {
+        matches.push({
+          home: teamList[i],
+          away: teamList[i+1],
+          homeScore: 0,
+          awayScore: 0,
+          events: [],
+          stats: { homeShots: 0, awayShots: 0, homePossession: 50, awayPossession: 50 }
+        });
+      }
+      return matches;
+    }
+
+    function setupPlayoffRoundMatches() {
+      currentBrasfootState = {
+        active: true,
+        currentMatchMinute: 0,
+        currentMatches: tournamentData.bracket.matches,
+        history: currentBrasfootState.history || []
+      };
     }
 
     function showPodiumScreen() {
@@ -2218,12 +2441,12 @@
       if (!container) return;
       container.innerHTML = '';
 
-      let titleStage = "🏆 ESTADUALZÃO (128 CLUBES)";
-      if (tournamentStage === 'COPA_DO_BRASIL') titleStage = "🏆 COPA DO BRASIL (64 CLUBES)";
-      if (tournamentStage === 'BRASILEIRAO_C') titleStage = "🏆 BRASILEIRÃO SÉRIE C";
+      let titleStage = "🏆 ESTADUALZÃO - FASE DE GRUPOS (16x8)";
+      if (tournamentStage === 'ESTADUALZAO_PHASE2') titleStage = "🏆 ESTADUALZÃO - SEGUNDA FASE (16x4)";
+      if (tournamentStage === 'PLAYOFFS') titleStage = "🏆 ESTADUALZÃO - MATA-MATA (32 TIMES)";
 
       document.getElementById('phase-indicator').innerText = titleStage;
-      document.getElementById('round-indicator').innerText = 'Partidas eliminatórias ida e volta em tempo real';
+      document.getElementById('round-indicator').innerText = tournamentStage === 'PLAYOFFS' ? 'Mata-Mata em Tempo Real' : `Rodada ${tournamentData.round} de ${tournamentData.maxRounds}`;
 
       currentBrasfootState.currentMatches.forEach(m => {
         const box = document.createElement('div');
@@ -2256,33 +2479,63 @@
     function renderTournamentSidePanel() {
       const groupsDiv = document.getElementById('groups-container');
       const bracketDiv = document.getElementById('bracket-list-container');
-      groupsDiv.style.display = 'none';
-      bracketDiv.style.display = 'flex';
-      bracketDiv.innerHTML = '';
 
-      const title = document.createElement('div');
-      title.className = 'bracket-phase-title';
-      title.innerText = tournamentStage === 'ESTADUALZÃO' ? 'Chaveamento Estadualzão' : 'Chaveamento Eliminatório';
-      bracketDiv.appendChild(title);
+      if (tournamentStage !== 'PLAYOFFS') {
+        groupsDiv.style.display = 'grid';
+        bracketDiv.style.display = 'none';
+        groupsDiv.innerHTML = '';
 
-      currentBrasfootState.currentMatches.forEach(m => {
-        const item = document.createElement('div');
-        item.className = 'bracket-match-item';
-        const homeWin = m.homeScore > m.awayScore;
-        item.innerHTML = `
-          <div class="bracket-team ${homeWin ? 'winner' : ''}">
-            <span>${getTeamLogoHTML(m.home.name, m.home.badge)} ${m.home.name}</span>
-            <span>${m.homeScore}</span>
-          </div>
-          <div class="bracket-team ${!homeWin && m.homeScore !== m.awayScore ? 'winner' : ''}">
-            <span>${getTeamLogoHTML(m.away.name, m.away.badge)} ${m.away.name}</span>
-            <span>${m.awayScore}</span>
-          </div>
-        `;
-        bracketDiv.appendChild(item);
-      });
+        Object.keys(tournamentData.groups).forEach(gKey => {
+          const card = document.createElement('div');
+          card.className = 'group-card';
+          let rowsHTML = tournamentData.groups[gKey].map((t, idx) => `
+            <tr>
+              <td class="team-cell">${idx + 1}. ${getTeamLogoHTML(t.name, t.badge)} ${t.name}</td>
+              <td><b>${t.pts}</b></td>
+              <td>${t.pj}</td>
+              <td>${t.sg}</td>
+            </tr>
+          `).join('');
+
+          card.innerHTML = `
+            <div class="group-card-title">Grupo ${gKey}</div>
+            <table>
+              <thead><tr><th style="text-align:left;">Time</th><th>P</th><th>J</th><th>SG</th></tr></thead>
+              <tbody>${rowsHTML}</tbody>
+            </table>
+          `;
+          groupsDiv.appendChild(card);
+        });
+      } else {
+        groupsDiv.style.display = 'none';
+        bracketDiv.style.display = 'flex';
+        bracketDiv.innerHTML = '';
+
+        const title = document.createElement('div');
+        title.className = 'bracket-phase-title';
+        title.innerText = 'Chaveamento Mata-Mata';
+        bracketDiv.appendChild(title);
+
+        if (tournamentData.bracket && tournamentData.bracket.matches) {
+          tournamentData.bracket.matches.forEach(m => {
+            const item = document.createElement('div');
+            item.className = 'bracket-match-item';
+            const homeWin = m.homeScore > m.awayScore;
+            item.innerHTML = `
+              <div class="bracket-team ${homeWin ? 'winner' : ''}">
+                <span>${getTeamLogoHTML(m.home.name, m.home.badge)} ${m.home.name}</span>
+                <span>${m.homeScore}</span>
+              </div>
+              <div class="bracket-team ${!homeWin && m.homeScore !== m.awayScore ? 'winner' : ''}">
+                <span>${getTeamLogoHTML(m.away.name, m.away.badge)} ${m.away.name}</span>
+                <span>${m.awayScore}</span>
+              </div>
+            `;
+            bracketDiv.appendChild(item);
+          });
+        }
+      }
     }
   </script>
-  <div style="position:fixed;bottom:4px;right:8px;font-size:10px;color:#94a3b8;opacity:.6;z-index:9999;pointer-events:none;">versão completa: 128 times + copas + brasileirao</div>
 </body>
 </html>
