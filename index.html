@@ -667,7 +667,6 @@
     </div>
 
     <div class="setup-grid" id="setup-teams-grid">
-      <!-- Times 1 a 8 -->
       <div class="team-input-card" id="card-t0">
         <label><b>Time 1 (Host)</b></label>
         <div class="badge-preview" id="badge-prev-0"></div>
@@ -969,7 +968,6 @@
   </div>
 
   <script>
-    // MAPEAMENTO COMPLETO DE LOGOS COM OS TIMES REQUISITADOS
     const TEAM_LOGOS = {
       "flamengo": "https://upload.wikimedia.org/wikipedia/commons/9/93/Flamengo-RJ_%28BRA%29.png",
       "corinthians": "https://thumb.wikimedia.org/wikipedia/pt/thumb/b/b4/Corinthians_simbolo.png/250px-Corinthians_simbolo.png",
@@ -1123,9 +1121,15 @@
       "serra": "https://upload.wikimedia.org/wikipedia/commons/1/18/Escudo_do_Serra_-_2017_PNG.png"
     };
 
-    const ESTADUALZAO_LIST = [
-      "RJ - Flamengo", "SP - Corinthians", "SP - Palmeiras", "MG - Atlético Mineiro", "SP - São Paulo", "RJ - Fluminense", "RJ - Botafogo", "PR - Athletico Paranaense", "BA - Bahia", "RJ - Vasco da Gama", "MG - Cruzeiro", "RS - Grêmio", "CE - Fortaleza", "RS - Internacional", "SP - Red Bull Bragantino", "SP - Santos", "RS - Juventude", "GO - Atlético Goianiense", "MG - América Mineiro", "BA - Vitória", "CE - Ceará", "MT - Cuiabá", "GO - Goiás", "PR - Coritiba", "PE - Sport", "AL - CRB", "SC - Criciúma", "SP - Mirassol", "GO - Vila Nova", "PR - Operário-PR", "SC - Avaí", "SP - Novorizontino", "SC - Chapecoense", "SP - Botafogo-SP", "PA - Paysandu", "SC - Brusque", "PA - Remo", "SP - Ponte Preta", "AL - CSA", "AM - Amazonas", "PB - Botafogo-PB", "RS - Brasil de Pelotas", "RN - América-RN", "AM - Manaus", "PR - Londrina", "SP - Ferroviária", "SC - Figueirense", "SP - Guarani", "PA - Águia de Marabá", "PI - River-PI", "SP - Santo André", "SP - São Bernardo", "SP - Inter de Limeira", "PB - Treze", "Anápolis", "AL - ASA", "SE - Confiança", "PI - Altos", "RN - ABC", "MA - Sampaio Corrêa", "MA - Moto Club", "DF - Brasiliense", "DF - Gama", "MS - Operário-MS", "Barra", "Maringá", "MT - Mixto", "MT - Luverdense", "SE - Itabaiana", "SE - Sergipe", "TO - Tocantinópolis", "TO - Palmas", "Ypiranga", "Primavera", "AC - Rio Branco", "XV Piracicaba", "AP - Trem", "Madureira", "Cianorte", "Portuguesa", "Capivariano", "MA - Maranhão", "PA - Tuna Luso", "CE - Ferroviário", "PE - Santa Cruz", "PE - Náutico", "Agua santa", "Athletic club", "BA - Juazeirense", "Bangu", "BA - Jacuipense", "Floresta", "Icasa", "SE - Falcon", "PE - Salgueiro", "PE - Retrô", "PB - Sousa", "Joinville", "Juventus Mooca", "RN - Globo", "Oeste", "Paulista", "MA - Imperatriz", "Volta redonda", "Tombense", "Noroeste", "Velo clube", "AC - Independência", "São bento", "Desportivo Brasil", "Salto", "União Suzano", "Sfera", "Comercial", "Boa vista", "Resende", "Nações", "ES - Serra"
+    // Lista sem siglas e limpa
+    const RAW_ESTADUALZAO_LIST = [
+      "Flamengo", "Corinthians", "Palmeiras", "Atlético Mineiro", "São Paulo", "Fluminense", "Botafogo", "Athletico Paranaense", "Bahia", "Vasco da Gama", "Cruzeiro", "Grêmio", "Fortaleza", "Internacional", "Red Bull Bragantino", "Santos", "Juventude", "Atlético Goianiense", "América Mineiro", "Vitória", "Ceará", "Cuiabá", "Goiás", "Coritiba", "Sport", "CRB", "Criciúma", "Mirassol", "Vila Nova", "Operário-PR", "Avaí", "Novorizontino", "Chapecoense", "Botafogo-SP", "Paysandu", "Brusque", "Remo", "Ponte Preta", "CSA", "Amazonas", "Botafogo-PB", "Brasil de Pelotas", "América-RN", "Manaus", "Londrina", "Ferroviária", "Figueirense", "Guarani", "Águia de Marabá", "River-PI", "Santo André", "São Bernardo", "Inter de Limeira", "Treze", "Anápolis", "ASA", "Confiança", "Altos", "ABC", "Sampaio Corrêa", "Moto Club", "Brasiliense", "Gama", "Operário-MS", "Barra", "Maringá", "Mixto", "Luverdense", "Itabaiana", "Sergipe", "Tocantinópolis", "Palmas", "Ypiranga", "Primavera", "Rio Branco", "XV Piracicaba", "Trem", "Madureira", "Cianorte", "Portuguesa", "Capivariano", "Maranhão", "Tuna Luso", "Ferroviário", "Santa Cruz", "Náutico", "Água Santa", "Athletic Club", "Juazeirense", "Bangu", "Jacuipense", "Floresta", "Icasa", "Falcon", "Salgueiro", "Retrô", "Sousa", "Joinville", "Juventus Mooca", "Globo", "Oeste", "Paulista", "Imperatriz", "Volta Redonda", "Tombense", "Noroeste", "Velo Clube", "Independência", "São Bento", "Desportivo Brasil", "Salto", "União Suzano", "Sfera", "Comercial", "Boa Vista", "Resende", "Nações", "Serra"
     ];
+
+    // Clubes conhecidos que recebem bônus de força (evita zebras e favorece favoritos)
+    const BIG_TEAMS = new Set([
+      "Flamengo", "Corinthians", "Palmeiras", "Atlético Mineiro", "São Paulo", "Fluminense", "Botafogo", "Vasco da Gama", "Cruzeiro", "Grêmio", "Internacional", "Santos"
+    ]);
 
     function getTeamLogoHTML(teamName, badgeObj) {
       if (!teamName) return `<span class="badge-inline-svg">${generateBadgeSVG(badgeObj)}</span>`;
@@ -2076,15 +2080,23 @@
         });
       }
 
+      // Garante que os times da lista não se repitam utilizando um Set/pool embaralhado
+      let availableTeamNames = [...RAW_ESTADUALZAO_LIST].sort(() => Math.random() - 0.5);
       let listIndex = 0;
+
       while (allParticipants.length < 128) {
-        const teamName = ESTADUALZAO_LIST[listIndex % ESTADUALZAO_LIST.length];
+        const teamName = availableTeamNames[listIndex % availableTeamNames.length];
+        
+        // Atribui bônus de força se for time conhecido, gerando dificuldade para zebras
+        const isBig = BIG_TEAMS.has(teamName);
+        const baseOvr = isBig ? (Math.floor(Math.random() * 8) + 84) : (Math.floor(Math.random() * 10) + 70);
+
         allParticipants.push({
-          id: `est_${listIndex}`,
+          id: `est_${listIndex}_${teamName}`,
           name: teamName,
           badge: { c1: "#475569", c2: "#ffffff", shape: "shield", pattern: "solid", animal: "⚽" },
           isHuman: false,
-          ovr: Math.floor(Math.random() * 12) + 74
+          ovr: baseOvr
         });
         listIndex++;
       }
@@ -2183,24 +2195,30 @@
     }
 
     function simulateMatchMinute(match, min) {
-      const ovrDiff = match.home.ovr - match.away.ovr;
-      const homeChance = 0.03 + (ovrDiff * 0.002);
-      const awayChance = 0.03 - (ovrDiff * 0.002);
+      // Ajuste de peso ampliado para favorecer times conhecidos/fortes e dificultar zebras
+      const isHomeBig = BIG_TEAMS.has(match.home.name);
+      const isAwayBig = BIG_TEAMS.has(match.away.name);
+      let ovrDiff = match.home.ovr - match.away.ovr;
+      if (isHomeBig && !isAwayBig) ovrDiff += 4;
+      if (isAwayBig && !isHomeBig) ovrDiff -= 4;
 
-      match.stats.homePossession = Math.min(75, Math.max(25, 50 + Math.round(ovrDiff * 1.5) + Math.floor(Math.random() * 5 - 2)));
+      const homeChance = 0.03 + (ovrDiff * 0.003);
+      const awayChance = 0.03 - (ovrDiff * 0.003);
+
+      match.stats.homePossession = Math.min(78, Math.max(22, 50 + Math.round(ovrDiff * 1.8) + Math.floor(Math.random() * 5 - 2)));
       match.stats.awayPossession = 100 - match.stats.homePossession;
 
-      if (Math.random() < homeChance) {
+      if (Math.random() < Math.max(0.01, homeChance)) {
         match.stats.homeShots++;
-        if (Math.random() < 0.35) {
+        if (Math.random() < 0.4) {
           match.homeScore++;
           match.events.unshift(`⚽ ${min}' GOL do ${match.home.name}! (${match.homeScore}-${match.awayScore})`);
         }
       }
 
-      if (Math.random() < awayChance) {
+      if (Math.random() < Math.max(0.01, awayChance)) {
         match.stats.awayShots++;
-        if (Math.random() < 0.35) {
+        if (Math.random() < 0.4) {
           match.awayScore++;
           match.events.unshift(`⚽ ${min}' GOL do ${match.away.name}! (${match.homeScore}-${match.awayScore})`);
         }
@@ -2241,7 +2259,10 @@
       } else if (tournamentStage === 'PLAYOFFS') {
         currentBrasfootState.currentMatches.forEach(m => {
           if (m.homeScore === m.awayScore) {
-            if (Math.random() < 0.5) m.homeScore++;
+            // Desempate tende a beneficiar o favorito/time com maior OVR
+            const homeAdv = m.home.ovr + (BIG_TEAMS.has(m.home.name) ? 5 : 0);
+            const awayAdv = m.away.ovr + (BIG_TEAMS.has(m.away.name) ? 5 : 0);
+            if (Math.random() * homeAdv >= Math.random() * awayAdv) m.homeScore++;
             else m.awayScore++;
             m.events.unshift(`🚩 Pênaltis! Vencedor: ${m.homeScore > m.awayScore ? m.home.name : m.away.name}`);
           }
