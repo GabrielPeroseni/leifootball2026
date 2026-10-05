@@ -500,6 +500,29 @@
     .league-table-container { background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-color); padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
     .bracket-list { display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem; overflow-y: auto; }
 
+    .top-scorers-box {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+    }
+    .top-scorers-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 4px;
+      margin-bottom: 6px;
+    }
+    .scorer-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      margin-bottom: 3px;
+    }
+
     .group-tables-grid { display: grid; grid-template-columns: 1fr; gap: 12px; overflow-y: auto; }
     .group-card { background: var(--bg-input); padding: 10px; border-radius: 6px; font-size: 0.9rem; border: 1px solid var(--border-color); }
     .group-card-title { font-weight: 700; color: #60a5fa; font-size: 0.95rem; margin-bottom: 6px; text-transform: uppercase; border-bottom: 1px solid var(--border-color); padding-bottom: 2px; }
@@ -926,6 +949,10 @@
       </div>
 
       <div class="league-table-container">
+        <div class="top-scorers-box" id="top-scorers-container">
+          <div class="top-scorers-title">⚽ Artilharia do Campeonato</div>
+          <div id="top-scorers-list"><div style="font-size:0.75rem; color:var(--text-muted);">Nenhum gol marcado ainda.</div></div>
+        </div>
         <h3 style="color:var(--text-main); text-align:center; margin-bottom:6px; font-size:0.95rem; text-transform:uppercase;" id="side-panel-title">Tabelas / Classificação</h3>
         <div class="group-tables-grid" id="groups-container"></div>
         <div class="bracket-list" id="bracket-list-container" style="display:none;"></div>
@@ -1121,12 +1148,10 @@
       "serra": "https://upload.wikimedia.org/wikipedia/commons/1/18/Escudo_do_Serra_-_2017_PNG.png"
     };
 
-    // Lista sem siglas e limpa
     const RAW_ESTADUALZAO_LIST = [
       "Flamengo", "Corinthians", "Palmeiras", "Atlético Mineiro", "São Paulo", "Fluminense", "Botafogo", "Athletico Paranaense", "Bahia", "Vasco da Gama", "Cruzeiro", "Grêmio", "Fortaleza", "Internacional", "Red Bull Bragantino", "Santos", "Juventude", "Atlético Goianiense", "América Mineiro", "Vitória", "Ceará", "Cuiabá", "Goiás", "Coritiba", "Sport", "CRB", "Criciúma", "Mirassol", "Vila Nova", "Operário-PR", "Avaí", "Novorizontino", "Chapecoense", "Botafogo-SP", "Paysandu", "Brusque", "Remo", "Ponte Preta", "CSA", "Amazonas", "Botafogo-PB", "Brasil de Pelotas", "América-RN", "Manaus", "Londrina", "Ferroviária", "Figueirense", "Guarani", "Águia de Marabá", "River-PI", "Santo André", "São Bernardo", "Inter de Limeira", "Treze", "Anápolis", "ASA", "Confiança", "Altos", "ABC", "Sampaio Corrêa", "Moto Club", "Brasiliense", "Gama", "Operário-MS", "Barra", "Maringá", "Mixto", "Luverdense", "Itabaiana", "Sergipe", "Tocantinópolis", "Palmas", "Ypiranga", "Primavera", "Rio Branco", "XV Piracicaba", "Trem", "Madureira", "Cianorte", "Portuguesa", "Capivariano", "Maranhão", "Tuna Luso", "Ferroviário", "Santa Cruz", "Náutico", "Água Santa", "Athletic Club", "Juazeirense", "Bangu", "Jacuipense", "Floresta", "Icasa", "Santa-Cruz-Salto", "Salgueiro", "Retrô", "Sousa", "Joinville", "Juventus Mooca", "Globo", "Oeste", "Paulista", "Imperatriz", "Volta Redonda", "Tombense", "Noroeste", "Velo Clube", "Independência", "São Bento", "Desportivo Brasil", "Salto", "União Suzano", "Sfera", "Comercial", "Boa Vista", "Resende", "Nações", "Serra"
     ];
 
-    // Clubes conhecidos que recebem bônus de força (evita zebras e favorece favoritos)
     const BIG_TEAMS = new Set([
       "Flamengo", "Corinthians", "Palmeiras", "Atlético Mineiro", "São Paulo", "Fluminense", "Botafogo", "Vasco da Gama", "Cruzeiro", "Grêmio", "Internacional", "Santos"
     ]);
@@ -1312,6 +1337,8 @@
     let tournamentStage = 'ESTADUALZAO_PHASE1';
     let tournamentData = { groups: {}, round: 1, maxRounds: 7, bracket: {} };
     let currentBrasfootState = { active: false, currentMatchMinute: 0, currentMatches: [], history: [] };
+    let topScorers = {}; // Guarda a artilharia: { "Nome do Jogador": { goals: 5, team: "Time" } }
+    let playoffResults = { champion: null, runnerUp: null, semifinalists: [] };
 
     let peer = null, connections = [], hostConn = null, isHost = true, myPlayerId = 0;
 
@@ -1580,6 +1607,8 @@
         currentPlayerCard, turnOrder, activeTurnIndex, highestBid,
         highestBidderId, activeBidders, playersActedThisCard: Array.from(playersActedThisCard), isAuctionStarted, isDiceRolled, isTransitioning, currentSeason, season2DraftCount, tournamentStage, tournamentData,
         pendingSwap: pendingSwap,
+        topScorers: topScorers,
+        playoffResults: playoffResults,
         diceResultText: document.getElementById('dice-result').innerText,
         setupHidden: document.getElementById('setup-screen').style.display === 'none',
         menuHidden: document.getElementById('main-menu-screen').style.display === 'none',
@@ -1616,6 +1645,8 @@
       tournamentStage = state.tournamentStage || 'ESTADUALZAO_PHASE1';
       pendingSwap = state.pendingSwap || null;
       if (state.tournamentData) tournamentData = state.tournamentData;
+      if (state.topScorers) topScorers = state.topScorers;
+      if (state.playoffResults) playoffResults = state.playoffResults;
 
       for (let i = 0; i < playerCount; i++) {
         const input = document.getElementById(`t${i}-name`);
@@ -1679,6 +1710,8 @@
       season2DraftCount = 0;
       tournamentStage = 'ESTADUALZAO_PHASE1';
       usedPlayerNames.clear();
+      topScorers = {};
+      playoffResults = { champion: null, runnerUp: null, semifinalists: [] };
       updateBadgePreviews();
 
       document.getElementById('main-menu-screen').style.display = 'none';
@@ -1885,7 +1918,7 @@
       let newBid = !isAuctionStarted ? amount : highestBid + amount;
       
       if (teams[currentTeamId].tokens < newBid) {
-        if (senderId === myPlayerId) alert("⚠️ Tokens insuficientes!");
+        if (senderId === myPlayerId) alert("⚠️️ Tokens insuficientes!");
         return;
       }
 
@@ -2080,15 +2113,12 @@
         });
       }
 
-      // CORREÇÃO: Utiliza um Set para filtrar e garantir que os nomes dos times sejam unicos
       let uniqueTeamNames = Array.from(new Set(RAW_ESTADUALZAO_LIST));
       let availableTeamNames = uniqueTeamNames.sort(() => Math.random() - 0.5);
       let listIndex = 0;
 
       while (allParticipants.length < 128) {
         const teamName = availableTeamNames[listIndex % availableTeamNames.length];
-        
-        // Atribui bônus de força se for time conhecido, gerando dificuldade para zebras
         const isBig = BIG_TEAMS.has(teamName);
         const baseOvr = isBig ? (Math.floor(Math.random() * 8) + 84) : (Math.floor(Math.random() * 10) + 70);
 
@@ -2195,6 +2225,35 @@
       }, 250);
     }
 
+    // LEITURA DOS JOGADORES DE CADA TIME PARA NARRAR GOL DO JOGADOR
+    function getRandomScorerName(teamObj) {
+      if (teamObj.isHuman) {
+        const humanTeam = teams.find(t => t.id === teamObj.id || t.name === teamObj.name);
+        if (humanTeam && humanTeam.lineup) {
+          const availablePlayers = [];
+          for (let key in humanTeam.lineup) {
+            if (humanTeam.lineup[key] && key !== 'GOL') {
+              availablePlayers.push(humanTeam.lineup[key].name);
+            }
+          }
+          if (availablePlayers.length > 0) {
+            return availablePlayers[Math.floor(Math.random() * availablePlayers.length)];
+          }
+        }
+      }
+      
+      const genericAta = database.ATA.map(p => p.name);
+      return genericAta[Math.floor(Math.random() * genericAta.length)];
+    }
+
+    function recordGoal(scorerName, teamName) {
+      if (!topScorers[scorerName]) {
+        topScorers[scorerName] = { goals: 0, team: teamName };
+      }
+      topScorers[scorerName].goals++;
+      topScorers[scorerName].team = teamName;
+    }
+
     function simulateMatchMinute(match, min) {
       const isHomeBig = BIG_TEAMS.has(match.home.name);
       const isAwayBig = BIG_TEAMS.has(match.away.name);
@@ -2212,7 +2271,9 @@
         match.stats.homeShots++;
         if (Math.random() < 0.4) {
           match.homeScore++;
-          match.events.unshift(`⚽ ${min}' GOL do ${match.home.name}! (${match.homeScore}-${match.awayScore})`);
+          const scorer = getRandomScorerName(match.home);
+          recordGoal(scorer, match.home.name);
+          match.events.unshift(`⚽ ${min}' GOL do ${scorer} (${match.home.name})! (${match.homeScore}-${match.awayScore})`);
         }
       }
 
@@ -2220,7 +2281,9 @@
         match.stats.awayShots++;
         if (Math.random() < 0.4) {
           match.awayScore++;
-          match.events.unshift(`⚽ ${min}' GOL do ${match.away.name}! (${match.homeScore}-${match.awayScore})`);
+          const scorer = getRandomScorerName(match.away);
+          recordGoal(scorer, match.away.name);
+          match.events.unshift(`⚽ ${min}' GOL do ${scorer} (${match.away.name})! (${match.homeScore}-${match.awayScore})`);
         }
       }
     }
@@ -2267,14 +2330,30 @@
           }
         });
 
-        let winners = currentBrasfootState.currentMatches.map(m => m.homeScore > m.awayScore ? m.home : m.away);
-        if (winners.length > 1) {
+        const currentMatches = currentBrasfootState.currentMatches;
+        
+        // REGISTRA SEMIFINALISTAS E CAMPEÃO DA FINAL
+        if (currentMatches.length === 2) {
+          playoffResults.semifinalists = currentMatches.map(m => m.homeScore > m.awayScore ? m.away.name : m.home.name);
+        }
+
+        let winners = currentMatches.map(m => m.homeScore > m.awayScore ? m.home : m.away);
+
+        if (currentMatches.length === 1) {
+          const finalMatch = currentMatches[0];
+          if (finalMatch.homeScore > finalMatch.awayScore) {
+            playoffResults.champion = finalMatch.home.name;
+            playoffResults.runnerUp = finalMatch.away.name;
+          } else {
+            playoffResults.champion = finalMatch.away.name;
+            playoffResults.runnerUp = finalMatch.home.name;
+          }
+          showPodiumScreen();
+        } else if (winners.length > 1) {
           tournamentData.bracket.matches = createKnockoutPairings(winners);
           setupPlayoffRoundMatches();
           broadcastState();
           runCurrentMatchesLoop();
-        } else {
-          showPodiumScreen();
         }
       }
     }
@@ -2427,16 +2506,18 @@
     }
 
     function renderPodium() {
-      const champ = teams[0] ? teams[0].name : "Time Campeão";
-      const vice = teams[1] ? teams[1].name : "Vice-Campeão";
-      const third = teams[2] ? teams[2].name : "Terceiro Lugar";
+      const champ = playoffResults.champion || (teams[0] ? teams[0].name : "Time Campeão");
+      const vice = playoffResults.runnerUp || (teams[1] ? teams[1].name : "Vice-Campeão");
+      const semiText = playoffResults.semifinalists && playoffResults.semifinalists.length > 0 
+        ? playoffResults.semifinalists.join(" / ") 
+        : "Semifinalistas";
 
       document.getElementById('podium-name-1').innerText = champ;
       document.getElementById('podium-badge-1').innerHTML = getTeamLogoHTML(champ);
       document.getElementById('podium-name-2').innerText = vice;
       document.getElementById('podium-badge-2').innerHTML = getTeamLogoHTML(vice);
-      document.getElementById('podium-name-3').innerText = third;
-      document.getElementById('podium-badge-3').innerHTML = getTeamLogoHTML(third);
+      document.getElementById('podium-name-3').innerText = semiText;
+      document.getElementById('podium-badge-3').innerHTML = getTeamLogoHTML(playoffResults.semifinalists[0] || semiText);
 
       setTimeout(() => {
         document.getElementById('step-1').classList.add('show');
@@ -2493,7 +2574,30 @@
         container.appendChild(box);
       });
 
+      renderTopScorersUI();
       renderTournamentSidePanel();
+    }
+
+    function renderTopScorersUI() {
+      const listEl = document.getElementById('top-scorers-list');
+      if (!listEl) return;
+
+      const sortedScorers = Object.keys(topScorers)
+        .map(name => ({ name, ...topScorers[name] }))
+        .sort((a, b) => b.goals - a.goals)
+        .slice(0, 5);
+
+      if (sortedScorers.length === 0) {
+        listEl.innerHTML = `<div style="font-size:0.75rem; color:var(--text-muted);">Nenhum gol marcado ainda.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = sortedScorers.map((s, idx) => `
+        <div class="scorer-row">
+          <span><b>${idx + 1}. ${s.name}</b> <small style="color:var(--text-muted);">(${s.team})</small></span>
+          <span style="color:var(--accent-gold); font-weight:bold;">${s.goals} ⚽</span>
+        </div>
+      `).join('');
     }
 
     function renderTournamentSidePanel() {
