@@ -1337,7 +1337,7 @@
     let tournamentStage = 'ESTADUALZAO_PHASE1';
     let tournamentData = { groups: {}, round: 1, maxRounds: 7, bracket: {} };
     let currentBrasfootState = { active: false, currentMatchMinute: 0, currentMatches: [], history: [] };
-    let topScorers = {}; // Guarda a artilharia: { "Nome do Jogador": { goals: 5, team: "Time" } }
+    let topScorers = {}; 
     let playoffResults = { champion: null, runnerUp: null, semifinalists: [] };
 
     let peer = null, connections = [], hostConn = null, isHost = true, myPlayerId = 0;
@@ -1918,7 +1918,7 @@
       let newBid = !isAuctionStarted ? amount : highestBid + amount;
       
       if (teams[currentTeamId].tokens < newBid) {
-        if (senderId === myPlayerId) alert("⚠️️ Tokens insuficientes!");
+        if (senderId === myPlayerId) alert("⚠ Tokens insuficientes!");
         return;
       }
 
@@ -2096,6 +2096,7 @@
       return count > 0 ? Math.round(total / count) : 80;
     }
 
+    // 1. INÍCIO DO CAMPEONATO (SEM DUPLICAÇÕES DE TIMES)
     function startEstadualzaoPhase1() {
       document.getElementById('game-arena').style.display = 'none';
       document.getElementById('league-screen').style.display = 'flex';
@@ -2103,6 +2104,8 @@
       if (!isHost) return;
 
       let allParticipants = [];
+      const humanTeamNames = new Set();
+
       for (let i = 0; i < playerCount; i++) {
         allParticipants.push({
           id: teams[i].id,
@@ -2111,14 +2114,23 @@
           isHuman: true,
           ovr: calculateTeamOvr(teams[i])
         });
+        humanTeamNames.add(teams[i].name.toLowerCase().trim());
       }
 
-      let uniqueTeamNames = Array.from(new Set(RAW_ESTADUALZAO_LIST));
+      // Filtra lista removendo duplicatas entre si e com os times reais
+      let uniqueTeamNames = Array.from(new Set(RAW_ESTADUALZAO_LIST)).filter(name => 
+        !humanTeamNames.has(name.toLowerCase().trim())
+      );
+
       let availableTeamNames = uniqueTeamNames.sort(() => Math.random() - 0.5);
       let listIndex = 0;
 
       while (allParticipants.length < 128) {
-        const teamName = availableTeamNames[listIndex % availableTeamNames.length];
+        if (listIndex >= availableTeamNames.length) {
+          availableTeamNames.push(`Clube ${listIndex + 1}`);
+        }
+
+        const teamName = availableTeamNames[listIndex];
         const isBig = BIG_TEAMS.has(teamName);
         const baseOvr = isBig ? (Math.floor(Math.random() * 8) + 84) : (Math.floor(Math.random() * 10) + 70);
 
@@ -2225,7 +2237,7 @@
       }, 250);
     }
 
-    // LEITURA DOS JOGADORES DE CADA TIME PARA NARRAR GOL DO JOGADOR
+    // 2. RETORNA ARTILHEIRO SE FOR HUMANO (RETORNA NULL PARA BOTS)
     function getRandomScorerName(teamObj) {
       if (teamObj.isHuman) {
         const humanTeam = teams.find(t => t.id === teamObj.id || t.name === teamObj.name);
@@ -2241,12 +2253,26 @@
           }
         }
       }
-      
-      const genericAta = database.ATA.map(p => p.name);
-      return genericAta[Math.floor(Math.random() * genericAta.length)];
+      return null;
+    }
+
+    // 3. ARTILHARIA APENAS DOS JOGADORES REAIS
+    function isScorerHumanPlayer(scorerName) {
+      for (let t of teams) {
+        if (t.lineup) {
+          for (let key in t.lineup) {
+            if (t.lineup[key] && t.lineup[key].name === scorerName) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
     }
 
     function recordGoal(scorerName, teamName) {
+      if (!scorerName || !isScorerHumanPlayer(scorerName)) return;
+
       if (!topScorers[scorerName]) {
         topScorers[scorerName] = { goals: 0, team: teamName };
       }
@@ -2254,6 +2280,7 @@
       topScorers[scorerName].team = teamName;
     }
 
+    // 4. SIMULAÇÃO DO MINUTO E FORMATAÇÃO DO LOG DO GOL
     function simulateMatchMinute(match, min) {
       const isHomeBig = BIG_TEAMS.has(match.home.name);
       const isAwayBig = BIG_TEAMS.has(match.away.name);
@@ -2272,8 +2299,12 @@
         if (Math.random() < 0.4) {
           match.homeScore++;
           const scorer = getRandomScorerName(match.home);
-          recordGoal(scorer, match.home.name);
-          match.events.unshift(`⚽ ${min}' GOL do ${scorer} (${match.home.name})! (${match.homeScore}-${match.awayScore})`);
+          if (scorer) {
+            recordGoal(scorer, match.home.name);
+            match.events.unshift(`⚽ ${min}' GOL do ${scorer} (${match.home.name})! (${match.homeScore}-${match.awayScore})`);
+          } else {
+            match.events.unshift(`⚽ ${min}' GOL do ${match.home.name}! (${match.homeScore}-${match.awayScore})`);
+          }
         }
       }
 
@@ -2282,8 +2313,12 @@
         if (Math.random() < 0.4) {
           match.awayScore++;
           const scorer = getRandomScorerName(match.away);
-          recordGoal(scorer, match.away.name);
-          match.events.unshift(`⚽ ${min}' GOL do ${scorer} (${match.away.name})! (${match.homeScore}-${match.awayScore})`);
+          if (scorer) {
+            recordGoal(scorer, match.away.name);
+            match.events.unshift(`⚽ ${min}' GOL do ${scorer} (${match.away.name})! (${match.homeScore}-${match.awayScore})`);
+          } else {
+            match.events.unshift(`⚽ ${min}' GOL do ${match.away.name}! (${match.homeScore}-${match.awayScore})`);
+          }
         }
       }
     }
@@ -2332,7 +2367,6 @@
 
         const currentMatches = currentBrasfootState.currentMatches;
         
-        // REGISTRA SEMIFINALISTAS E CAMPEÃO DA FINAL
         if (currentMatches.length === 2) {
           playoffResults.semifinalists = currentMatches.map(m => m.homeScore > m.awayScore ? m.away.name : m.home.name);
         }
