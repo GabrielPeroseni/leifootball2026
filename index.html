@@ -365,8 +365,8 @@
     .team-tokens { background: var(--accent-slate); color: var(--text-main); padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 0.7rem; }
     .passes-left { background: rgba(239, 68, 68, 0.2); color: var(--danger-color); padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 0.65rem; margin-left: 4px; border: 1px solid rgba(239, 68, 68, 0.3); }
     
-    .lineup-slots { display: grid; grid-template-columns: 1fr; gap: 3px; font-size: 0.7rem; }
-    .slot { background: var(--bg-input); padding: 3px 6px; border-radius: 4px; border: 1px dashed var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+    .lineup-slots { display: grid; grid-template-columns: 1fr; gap: 2px; font-size: 0.7rem; }
+    .slot { background: var(--bg-input); padding: 2px 6px; border-radius: 4px; border: 1px dashed var(--border-color); display: flex; justify-content: space-between; align-items: center; }
     .slot.filled { border-style: solid; border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.1); }
     .slot-pos { font-weight: bold; color: var(--text-muted); font-size: 0.6rem; }
     .slot-player { color: var(--success-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.65rem; font-weight: 600; }
@@ -607,8 +607,8 @@
 
     @media (max-width: 768px) {
       #game-arena { grid-template-columns: 1fr; height: 100vh; overflow-y: auto; }
-      .teams-left-sidebar { height: 180px; flex-direction: row; overflow-x: auto; overflow-y: hidden; }
-      .team-panel { min-width: 200px; width: 220px; }
+      .teams-left-sidebar { height: 340px; flex-direction: row; overflow-x: auto; overflow-y: hidden; }
+      .team-panel { min-width: 200px; width: 220px; overflow-y: auto; }
       #auction-right-center { height: auto; min-height: 520px; }
       .brasfoot-grid { grid-template-columns: 1fr !important; }
       .league-table-container { height: 300px; }
@@ -926,7 +926,7 @@
       <div class="controls-panel">
         <p id="turn-indicator" style="text-align:center; font-weight:600; font-size: 0.85rem; color: var(--text-main);">Aguardando dado...</p>
         <div class="btn-group">
-          <button class="btn-action btn-pass" id="btn-pass" onclick="handlePass()" disabled>Recusar (<span id="my-passes-count">3</span>x)</button>
+          <button class="btn-action btn-pass" id="btn-pass" onclick="handlePass()" disabled>Recusar (<span id="my-passes-count">4</span>x)</button>
           <button class="btn-action btn-zero" id="btn-bid-0" onclick="handleBid(0)" disabled>Lance 0 Tokens</button>
           <button class="btn-action btn-bid" id="btn-bid-1" onclick="handleBid(1)" disabled>+1 Token</button>
           <button class="btn-action btn-bid" id="btn-bid-2" onclick="handleBid(2)" disabled>+2 Tokens</button>
@@ -985,7 +985,7 @@
     <button class="btn-start" id="btn-next-phase" style="margin-top:25px;" onclick="handlePodiumNextPhase()">Avançar para a próxima fase</button>
   </div>
 
-  <!-- MODAL DE TROCA DE JOGADOR (2ª TEMPORADA) -->
+  <!-- MODAL DE TROCA DE JOGADOR (TEMPORADAS 2 A 4) -->
   <div id="swap-modal-overlay">
     <div class="swap-modal">
       <div class="swap-modal-title" id="swap-modal-title">Substituir Jogador</div>
@@ -1647,17 +1647,36 @@
       ]
     };
 
+    // ===== CONFIGURAÇÕES DO JOGO =====
+    const MAX_SEASONS = 4;        // 1ª = leilão principal; 2ª, 3ª e 4ª = leilões de reforços
+    const MAX_PASSES = 4;         // Recusas disponíveis por leilão/temporada
+    const SWAPS_PER_SEASON = 4;   // Trocas por temporada de reforços (2ª, 3ª e 4ª)
+
+    // Elenco de 11: 1 goleiro + 4 defensores + 6 ala/pivô
+    const SLOT_LABELS = {
+      GOL: 'GOL',
+      DEF1: 'DEF 1', DEF2: 'DEF 2', DEF3: 'DEF 3', DEF4: 'DEF 4',
+      ALA_PIVO1: 'ALA/PIVÔ 1', ALA_PIVO2: 'ALA/PIVÔ 2', ALA_PIVO3: 'ALA/PIVÔ 3',
+      ALA_PIVO4: 'ALA/PIVÔ 4', ALA_PIVO5: 'ALA/PIVÔ 5', ALA_PIVO6: 'ALA/PIVÔ 6'
+    };
+
+    function createEmptyLineup() {
+      const lineup = {};
+      Object.keys(SLOT_LABELS).forEach(k => { lineup[k] = null; });
+      return lineup;
+    }
+
     let playerCount = 5;
 
     let defaultTeamsMaster = [
-      { id: 0, name: "Time 1", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, DEF3: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null, ALA_PIVO5: null }, badge: { c1: "#3b82f6", c2: "#0f172a", shape: "shield", pattern: "solid", animal: "🦅" } },
-      { id: 1, name: "Time 2", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, DEF3: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null, ALA_PIVO5: null }, badge: { c1: "#10b981", c2: "#ffffff", shape: "circle", pattern: "solid", animal: "🟢" } },
-      { id: 2, name: "Time 3", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, DEF3: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null, ALA_PIVO5: null }, badge: { c1: "#f59e0b", c2: "#000000", shape: "diamond", pattern: "half", animal: "🦁" } },
-      { id: 3, name: "Time 4", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, DEF3: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null, ALA_PIVO5: null }, badge: { c1: "#8b5cf6", c2: "#ffffff", shape: "shield", pattern: "stripes", animal: "🦅" } },
-      { id: 4, name: "Time 5", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, DEF3: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null, ALA_PIVO5: null }, badge: { c1: "#06b6d4", c2: "#ffffff", shape: "circle", pattern: "stars", animal: "🐉" } },
-      { id: 5, name: "Time 6", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, DEF3: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null, ALA_PIVO5: null }, badge: { c1: "#ec4899", c2: "#ffffff", shape: "shield", pattern: "solid", animal: "🐺" } },
-      { id: 6, name: "Time 7", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, DEF3: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null, ALA_PIVO5: null }, badge: { c1: "#e11d48", c2: "#000000", shape: "diamond", pattern: "stripes", animal: "🐅" } },
-      { id: 7, name: "Time 8", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, DEF3: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null, ALA_PIVO5: null }, badge: { c1: "#84cc16", c2: "#0f172a", shape: "circle", pattern: "half", animal: "🦁" } }
+      { id: 0, name: "Time 1", tokens: 100, passesLeft: MAX_PASSES, swapsLeft: SWAPS_PER_SEASON, lineup: createEmptyLineup(), badge: { c1: "#3b82f6", c2: "#0f172a", shape: "shield", pattern: "solid", animal: "🦅" } },
+      { id: 1, name: "Time 2", tokens: 100, passesLeft: MAX_PASSES, swapsLeft: SWAPS_PER_SEASON, lineup: createEmptyLineup(), badge: { c1: "#10b981", c2: "#ffffff", shape: "circle", pattern: "solid", animal: "🟢" } },
+      { id: 2, name: "Time 3", tokens: 100, passesLeft: MAX_PASSES, swapsLeft: SWAPS_PER_SEASON, lineup: createEmptyLineup(), badge: { c1: "#f59e0b", c2: "#000000", shape: "diamond", pattern: "half", animal: "🦁" } },
+      { id: 3, name: "Time 4", tokens: 100, passesLeft: MAX_PASSES, swapsLeft: SWAPS_PER_SEASON, lineup: createEmptyLineup(), badge: { c1: "#8b5cf6", c2: "#ffffff", shape: "shield", pattern: "stripes", animal: "🦅" } },
+      { id: 4, name: "Time 5", tokens: 100, passesLeft: MAX_PASSES, swapsLeft: SWAPS_PER_SEASON, lineup: createEmptyLineup(), badge: { c1: "#06b6d4", c2: "#ffffff", shape: "circle", pattern: "stars", animal: "🐉" } },
+      { id: 5, name: "Time 6", tokens: 100, passesLeft: MAX_PASSES, swapsLeft: SWAPS_PER_SEASON, lineup: createEmptyLineup(), badge: { c1: "#ec4899", c2: "#ffffff", shape: "shield", pattern: "solid", animal: "🐺" } },
+      { id: 6, name: "Time 7", tokens: 100, passesLeft: MAX_PASSES, swapsLeft: SWAPS_PER_SEASON, lineup: createEmptyLineup(), badge: { c1: "#e11d48", c2: "#000000", shape: "diamond", pattern: "stripes", animal: "🐅" } },
+      { id: 7, name: "Time 8", tokens: 100, passesLeft: MAX_PASSES, swapsLeft: SWAPS_PER_SEASON, lineup: createEmptyLineup(), badge: { c1: "#84cc16", c2: "#0f172a", shape: "circle", pattern: "half", animal: "🦁" } }
     ];
 
     let teams = JSON.parse(JSON.stringify(defaultTeamsMaster.slice(0, playerCount)));
@@ -1927,7 +1946,7 @@
       if (action === 'ROLL_DICE') rollDiceLogic();
       else if (action === 'BID') handleBidLogic(payload.amount, senderId);
       else if (action === 'PASS') handlePassLogic(senderId);
-      else if (action === 'NEXT_SEASON') { if (currentSeason === 1) startSeason2Auction(); }
+      else if (action === 'NEXT_SEASON') { if (currentSeason < MAX_SEASONS) startNextSeasonAuction(); }
       else if (action === 'CONFIRM_SWAP') {
         if (pendingSwap && senderId === pendingSwap.teamId &&
             teams[senderId] && teams[senderId].lineup[payload.targetSlot]) {
@@ -2026,6 +2045,7 @@
       renderTeamPanels();
       updateTurnUI();
       if (state.podiumScreenVisible) renderPodium();
+      else ['step-1', 'step-2', 'step-3'].forEach(id => document.getElementById(id).classList.remove('show'));
       syncSwapModal();
     }
 
@@ -2053,9 +2073,17 @@
       season2DraftCount = 0;
       tournamentStage = 'ESTADUALZAO_PHASE1';
       usedPlayerNames.clear();
+      rejectedQueue = [];
       topScorers = {};
       playoffResults = { champion: null, runnerUp: null, semifinalists: [] };
       updateBadgePreviews();
+
+      teams.forEach(t => {
+        t.tokens = 100;
+        t.passesLeft = MAX_PASSES;
+        t.swapsLeft = SWAPS_PER_SEASON;
+        t.lineup = createEmptyLineup();
+      });
 
       document.getElementById('main-menu-screen').style.display = 'none';
       document.getElementById('setup-screen').style.display = 'none';
@@ -2077,16 +2105,19 @@
       currentDeck = filtered.sort(() => Math.random() - 0.5);
     }
 
-    function startSeason2Auction() {
-      currentSeason = 2;
+    function startNextSeasonAuction() {
+      if (currentSeason >= MAX_SEASONS) return;
+      currentSeason++;
       season2DraftCount = 0;
       pendingSwap = null;
+      rejectedQueue = [];
+      playoffResults = { champion: null, runnerUp: null, semifinalists: [] };
       tournamentStage = 'LIGA';
       
       teams.forEach(t => {
         t.tokens += 100;
-        t.passesLeft = 3;
-        t.season2SwapsLeft = 2;
+        t.passesLeft = MAX_PASSES;
+        t.swapsLeft = SWAPS_PER_SEASON;
       });
 
       document.getElementById('league-screen').style.display = 'none';
@@ -2110,15 +2141,17 @@
           startEstadualzaoPhase1();
           return;
         }
-      } else if (currentSeason === 2) {
+      } else {
         for (let i = 0; i < playerCount; i++) {
-          if (teams[i].season2SwapsLeft > 0) { allDone = false; break; }
+          if (teams[i].swapsLeft > 0) { allDone = false; break; }
         }
         if (allDone) {
           startEstadualzaoPhase1();
           return;
         }
       }
+
+      rejectedQueue = rejectedQueue.filter(p => !usedPlayerNames.has(p.name));
 
       if (currentDeck.length > 0) {
         currentPlayerCard = currentDeck.pop();
@@ -2167,7 +2200,7 @@
       if (currentSeason === 1) {
         turnOrder = activeIndices.filter(id => !isTeamFull(id)).sort(() => Math.random() - 0.5);
       } else {
-        turnOrder = activeIndices.filter(id => teams[id].season2SwapsLeft > 0).sort(() => Math.random() - 0.5);
+        turnOrder = activeIndices.filter(id => teams[id].swapsLeft > 0).sort(() => Math.random() - 0.5);
       }
       activeBidders = [...turnOrder];
       activeTurnIndex = 0;
@@ -2308,8 +2341,8 @@
       winner.tokens -= (highestBid > 0 ? highestBid : 0);
       usedPlayerNames.add(currentPlayerCard.name);
       
-      if (currentSeason === 2) {
-        winner.season2SwapsLeft--;
+      if (currentSeason >= 2) {
+        winner.swapsLeft--;
         promptSwapPlayerSelection(winnerId, currentPlayerCard);
       } else {
         assignPlayerToTeam(winnerId, currentPlayerCard);
@@ -2322,8 +2355,8 @@
       const winner = teams[teamId];
       let targetSlots = [];
       if (card.pos === 'GOL') targetSlots = ['GOL'];
-      if (card.pos === 'DEF') targetSlots = ['DEF1', 'DEF2', 'DEF3'];
-      if (card.pos === 'ALA/PIVÔ') targetSlots = ['ALA_PIVO1', 'ALA_PIVO2', 'ALA_PIVO3', 'ALA_PIVO4', 'ALA_PIVO5'];
+      if (card.pos === 'DEF') targetSlots = ['DEF1', 'DEF2', 'DEF3', 'DEF4'];
+      if (card.pos === 'ALA/PIVÔ') targetSlots = ['ALA_PIVO1', 'ALA_PIVO2', 'ALA_PIVO3', 'ALA_PIVO4', 'ALA_PIVO5', 'ALA_PIVO6'];
 
       for (let s of targetSlots) {
         if (winner.lineup[s] === null) {
@@ -2340,10 +2373,7 @@
 
     function openSwapModal(teamId, card) {
       const winner = teams[teamId];
-      const slotLabels = {
-        GOL: 'GOL', DEF1: 'DEF 1', DEF2: 'DEF 2', DEF3: 'DEF 3',
-        ALA_PIVO1: 'ALA/PIVÔ 1', ALA_PIVO2: 'ALA/PIVÔ 2', ALA_PIVO3: 'ALA/PIVÔ 3', ALA_PIVO4: 'ALA/PIVÔ 4', ALA_PIVO5: 'ALA/PIVÔ 5'
-      };
+      const slotLabels = SLOT_LABELS;
 
       const overlay = document.getElementById('swap-modal-overlay');
       const listContainer = document.getElementById('swap-modal-list');
@@ -2388,10 +2418,7 @@
         if (!panel) continue;
 
         const team = teams[i];
-        const slotLabels = {
-          GOL: 'GOL', DEF1: 'DEF 1', DEF2: 'DEF 2', DEF3: 'DEF 3',
-          ALA_PIVO1: 'ALA/PIVÔ 1', ALA_PIVO2: 'ALA/PIVÔ 2', ALA_PIVO3: 'ALA/PIVÔ 3', ALA_PIVO4: 'ALA/PIVÔ 4', ALA_PIVO5: 'ALA/PIVÔ 5'
-        };
+        const slotLabels = SLOT_LABELS;
 
         let html = `
           <div class="team-header">
@@ -2402,7 +2429,7 @@
             <div>
               <span class="team-tokens">${team.tokens} TK</span>
               <span class="passes-left">${team.passesLeft}x Rec.</span>
-              ${currentSeason === 2 ? `<span style="background:#3b82f6; color:#fff; padding:2px 6px; border-radius:4px; font-size:0.65rem; font-weight:bold; margin-left:2px;">${team.season2SwapsLeft} Trocas</span>` : ''}
+              ${currentSeason >= 2 ? `<span style="background:#3b82f6; color:#fff; padding:2px 6px; border-radius:4px; font-size:0.65rem; font-weight:bold; margin-left:2px;">${team.swapsLeft} Trocas</span>` : ''}
             </div>
           </div>
           <div class="lineup-slots">
@@ -2904,14 +2931,25 @@
 
       const btnNext = document.getElementById('btn-next-phase');
       btnNext.onclick = handlePodiumNextPhase;
-      btnNext.innerText = currentSeason === 1
-        ? "Avançar para a 2ª Temporada (Reforços)"
-        : "Voltar ao Menu Principal";
+      const subtitleEl = document.getElementById('podium-subtitle');
+      if (currentSeason < MAX_SEASONS) {
+        subtitleEl.innerText = `${currentSeason}ª Temporada encerrada!`;
+        btnNext.innerText = `Avançar para a ${currentSeason + 1}ª Temporada (Reforços)`;
+      } else {
+        subtitleEl.innerText = `Fim de jogo — ${MAX_SEASONS} temporadas concluídas!`;
+        btnNext.innerText = "Voltar ao Menu Principal";
+      }
     }
 
     function handlePodiumNextPhase() {
-      if (currentSeason === 1) sendActionToHost('NEXT_SEASON');
-      else backToMainMenu();
+      if (currentSeason < MAX_SEASONS) {
+        sendActionToHost('NEXT_SEASON');
+      } else {
+        document.getElementById('podium-screen').style.display = 'none';
+        document.getElementById('league-screen').style.display = 'none';
+        document.getElementById('game-arena').style.display = 'none';
+        backToMainMenu();
+      }
     }
 
     function renderTournamentUI() {
@@ -2924,7 +2962,7 @@
       if (tournamentStage === 'PLAYOFFS') titleStage = "🏆 ESTADUALZÃO - MATA-MATA (32 TIMES)";
 
       document.getElementById('phase-indicator').innerText = titleStage;
-      document.getElementById('round-indicator').innerText = tournamentStage === 'PLAYOFFS' ? 'Mata-Mata em Tempo Real' : `Rodada ${tournamentData.round} de ${tournamentData.maxRounds}`;
+      document.getElementById('round-indicator').innerText = `${currentSeason}ª Temporada · ` + (tournamentStage === 'PLAYOFFS' ? 'Mata-Mata em Tempo Real' : `Rodada ${tournamentData.round} de ${tournamentData.maxRounds}`);
 
       currentBrasfootState.currentMatches.forEach(m => {
         const box = document.createElement('div');
