@@ -4,7 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>FUTEBOL MANAGER & LEILÃO 2026</title>
-  <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+  <!-- PeerJS (modo online): tenta jsDelivr, depois cdnjs, depois unpkg -->
+  <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.2/dist/peerjs.min.js"></script>
+  <script>window.Peer || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.2/peerjs.min.js"><\/script>');</script>
+  <script>window.Peer || document.write('<script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"><\/script>');</script>
+  <script>
+    /* Se nenhuma CDN carregar, evita o erro "Peer is not defined" e deixa o resto do jogo abrir (sem online). */
+    if (typeof window.Peer === 'undefined') {
+      window.Peer = function () {
+        this.on = function (ev, cb) { if (ev === 'open') setTimeout(function () { var el = document.getElementById('host-id-display'); if (el) el.innerHTML = '<b style="color:#ef4444;">Modo online indisponível</b> (biblioteca PeerJS não carregou)'; }, 0); };
+        this.connect = function () { alert('Modo online indisponível: a biblioteca PeerJS não carregou.'); return { on: function () {}, send: function () {} }; };
+      };
+    }
+  </script>
   <style>
     :root {
       --bg-primary: #121820;
@@ -607,7 +619,7 @@
 
     @media (max-width: 768px) {
       #game-arena { grid-template-columns: 1fr; height: 100vh; overflow-y: auto; }
-      .teams-left-sidebar { height: 180px; flex-direction: row; overflow-x: auto; overflow-y: hidden; }
+      .teams-left-sidebar { height: 330px; flex-direction: row; overflow-x: auto; overflow-y: hidden; }
       .team-panel { min-width: 200px; width: 220px; }
       #auction-right-center { height: auto; min-height: 520px; }
       .brasfoot-grid { grid-template-columns: 1fr !important; }
@@ -926,7 +938,7 @@
       <div class="controls-panel">
         <p id="turn-indicator" style="text-align:center; font-weight:600; font-size: 0.85rem; color: var(--text-main);">Aguardando dado...</p>
         <div class="btn-group">
-          <button class="btn-action btn-pass" id="btn-pass" onclick="handlePass()" disabled>Recusar (<span id="my-passes-count">3</span>x)</button>
+          <button class="btn-action btn-pass" id="btn-pass" onclick="handlePass()" disabled>Recusar (<span id="my-passes-count">4</span>x)</button>
           <button class="btn-action btn-zero" id="btn-bid-0" onclick="handleBid(0)" disabled>Lance 0 Tokens</button>
           <button class="btn-action btn-bid" id="btn-bid-1" onclick="handleBid(1)" disabled>+1 Token</button>
           <button class="btn-action btn-bid" id="btn-bid-2" onclick="handleBid(2)" disabled>+2 Tokens</button>
@@ -985,7 +997,7 @@
     <button class="btn-start" id="btn-next-phase" style="margin-top:25px;" onclick="handlePodiumNextPhase()">Avançar para a próxima fase</button>
   </div>
 
-  <!-- MODAL DE TROCA DE JOGADOR (2ª TEMPORADA) -->
+  <!-- MODAL DE TROCA DE JOGADOR (TEMPORADAS DE REFORÇO) -->
   <div id="swap-modal-overlay">
     <div class="swap-modal">
       <div class="swap-modal-title" id="swap-modal-title">Substituir Jogador</div>
@@ -1640,24 +1652,52 @@
         { name: "Luciano", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/223560-1750986922.jpg?lm=4711" },
         { name: "Carlos Vinicius", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/525287-1662070180.jpg?lm=4711" },
         { name: "Allan Patrick", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/104505-1641992716.png?lm=4711" },
-        { name: "Marinho", ovr: 7, photo: "https://img.a.transfermarkt.technology/portrait/medium/74758-1729175331.jpg?lm=4711" },
+        { name: "Marinho", ovr: 77, photo: "https://img.a.transfermarkt.technology/portrait/medium/74758-1729175331.jpg?lm=4711" },
         { name: "Gabriel Martinelli", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/655488-1682689091.jpg?lm=4711" },
         { name: "João Felix", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/462250-1668165358.jpg?lm=4711" },
         { name: "Coman", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/243714-1700040256.jpg?lm=4711" }
       ]
     };
 
+    // ===== CONFIGURAÇÕES DO JOGO =====
+    const MAX_PASSES = 4;          // recusas por time no leilão
+    const SWAPS_PER_SEASON = 4;    // trocas por time em cada temporada de reforços (2ª, 3ª e 4ª)
+    const MAX_SEASONS = 4;         // total de temporadas (sempre o mesmo campeonato: Estadualzão)
+
+    // Elenco de 11: 1 GOL + 4 DEF + 6 ALA/PIVÔ
+    const DEF_SLOTS = ['DEF1', 'DEF2', 'DEF3', 'DEF4'];
+    const ATA_SLOTS = ['ALA_PIVO1', 'ALA_PIVO2', 'ALA_PIVO3', 'ALA_PIVO4', 'ALA_PIVO5', 'ALA_PIVO6'];
+    const SLOT_LABELS = {
+      GOL: 'GOL',
+      DEF1: 'DEF 1', DEF2: 'DEF 2', DEF3: 'DEF 3', DEF4: 'DEF 4',
+      ALA_PIVO1: 'ALA/PIVÔ 1', ALA_PIVO2: 'ALA/PIVÔ 2', ALA_PIVO3: 'ALA/PIVÔ 3',
+      ALA_PIVO4: 'ALA/PIVÔ 4', ALA_PIVO5: 'ALA/PIVÔ 5', ALA_PIVO6: 'ALA/PIVÔ 6'
+    };
+
+    function emptyLineup() {
+      const l = { GOL: null };
+      DEF_SLOTS.forEach(k => l[k] = null);
+      ATA_SLOTS.forEach(k => l[k] = null);
+      return l;
+    }
+
+    function getSlotsForPos(pos) {
+      if (pos === 'GOL') return ['GOL'];
+      if (pos === 'DEF') return DEF_SLOTS;
+      return ATA_SLOTS;
+    }
+
     let playerCount = 5;
 
     let defaultTeamsMaster = [
-      { id: 0, name: "Time 1", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, DEF3: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null, ALA_PIVO5: null }, badge: { c1: "#3b82f6", c2: "#0f172a", shape: "shield", pattern: "solid", animal: "🦅" } },
-      { id: 1, name: "Time 2", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, DEF3: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null, ALA_PIVO5: null }, badge: { c1: "#10b981", c2: "#ffffff", shape: "circle", pattern: "solid", animal: "🟢" } },
-      { id: 2, name: "Time 3", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, DEF3: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null, ALA_PIVO5: null }, badge: { c1: "#f59e0b", c2: "#000000", shape: "diamond", pattern: "half", animal: "🦁" } },
-      { id: 3, name: "Time 4", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, DEF3: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null, ALA_PIVO5: null }, badge: { c1: "#8b5cf6", c2: "#ffffff", shape: "shield", pattern: "stripes", animal: "🦅" } },
-      { id: 4, name: "Time 5", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, DEF3: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null, ALA_PIVO5: null }, badge: { c1: "#06b6d4", c2: "#ffffff", shape: "circle", pattern: "stars", animal: "🐉" } },
-      { id: 5, name: "Time 6", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, DEF3: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null, ALA_PIVO5: null }, badge: { c1: "#ec4899", c2: "#ffffff", shape: "shield", pattern: "solid", animal: "🐺" } },
-      { id: 6, name: "Time 7", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, DEF3: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null, ALA_PIVO5: null }, badge: { c1: "#e11d48", c2: "#000000", shape: "diamond", pattern: "stripes", animal: "🐅" } },
-      { id: 7, name: "Time 8", tokens: 100, passesLeft: 3, season2SwapsLeft: 2, lineup: { GOL: null, DEF1: null, DEF2: null, DEF3: null, ALA_PIVO1: null, ALA_PIVO2: null, ALA_PIVO3: null, ALA_PIVO4: null, ALA_PIVO5: null }, badge: { c1: "#84cc16", c2: "#0f172a", shape: "circle", pattern: "half", animal: "🦁" } }
+      { id: 0, name: "Time 1", tokens: 100, passesLeft: MAX_PASSES, season2SwapsLeft: SWAPS_PER_SEASON, lineup: emptyLineup(), badge: { c1: "#3b82f6", c2: "#0f172a", shape: "shield", pattern: "solid", animal: "🦅" } },
+      { id: 1, name: "Time 2", tokens: 100, passesLeft: MAX_PASSES, season2SwapsLeft: SWAPS_PER_SEASON, lineup: emptyLineup(), badge: { c1: "#10b981", c2: "#ffffff", shape: "circle", pattern: "solid", animal: "🟢" } },
+      { id: 2, name: "Time 3", tokens: 100, passesLeft: MAX_PASSES, season2SwapsLeft: SWAPS_PER_SEASON, lineup: emptyLineup(), badge: { c1: "#f59e0b", c2: "#000000", shape: "diamond", pattern: "half", animal: "🦁" } },
+      { id: 3, name: "Time 4", tokens: 100, passesLeft: MAX_PASSES, season2SwapsLeft: SWAPS_PER_SEASON, lineup: emptyLineup(), badge: { c1: "#8b5cf6", c2: "#ffffff", shape: "shield", pattern: "stripes", animal: "🦅" } },
+      { id: 4, name: "Time 5", tokens: 100, passesLeft: MAX_PASSES, season2SwapsLeft: SWAPS_PER_SEASON, lineup: emptyLineup(), badge: { c1: "#06b6d4", c2: "#ffffff", shape: "circle", pattern: "stars", animal: "🐉" } },
+      { id: 5, name: "Time 6", tokens: 100, passesLeft: MAX_PASSES, season2SwapsLeft: SWAPS_PER_SEASON, lineup: emptyLineup(), badge: { c1: "#ec4899", c2: "#ffffff", shape: "shield", pattern: "solid", animal: "🐺" } },
+      { id: 6, name: "Time 7", tokens: 100, passesLeft: MAX_PASSES, season2SwapsLeft: SWAPS_PER_SEASON, lineup: emptyLineup(), badge: { c1: "#e11d48", c2: "#000000", shape: "diamond", pattern: "stripes", animal: "🐅" } },
+      { id: 7, name: "Time 8", tokens: 100, passesLeft: MAX_PASSES, season2SwapsLeft: SWAPS_PER_SEASON, lineup: emptyLineup(), badge: { c1: "#84cc16", c2: "#0f172a", shape: "circle", pattern: "half", animal: "🦁" } }
     ];
 
     let teams = JSON.parse(JSON.stringify(defaultTeamsMaster.slice(0, playerCount)));
@@ -1927,7 +1967,10 @@
       if (action === 'ROLL_DICE') rollDiceLogic();
       else if (action === 'BID') handleBidLogic(payload.amount, senderId);
       else if (action === 'PASS') handlePassLogic(senderId);
-      else if (action === 'NEXT_SEASON') { if (currentSeason === 1) startSeason2Auction(); }
+      else if (action === 'NEXT_SEASON') {
+        const podiumOpen = document.getElementById('podium-screen').style.display !== 'none';
+        if (currentSeason < MAX_SEASONS && podiumOpen) startNextSeasonAuction();
+      }
       else if (action === 'CONFIRM_SWAP') {
         if (pendingSwap && senderId === pendingSwap.teamId &&
             teams[senderId] && teams[senderId].lineup[payload.targetSlot]) {
@@ -2077,16 +2120,18 @@
       currentDeck = filtered.sort(() => Math.random() - 0.5);
     }
 
-    function startSeason2Auction() {
-      currentSeason = 2;
+    function startNextSeasonAuction() {
+      if (currentSeason >= MAX_SEASONS) return;
+      currentSeason++;
       season2DraftCount = 0;
       pendingSwap = null;
       tournamentStage = 'LIGA';
+      playoffResults = { champion: null, runnerUp: null, semifinalists: [] };
       
       teams.forEach(t => {
         t.tokens += 100;
-        t.passesLeft = 3;
-        t.season2SwapsLeft = 2;
+        t.passesLeft = MAX_PASSES;
+        t.season2SwapsLeft = SWAPS_PER_SEASON;
       });
 
       document.getElementById('league-screen').style.display = 'none';
@@ -2110,7 +2155,7 @@
           startEstadualzaoPhase1();
           return;
         }
-      } else if (currentSeason === 2) {
+      } else {
         for (let i = 0; i < playerCount; i++) {
           if (teams[i].season2SwapsLeft > 0) { allDone = false; break; }
         }
@@ -2154,6 +2199,10 @@
       toggleBidButtons(false);
     }
 
+    function teamHasOpenSlot(teamId, pos) {
+      return !!teams[teamId] && getSlotsForPos(pos).some(s => teams[teamId].lineup[s] === null);
+    }
+
     function isTeamFull(teamId) {
       return teams[teamId] && Object.values(teams[teamId].lineup).every(slot => slot !== null);
     }
@@ -2165,7 +2214,7 @@
       for (let i = 0; i < playerCount; i++) activeIndices.push(i);
 
       if (currentSeason === 1) {
-        turnOrder = activeIndices.filter(id => !isTeamFull(id)).sort(() => Math.random() - 0.5);
+        turnOrder = activeIndices.filter(id => !isTeamFull(id) && teamHasOpenSlot(id, currentPlayerCard.pos)).sort(() => Math.random() - 0.5);
       } else {
         turnOrder = activeIndices.filter(id => teams[id].season2SwapsLeft > 0).sort(() => Math.random() - 0.5);
       }
@@ -2308,7 +2357,7 @@
       winner.tokens -= (highestBid > 0 ? highestBid : 0);
       usedPlayerNames.add(currentPlayerCard.name);
       
-      if (currentSeason === 2) {
+      if (currentSeason >= 2) {
         winner.season2SwapsLeft--;
         promptSwapPlayerSelection(winnerId, currentPlayerCard);
       } else {
@@ -2320,10 +2369,7 @@
 
     function assignPlayerToTeam(teamId, card) {
       const winner = teams[teamId];
-      let targetSlots = [];
-      if (card.pos === 'GOL') targetSlots = ['GOL'];
-      if (card.pos === 'DEF') targetSlots = ['DEF1', 'DEF2', 'DEF3'];
-      if (card.pos === 'ALA/PIVÔ') targetSlots = ['ALA_PIVO1', 'ALA_PIVO2', 'ALA_PIVO3', 'ALA_PIVO4', 'ALA_PIVO5'];
+      const targetSlots = getSlotsForPos(card.pos);
 
       for (let s of targetSlots) {
         if (winner.lineup[s] === null) {
@@ -2340,10 +2386,7 @@
 
     function openSwapModal(teamId, card) {
       const winner = teams[teamId];
-      const slotLabels = {
-        GOL: 'GOL', DEF1: 'DEF 1', DEF2: 'DEF 2', DEF3: 'DEF 3',
-        ALA_PIVO1: 'ALA/PIVÔ 1', ALA_PIVO2: 'ALA/PIVÔ 2', ALA_PIVO3: 'ALA/PIVÔ 3', ALA_PIVO4: 'ALA/PIVÔ 4', ALA_PIVO5: 'ALA/PIVÔ 5'
-      };
+      const slotLabels = SLOT_LABELS;
 
       const overlay = document.getElementById('swap-modal-overlay');
       const listContainer = document.getElementById('swap-modal-list');
@@ -2388,10 +2431,7 @@
         if (!panel) continue;
 
         const team = teams[i];
-        const slotLabels = {
-          GOL: 'GOL', DEF1: 'DEF 1', DEF2: 'DEF 2', DEF3: 'DEF 3',
-          ALA_PIVO1: 'ALA/PIVÔ 1', ALA_PIVO2: 'ALA/PIVÔ 2', ALA_PIVO3: 'ALA/PIVÔ 3', ALA_PIVO4: 'ALA/PIVÔ 4', ALA_PIVO5: 'ALA/PIVÔ 5'
-        };
+        const slotLabels = SLOT_LABELS;
 
         let html = `
           <div class="team-header">
@@ -2402,7 +2442,7 @@
             <div>
               <span class="team-tokens">${team.tokens} TK</span>
               <span class="passes-left">${team.passesLeft}x Rec.</span>
-              ${currentSeason === 2 ? `<span style="background:#3b82f6; color:#fff; padding:2px 6px; border-radius:4px; font-size:0.65rem; font-weight:bold; margin-left:2px;">${team.season2SwapsLeft} Trocas</span>` : ''}
+              ${currentSeason >= 2 ? `<span style="background:#3b82f6; color:#fff; padding:2px 6px; border-radius:4px; font-size:0.65rem; font-weight:bold; margin-left:2px;">${team.season2SwapsLeft} Trocas</span>` : ''}
             </div>
           </div>
           <div class="lineup-slots">
@@ -2904,13 +2944,13 @@
 
       const btnNext = document.getElementById('btn-next-phase');
       btnNext.onclick = handlePodiumNextPhase;
-      btnNext.innerText = currentSeason === 1
-        ? "Avançar para a 2ª Temporada (Reforços)"
+      btnNext.innerText = currentSeason < MAX_SEASONS
+        ? `Avançar para a ${currentSeason + 1}ª Temporada (Reforços)`
         : "Voltar ao Menu Principal";
     }
 
     function handlePodiumNextPhase() {
-      if (currentSeason === 1) sendActionToHost('NEXT_SEASON');
+      if (currentSeason < MAX_SEASONS) sendActionToHost('NEXT_SEASON');
       else backToMainMenu();
     }
 
@@ -3039,4 +3079,4 @@
     }
   </script>
 </body>
-</html>
+</html>
