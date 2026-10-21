@@ -1,1 +1,3182 @@
+ <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>FUTEBOL MANAGER & LEILÃO 2026</title>
+  <!-- PeerJS (modo online): tenta jsDelivr, depois cdnjs, depois unpkg -->
+  <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.2/dist/peerjs.min.js"></script>
+  <script>window.Peer || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.2/peerjs.min.js"><\/script>');</script>
+  <script>window.Peer || document.write('<script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"><\/script>');</script>
+  <script>
+    /* Se nenhuma CDN carregar, evita o erro "Peer is not defined" e deixa o resto do jogo abrir (sem online). */
+    if (typeof window.Peer === 'undefined') {
+      window.Peer = function () {
+        this.on = function (ev, cb) { if (ev === 'open') setTimeout(function () { var el = document.getElementById('host-id-display'); if (el) el.innerHTML = '<b style="color:#ef4444;">Modo online indisponível</b> (biblioteca PeerJS não carregou)'; }, 0); };
+        this.connect = function () { alert('Modo online indisponível: a biblioteca PeerJS não carregou.'); return { on: function () {}, send: function () {} }; };
+      };
+    }
+  </script>
+  <style>
+    :root {
+      --bg-primary: #121820;
+      --bg-card: #1c2533;
+      --bg-card-hover: #243042;
+      --bg-input: #10151d;
+      --border-color: #2e3c50;
+      --border-focus: #3b82f6;
+      --text-main: #e2e8f0;
+      --text-muted: #94a3b8;
+      --accent-blue: #3b82f6;
+      --accent-blue-hover: #2563eb;
+      --accent-green: #10b981;
+      --accent-slate: #475569;
+      --accent-gold: #38bdf8;
+      --danger-color: #ef4444;
+      --success-color: #10b981;
+    }
 
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      -webkit-tap-highlight-color: transparent; 
+    }
+
+    body { 
+      background-color: var(--bg-primary); 
+      color: var(--text-main); 
+      height: 100vh; 
+      display: flex; 
+      flex-direction: column; 
+      overflow: hidden; 
+    }
+
+    /* MENU PRINCIPAL */
+    #main-menu-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+      position: absolute;
+      inset: 0;
+      z-index: 200;
+      padding: 20px;
+    }
+
+    .menu-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .menu-title {
+      font-size: 2.8rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #60a5fa 0%, #10b981 100%);
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    }
+
+    .menu-subtitle {
+      color: var(--text-muted);
+      font-size: 1rem;
+      letter-spacing: 2px;
+      margin-top: 5px;
+      text-transform: uppercase;
+    }
+
+    .menu-cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 950px;
+    }
+
+    .mode-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border-color);
+      border-radius: 16px;
+      padding: 25px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+
+    .mode-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
+    }
+
+    .mode-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--accent-blue);
+      box-shadow: 0 15px 30px rgba(59, 130, 246, 0.25);
+      background: var(--bg-card-hover);
+    }
+
+    .mode-card:hover::before {
+      transform: translateX(100%);
+    }
+
+    .mode-card.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      border-color: #273549;
+    }
+
+    .mode-card.disabled:hover {
+      transform: none;
+      box-shadow: none;
+      background: var(--bg-card);
+    }
+
+    .mode-icon {
+      font-size: 3.5rem;
+      margin-bottom: 15px;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+    }
+
+    .mode-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .mode-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .badge-coming-soon {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--accent-slate);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border: 1px solid var(--border-color);
+    }
+
+    /* TELAS DE CONFIGURAÇÃO */
+    .screen { 
+      position: absolute; 
+      inset: 0; 
+      background: var(--bg-primary); 
+      z-index: 100; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: flex-start; 
+      gap: 15px; 
+      padding: 20px; 
+      overflow-y: auto; 
+    }
+
+    .setup-title {
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      color: var(--text-main);
+      text-transform: uppercase;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .setup-header-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-card);
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .mode-tabs {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      background: var(--bg-input);
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+
+    .tab-btn.active {
+      background: var(--accent-blue);
+      color: white;
+      border-color: var(--accent-blue);
+    }
+
+    .player-select-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--text-main);
+    }
+
+    .player-select-box select {
+      padding: 6px 12px;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-input);
+      color: var(--text-main);
+      outline: none;
+      font-size: 0.9rem;
+    }
+
+    .setup-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+      gap: 12px; 
+      width: 100%; 
+      max-width: 1250px; 
+    }
+
+    .team-input-card { 
+      background: var(--bg-card); 
+      padding: 12px; 
+      border-radius: 8px; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 6px; 
+      font-size: 0.85rem; 
+      align-items: center; 
+      border: 1px solid var(--border-color); 
+    }
+
+    .team-input-card label {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+
+    .team-input-card input, .team-input-card select { 
+      padding: 8px; 
+      border-radius: 4px; 
+      border: 1px solid var(--border-color); 
+      background: var(--bg-input); 
+      color: var(--text-main); 
+      width: 100%; 
+      font-size: 0.8rem; 
+      outline: none;
+    }
+
+    .team-input-card input:focus, .team-input-card select:focus {
+      border-color: var(--border-focus);
+    }
+
+    .btn-start { 
+      padding: 12px 24px; 
+      font-size: 0.95rem; 
+      font-weight: 600; 
+      background: var(--accent-blue); 
+      color: white; 
+      border: none; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      transition: background 0.2s; 
+      touch-action: manipulation; 
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-start:hover { background: var(--accent-blue-hover); }
+    .btn-start:active { transform: scale(0.98); }
+
+    .btn-back {
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: var(--accent-slate);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: 0.2s;
+    }
+
+    .btn-back:hover { background: #334155; }
+
+    .badge-preview { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; margin-bottom: 2px; }
+
+    /* GAME ARENA (LEILÃO) */
+    #game-arena { 
+      display: grid; 
+      grid-template-columns: 320px 1fr; 
+      height: 100vh; 
+      padding: 12px; 
+      gap: 12px; 
+      overflow: hidden; 
+      background-color: var(--bg-primary);
+    }
+
+    .teams-left-sidebar { display: flex; flex-direction: column; gap: 8px; height: 100%; overflow-y: auto; padding-right: 4px; }
+    
+    .team-panel { 
+      background: var(--bg-card); 
+      border-radius: 8px; 
+      padding: 8px; 
+      display: flex; 
+      flex-direction: column; 
+      border: 2px solid var(--border-color); 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+      flex-shrink: 0; 
+      transition: border-color 0.3s, box-shadow 0.3s; 
+    }
+
+    .team-panel.active-turn { 
+      border-color: var(--accent-blue) !important; 
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.4); 
+    }
+
+    .team-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid var(--border-color); font-size: 0.8rem; }
+    .team-tokens { background: var(--accent-slate); color: var(--text-main); padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 0.7rem; }
+    .passes-left { background: rgba(239, 68, 68, 0.2); color: var(--danger-color); padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 0.65rem; margin-left: 4px; border: 1px solid rgba(239, 68, 68, 0.3); }
+    
+    .lineup-slots { display: grid; grid-template-columns: 1fr; gap: 3px; font-size: 0.7rem; }
+    .slot { background: var(--bg-input); padding: 3px 6px; border-radius: 4px; border: 1px dashed var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+    .slot.filled { border-style: solid; border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.1); }
+    .slot-pos { font-weight: bold; color: var(--text-muted); font-size: 0.6rem; }
+    .slot-player { color: var(--success-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.65rem; font-weight: 600; }
+
+    #auction-right-center { 
+      background: var(--bg-card); 
+      border-radius: 8px; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: space-between; 
+      padding: 16px; 
+      border: 1px solid var(--border-color); 
+      height: 100%; 
+      overflow-y: auto; 
+    }
+
+    .player-card { 
+      background: linear-gradient(135deg, #1e293b, #0f172a); 
+      width: 280px; 
+      height: 340px; 
+      border-radius: 16px; 
+      padding: 16px; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: space-between; 
+      color: var(--text-main); 
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6); 
+      position: relative; 
+      border: 2px solid var(--border-color); 
+      flex-shrink: 0; 
+      margin: 10px 0;
+    }
+
+    .card-ovr { position: absolute; top: 12px; left: 16px; font-size: 2.2rem; font-weight: 900; line-height: 1; color: var(--accent-gold); }
+    .card-pos { position: absolute; top: 48px; left: 16px; font-size: 0.85rem; font-weight: bold; text-transform: uppercase; color: var(--text-muted); }
+    .card-photo-box { width: 170px; height: 170px; border-radius: 50%; margin-top: 15px; display: flex; align-items: center; justify-content: center; background: var(--bg-input); border: 3px solid var(--border-color); overflow: hidden; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
+    .card-photo-img { width: 100%; height: 100%; object-fit: contain; }
+    .card-name { font-size: 1.1rem; font-weight: 700; text-align: center; text-transform: uppercase; border-top: 1px solid var(--border-color); width: 100%; padding-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main); }
+    
+    .bidding-info { text-align: center; margin: 4px 0; }
+    .current-bid { font-size: 2rem; color: #60a5fa; font-weight: bold; margin: 2px 0; }
+    
+    .controls-panel { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 450px; }
+    .btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
+    
+    .btn-action { 
+      flex: 1; 
+      min-width: 70px; 
+      padding: 10px 6px; 
+      border: none; 
+      border-radius: 4px; 
+      font-weight: 600; 
+      cursor: pointer; 
+      color: white; 
+      transition: 0.2s; 
+      font-size: 0.8rem; 
+      touch-action: manipulation; 
+      text-transform: uppercase;
+    }
+
+    .btn-action:active { transform: scale(0.96); }
+    .btn-pass { background: rgba(239, 68, 68, 0.2); color: var(--danger-color); border: 1px solid rgba(239, 68, 68, 0.3); }
+    .btn-pass:hover { background: rgba(239, 68, 68, 0.3); }
+    .btn-bid { background: var(--accent-blue); color: #fff; }
+    .btn-bid:hover { background: var(--accent-blue-hover); }
+    .btn-zero { background: var(--accent-slate); color: #fff; }
+    .btn-zero:hover { background: #334155; }
+    .btn-dice { background: #475569; width: 100%; padding: 10px; font-size: 0.85rem; }
+    .btn-dice:hover { background: #334155; }
+    
+    button:disabled { opacity: 0.3; cursor: not-allowed; transform: none !important; }
+
+    /* CAMPEONATO / TRANSMISSÃO */
+    #league-screen { display: flex; flex-direction: column; gap: 10px; padding: 16px; width: 100%; height: 100vh; background: var(--bg-primary); overflow: hidden; }
+    .brasfoot-header { text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; flex-shrink: 0; }
+    .brasfoot-grid { display: grid; grid-template-columns: 1fr 420px; gap: 12px; flex: 1; overflow: hidden; }
+    
+    .matches-broadcast { display: flex; flex-direction: column; gap: 10px; height: 100%; overflow-y: auto; justify-content: flex-start; align-items: center; padding-right: 4px; }
+    .match-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; max-width: 600px; }
+    .match-box.active { border-color: var(--accent-blue); box-shadow: 0 0 12px rgba(59, 130, 246, 0.3); }
+    .match-time { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); padding: 3px 10px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; letter-spacing: 1px; }
+    .match-teams { display: flex; justify-content: space-between; width: 100%; align-items: center; font-weight: 600; font-size: 1rem; }
+    .team-display { display: flex; align-items: center; gap: 8px; width: 42%; font-size: 0.95rem; }
+    .team-display.home { justify-content: flex-start; }
+    .team-display.away { justify-content: flex-end; }
+    
+    .team-badge-icon { 
+      width: 22px; 
+      height: 22px; 
+      flex-shrink: 0; 
+      object-fit: contain; 
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .badge-inline-svg {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    
+    .match-score { font-size: 1.5rem; color: #60a5fa; background: var(--bg-input); border: 1px solid var(--border-color); padding: 4px 12px; border-radius: 4px; font-family: monospace; letter-spacing: 2px; }
+    .match-events { width: 100%; height: 110px; background: var(--bg-input); border-radius: 4px; padding: 8px; font-size: 0.8rem; color: var(--text-main); overflow-y: auto; font-family: monospace; border: 1px solid var(--border-color); }
+
+    .match-stats-panel {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.78rem;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding-bottom: 3px;
+    }
+    .stat-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .stat-label { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.7rem; }
+    .stat-val { font-weight: bold; color: var(--accent-gold); }
+
+    .league-table-container { background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-color); padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+    .bracket-list { display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem; overflow-y: auto; }
+
+    .top-scorers-box {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+    }
+    .top-scorers-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 4px;
+      margin-bottom: 6px;
+    }
+    .scorer-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      margin-bottom: 3px;
+    }
+
+    .group-tables-grid { display: grid; grid-template-columns: 1fr; gap: 12px; overflow-y: auto; }
+    .group-card { background: var(--bg-input); padding: 10px; border-radius: 6px; font-size: 0.9rem; border: 1px solid var(--border-color); }
+    .group-card-title { font-weight: 700; color: #60a5fa; font-size: 0.95rem; margin-bottom: 6px; text-transform: uppercase; border-bottom: 1px solid var(--border-color); padding-bottom: 2px; }
+    .group-card table { width: 100%; border-collapse: collapse; text-align: center; }
+    .group-card th, .group-card td { padding: 5px 3px; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; }
+    .group-card td.team-cell { text-align: left; display: flex; align-items: center; gap: 6px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* ESTILOS DA CHAVE MATA-MATA */
+    .bracket-phase-title { color: #60a5fa; font-weight: 700; font-size: 0.95rem; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; margin-top: 8px; text-transform: uppercase; }
+    .bracket-match-item { background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
+    .bracket-team { display: flex; justify-content: space-between; align-items: center; padding: 4px 6px; border-radius: 4px; font-size: 0.88rem; }
+    .bracket-team.winner { background: rgba(16, 185, 129, 0.2); font-weight: bold; color: var(--success-color); border: 1px solid rgba(16, 185, 129, 0.4); }
+
+    .bracket-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; width: 100%; }
+    .bracket-side { display: flex; align-items: center; gap: 4px; width: 38%; min-width: 0; font-size: 0.85rem; padding: 3px 4px; border-radius: 4px; }
+    .bracket-side.home { justify-content: flex-start; }
+    .bracket-side.away { justify-content: flex-end; }
+    .bracket-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+    .bracket-side.winner { background: rgba(16, 185, 129, 0.2); font-weight: bold; color: var(--success-color); border: 1px solid rgba(16, 185, 129, 0.4); }
+    .bracket-score { font-family: monospace; font-weight: 700; color: #60a5fa; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 4px; padding: 2px 8px; white-space: nowrap; }
+
+    /* PÓDIO */
+    #podium-screen { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 40px; background: var(--bg-primary); }
+    .podium-container { display: flex; align-items: flex-end; justify-content: center; gap: 12px; height: 300px; width: 100%; max-width: 600px; }
+    .podium-step { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 12px; border-radius: 8px 8px 0 0; font-weight: bold; transition: transform 0.8s ease-out; transform: translateY(100%); width: 30%; }
+    #podium-screen { justify-content: safe flex-end; }
+    .season-stats-box { width: 100%; max-width: 720px; margin-top: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; }
+    .season-stats-title { color: #60a5fa; font-weight: 700; font-size: 0.95rem; text-transform: uppercase; text-align: center; margin-bottom: 8px; }
+    .season-stats-scroll { overflow-x: auto; }
+    .season-stats-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 0.85rem; }
+    .season-stats-table th, .season-stats-table td { padding: 6px 5px; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+    .season-stats-table th { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; }
+    .season-stats-table td.team-cell { text-align: left; font-weight: 600; }
+    .season-stats-table td.team-cell > span { display: inline-flex; align-items: center; gap: 6px; }
+    .season-stats-table td.apr { color: var(--accent-gold); font-weight: 700; }
+    .podium-step.show { transform: translateY(0); }
+    .podium-1 { height: 220px; background: #334155; color: #fff; border-top: 3px solid #60a5fa; z-index: 3; }
+    .podium-2 { height: 160px; background: #283141; color: #fff; border-top: 3px solid #94a3b8; z-index: 2; }
+    .podium-3 { height: 120px; background: #1e2530; color: #fff; border-top: 3px solid #475569; z-index: 1; }
+    .podium-team-name { font-size: 0.9rem; margin-top: 6px; text-align: center; word-break: break-word; }
+    .trophy { font-size: 2.5rem; animation: bounce 1.5s infinite alternate; }
+    @keyframes bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-8px); } }
+
+    /* MODAL DE TROCA DE JOGADOR DA 2ª TEMPORADA */
+    #swap-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+    }
+    .swap-modal {
+      background: var(--bg-card);
+      border: 2px solid var(--accent-blue);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 450px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+    .swap-modal-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #60a5fa;
+      text-transform: uppercase;
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+    .swap-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+    .swap-item {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .swap-item:hover {
+      border-color: var(--accent-blue);
+      background: var(--bg-card-hover);
+    }
+    .swap-item-name { font-weight: 600; font-size: 0.85rem; color: var(--text-main); }
+    .swap-item-pos { font-size: 0.75rem; color: var(--text-muted); }
+
+    @media (max-width: 768px) {
+      #game-arena { grid-template-columns: 1fr; height: 100vh; overflow-y: auto; }
+      .teams-left-sidebar { height: 330px; flex-direction: row; overflow-x: auto; overflow-y: hidden; }
+      .team-panel { min-width: 200px; width: 220px; }
+      #auction-right-center { height: auto; min-height: 520px; }
+      .brasfoot-grid { grid-template-columns: 1fr !important; }
+      .league-table-container { height: 300px; }
+      .player-card { width: 240px; height: 300px; }
+      .card-photo-box { width: 140px; height: 140px; }
+      .menu-title { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MENU PRINCIPAL -->
+  <div id="main-menu-screen">
+    <div class="menu-header">
+      <h1 class="menu-title">⚽ FutManager 2026</h1>
+      <p class="menu-subtitle">Selecione o Modo de Jogo</p>
+    </div>
+
+    <div class="menu-cards-container">
+      <div class="mode-card" onclick="selectGameMode('leilao')">
+        <div class="mode-icon">🔨</div>
+        <div class="mode-title">Modo Leilão</div>
+        <div class="mode-desc">Monte seu elenco disputando lances em tempo real com outros jogadores e conquiste o campeonato!</div>
+      </div>
+
+      <div class="mode-card disabled" onclick="selectGameMode('estrelato')">
+        <span class="badge-coming-soon">Em Breve</span>
+        <div class="mode-icon">⭐</div>
+        <div class="mode-title">Rumo ao Estrelato</div>
+        <div class="mode-desc">Crie um único jogador, evolua seus atributos partida a partida e torne-se uma lenda do futebol mundial.</div>
+      </div>
+
+      <div class="mode-card disabled" onclick="selectGameMode('carreira')">
+        <span class="badge-coming-soon">Em Breve</span>
+        <div class="mode-icon">📋</div>
+        <div class="mode-title">Modo Carreira</div>
+        <div class="mode-desc">Assuma o controle total de um clube. Gerencie finanças, contratações, táticas e categorias de base.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA DE CONFIGURAÇÃO DO LEILÃO -->
+  <div id="setup-screen" class="screen" style="display: none;">
+    <div style="width: 100%; max-width: 1250px; display: flex; justify-content: space-between; align-items: center;">
+      <button class="btn-back" onclick="backToMainMenu()">← Menu Principal</button>
+      <h1 class="setup-title" style="margin-top: 0;">Leilão & Torneios 2026</h1>
+      <div style="width: 120px;"></div>
+    </div>
+    
+    <div class="setup-header-controls">
+      <div class="mode-tabs">
+        <button id="tab-host" class="tab-btn active" onclick="switchSetupTab('host')">Criar Sala (Host)</button>
+        <button id="tab-join" class="tab-btn" onclick="switchSetupTab('join')">Entrar na Sala</button>
+      </div>
+
+      <div id="host-controls" style="display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%;">
+        <div class="player-select-box">
+          <label for="num-players-select"><b>Quantidade de Jogadores:</b></label>
+          <select id="num-players-select" onchange="changePlayerCount(this.value)">
+            <option value="2">2 Jogadores</option>
+            <option value="3">3 Jogadores</option>
+            <option value="4">4 Jogadores</option>
+            <option value="5" selected>5 Jogadores</option>
+            <option value="6">6 Jogadores</option>
+            <option value="7">7 Jogadores</option>
+            <option value="8">8 Jogadores</option>
+          </select>
+        </div>
+        <div id="host-id-display" style="font-size: 0.85rem; color: #60a5fa; text-align: center;">Gerando ID da sala...</div>
+      </div>
+
+      <div id="join-controls" style="display: none; flex-direction: column; gap: 8px; width: 100%; max-width: 350px;">
+        <input type="text" id="join-room-id" placeholder="ID da Sala fornecido pelo Host">
+        <input type="text" id="join-team-name" placeholder="Nome do Seu Time">
+        <button class="btn-start" style="padding: 8px 15px; font-size: 0.85rem;" id="btn-join" onclick="joinRoom()">Entrar na Sala</button>
+      </div>
+
+      <div id="status-conn" style="font-size:0.8rem; color:var(--text-muted); text-align: center;"></div>
+    </div>
+
+    <div class="setup-grid" id="setup-teams-grid">
+      <div class="team-input-card" id="card-t0">
+        <label><b>Time 1 (Host)</b></label>
+        <div class="badge-preview" id="badge-prev-0"></div>
+        <input type="text" id="t0-name" value="Time 1" onchange="updateBadgePreviews()">
+        <label>Cor Principal</label>
+        <input type="color" id="t0-c1" value="#3b82f6" onchange="updateBadgePreviews()">
+        <label>Cor Secundária</label>
+        <input type="color" id="t0-c2" value="#0f172a" onchange="updateBadgePreviews()">
+        <label>Formato</label>
+        <select id="t0-shape" onchange="updateBadgePreviews()">
+          <option value="shield">Escudo Clássico</option>
+          <option value="circle">Circular</option>
+          <option value="diamond">Losango</option>
+        </select>
+        <label>Estilo / Padrão</label>
+        <select id="t0-pattern" onchange="updateBadgePreviews()">
+          <option value="solid">Liso / Sólido</option>
+          <option value="stripes">Listrado Vertical</option>
+          <option value="half">Meio a Meio</option>
+          <option value="stars">Com Estrela</option>
+        </select>
+        <label>Mascote</label>
+        <select id="t0-animal" onchange="updateBadgePreviews()">
+          <option value="🦅">Águia 🦅</option>
+          <option value="🦁">Leão 🦁</option>
+          <option value="🐅">Tigre 🐅</option>
+          <option value="🐺">Lobo 🐺</option>
+          <option value="🐉">Dragão 🐉</option>
+        </select>
+      </div>
+
+      <div class="team-input-card" id="card-t1">
+        <label><b>Time 2</b></label>
+        <div class="badge-preview" id="badge-prev-1"></div>
+        <input type="text" id="t1-name" value="Time 2" onchange="updateBadgePreviews()">
+        <label>Cor Principal</label>
+        <input type="color" id="t1-c1" value="#10b981" onchange="updateBadgePreviews()">
+        <label>Cor Secundária</label>
+        <input type="color" id="t1-c2" value="#ffffff" onchange="updateBadgePreviews()">
+        <label>Formato</label>
+        <select id="t1-shape" onchange="updateBadgePreviews()">
+          <option value="circle">Circular</option>
+          <option value="shield">Escudo Clássico</option>
+          <option value="diamond">Losango</option>
+        </select>
+        <label>Estilo / Padrão</label>
+        <select id="t1-pattern" onchange="updateBadgePreviews()">
+          <option value="solid">Liso / Sólido</option>
+          <option value="stripes">Listrado Vertical</option>
+          <option value="half">Meio a Meio</option>
+        </select>
+        <label>Mascote</label>
+        <select id="t1-animal" onchange="updateBadgePreviews()">
+          <option value="🟢">Porco 🟢</option>
+          <option value="🦅">Águia 🦅</option>
+          <option value="🦁">Leão 🦁</option>
+        </select>
+      </div>
+
+      <div class="team-input-card" id="card-t2">
+        <label><b>Time 3</b></label>
+        <div class="badge-preview" id="badge-prev-2"></div>
+        <input type="text" id="t2-name" value="Time 3" onchange="updateBadgePreviews()">
+        <label>Cor Principal</label>
+        <input type="color" id="t2-c1" value="#f59e0b" onchange="updateBadgePreviews()">
+        <label>Cor Secundária</label>
+        <input type="color" id="t2-c2" value="#000000" onchange="updateBadgePreviews()">
+        <label>Formato</label>
+        <select id="t2-shape" onchange="updateBadgePreviews()">
+          <option value="diamond">Losango</option>
+          <option value="shield">Escudo Clássico</option>
+        </select>
+        <label>Estilo / Padrão</label>
+        <select id="t2-pattern" onchange="updateBadgePreviews()">
+          <option value="half">Meio a Meio</option>
+          <option value="solid">Liso / Sólido</option>
+        </select>
+        <label>Mascote</label>
+        <select id="t2-animal" onchange="updateBadgePreviews()">
+          <option value="🦁">Leão 🦁</option>
+          <option value="🦅">Águia 🦅</option>
+        </select>
+      </div>
+
+      <div class="team-input-card" id="card-t3">
+        <label><b>Time 4</b></label>
+        <div class="badge-preview" id="badge-prev-3"></div>
+        <input type="text" id="t3-name" value="Time 4" onchange="updateBadgePreviews()">
+        <label>Cor Principal</label>
+        <input type="color" id="t3-c1" value="#8b5cf6" onchange="updateBadgePreviews()">
+        <label>Cor Secundária</label>
+        <input type="color" id="t3-c2" value="#ffffff" onchange="updateBadgePreviews()">
+        <label>Formato</label>
+        <select id="t3-shape" onchange="updateBadgePreviews()">
+          <option value="shield">Escudo Clássico</option>
+        </select>
+        <label>Estilo / Padrão</label>
+        <select id="t3-pattern" onchange="updateBadgePreviews()">
+          <option value="stripes">Listrado Vertical</option>
+        </select>
+        <label>Mascote</label>
+        <select id="t3-animal" onchange="updateBadgePreviews()">
+          <option value="🦅">Gavião 🦅</option>
+        </select>
+      </div>
+
+      <div class="team-input-card" id="card-t4">
+        <label><b>Time 5</b></label>
+        <div class="badge-preview" id="badge-prev-4"></div>
+        <input type="text" id="t4-name" value="Time 5" onchange="updateBadgePreviews()">
+        <label>Cor Principal</label>
+        <input type="color" id="t4-c1" value="#06b6d4" onchange="updateBadgePreviews()">
+        <label>Cor Secundária</label>
+        <input type="color" id="t4-c2" value="#ffffff" onchange="updateBadgePreviews()">
+        <label>Formato</label>
+        <select id="t4-shape" onchange="updateBadgePreviews()">
+          <option value="circle">Circular</option>
+        </select>
+        <label>Estilo / Padrão</label>
+        <select id="t4-pattern" onchange="updateBadgePreviews()">
+          <option value="stars">Com Estrela</option>
+        </select>
+        <label>Mascote</label>
+        <select id="t4-animal" onchange="updateBadgePreviews()">
+          <option value="🐉">Dragão 🐉</option>
+        </select>
+      </div>
+
+      <div class="team-input-card" id="card-t5" style="display: none;">
+        <label><b>Time 6</b></label>
+        <div class="badge-preview" id="badge-prev-5"></div>
+        <input type="text" id="t5-name" value="Time 6" onchange="updateBadgePreviews()">
+        <label>Cor Principal</label>
+        <input type="color" id="t5-c1" value="#ec4899" onchange="updateBadgePreviews()">
+        <label>Cor Secundária</label>
+        <input type="color" id="t5-c2" value="#ffffff" onchange="updateBadgePreviews()">
+        <label>Formato</label>
+        <select id="t5-shape" onchange="updateBadgePreviews()">
+          <option value="shield">Escudo Clássico</option>
+        </select>
+        <label>Estilo / Padrão</label>
+        <select id="t5-pattern" onchange="updateBadgePreviews()">
+          <option value="solid">Liso / Sólido</option>
+        </select>
+        <label>Mascote</label>
+        <select id="t5-animal" onchange="updateBadgePreviews()">
+          <option value="🐺">Lobo 🐺</option>
+        </select>
+      </div>
+
+      <div class="team-input-card" id="card-t6" style="display: none;">
+        <label><b>Time 7</b></label>
+        <div class="badge-preview" id="badge-prev-6"></div>
+        <input type="text" id="t6-name" value="Time 7" onchange="updateBadgePreviews()">
+        <label>Cor Principal</label>
+        <input type="color" id="t6-c1" value="#e11d48" onchange="updateBadgePreviews()">
+        <label>Cor Secundária</label>
+        <input type="color" id="t6-c2" value="#000000" onchange="updateBadgePreviews()">
+        <label>Formato</label>
+        <select id="t6-shape" onchange="updateBadgePreviews()">
+          <option value="diamond">Losango</option>
+        </select>
+        <label>Estilo / Padrão</label>
+        <select id="t6-pattern" onchange="updateBadgePreviews()">
+          <option value="stripes">Listrado Vertical</option>
+        </select>
+        <label>Mascote</label>
+        <select id="t6-animal" onchange="updateBadgePreviews()">
+          <option value="🐅">Tigre 🐅</option>
+        </select>
+      </div>
+
+      <div class="team-input-card" id="card-t7" style="display: none;">
+        <label><b>Time 8</b></label>
+        <div class="badge-preview" id="badge-prev-7"></div>
+        <input type="text" id="t7-name" value="Time 8" onchange="updateBadgePreviews()">
+        <label>Cor Principal</label>
+        <input type="color" id="t7-c1" value="#84cc16" onchange="updateBadgePreviews()">
+        <label>Cor Secundária</label>
+        <input type="color" id="t7-c2" value="#0f172a" onchange="updateBadgePreviews()">
+        <label>Formato</label>
+        <select id="t7-shape" onchange="updateBadgePreviews()">
+          <option value="circle">Circular</option>
+        </select>
+        <label>Estilo / Padrão</label>
+        <select id="t7-pattern" onchange="updateBadgePreviews()">
+          <option value="half">Meio a Meio</option>
+        </select>
+        <label>Mascote</label>
+        <select id="t7-animal" onchange="updateBadgePreviews()">
+          <option value="🦁">Leão 🦁</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn-start" id="btn-host-start" onclick="startGame()">Iniciar Leilão (Host)</button>
+  </div>
+
+  <!-- GAME ARENA (LEILÃO) -->
+  <div id="game-arena" style="display: none;">
+    <div class="teams-left-sidebar" id="teams-sidebar">
+      <div class="team-panel" id="panel-0"></div>
+      <div class="team-panel" id="panel-1"></div>
+      <div class="team-panel" id="panel-2"></div>
+      <div class="team-panel" id="panel-3"></div>
+      <div class="team-panel" id="panel-4"></div>
+      <div class="team-panel" id="panel-5" style="display: none;"></div>
+      <div class="team-panel" id="panel-6" style="display: none;"></div>
+      <div class="team-panel" id="panel-7" style="display: none;"></div>
+    </div>
+    
+    <div id="auction-right-center">
+      <div style="width: 100%; max-width: 400px; text-align: center;">
+        <span id="season-badge" style="background:var(--accent-slate); color:#fff; font-weight:600; padding:4px 12px; border-radius:4px; font-size:0.75rem; text-transform:uppercase;">1ª Temporada: Leilão Principal</span>
+        <button class="btn-action btn-dice" id="btn-roll-dice" style="margin-top:10px;" onclick="rollDice()">Sortear Ordem (Rolar Dado)</button>
+        <p id="dice-result" style="text-align: center; margin-top: 6px; font-weight: 600; color: #60a5fa; font-size:0.85rem;"></p>
+      </div>
+
+      <div class="player-card">
+        <div class="card-ovr" id="c-ovr">--</div>
+        <div class="card-pos" id="c-pos">POS</div>
+        <div class="card-photo-box">
+          <img id="c-photo" class="card-photo-img" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50%' y='55%' font-size='50' text-anchor='middle' dominant-baseline='central' fill='%23fff'>👤</text></svg>" alt="Foto">
+        </div>
+        <div class="card-name" id="c-name">Aguardando...</div>
+      </div>
+
+      <div class="bidding-info">
+        <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Lance Atual</div>
+        <div class="current-bid" id="current-bid-val">0 Tokens</div>
+        <div id="highest-bidder-name" style="font-size: 0.85rem; color: var(--text-muted);">Nenhum lance</div>
+      </div>
+
+      <div class="controls-panel">
+        <p id="turn-indicator" style="text-align:center; font-weight:600; font-size: 0.85rem; color: var(--text-main);">Aguardando dado...</p>
+        <div class="btn-group">
+          <button class="btn-action btn-pass" id="btn-pass" onclick="handlePass()" disabled>Recusar (<span id="my-passes-count">4</span>x)</button>
+          <button class="btn-action btn-zero" id="btn-bid-0" onclick="handleBid(0)" disabled>Lance 0 Tokens</button>
+          <button class="btn-action btn-bid" id="btn-bid-1" onclick="handleBid(1)" disabled>+1 Token</button>
+          <button class="btn-action btn-bid" id="btn-bid-2" onclick="handleBid(2)" disabled>+2 Tokens</button>
+          <button class="btn-action btn-bid" id="btn-bid-3" onclick="handleBid(3)" disabled>+3 Tokens</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA DE CAMPEONATO -->
+  <div id="league-screen" class="screen" style="display: none;">
+    <div class="brasfoot-header">
+      <h2 style="color:var(--text-main); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px;" id="phase-indicator">🏆 ESTADUALZÃO</h2>
+      <p id="round-indicator" style="color:var(--text-muted); font-size:0.85rem; margin-top:2px;">Simulação de Partidas</p>
+    </div>
+
+    <div class="brasfoot-grid">
+      <div class="matches-broadcast">
+        <div id="matches-broadcast-container" style="width:100%; display:flex; flex-direction:column; align-items:center;"></div>
+      </div>
+
+      <div class="league-table-container">
+        <div class="top-scorers-box" id="top-scorers-container">
+          <div class="top-scorers-title">⚽ Artilharia do Campeonato</div>
+          <div id="top-scorers-list"><div style="font-size:0.75rem; color:var(--text-muted);">Nenhum gol marcado ainda.</div></div>
+        </div>
+        <h3 style="color:var(--text-main); text-align:center; margin-bottom:6px; font-size:0.95rem; text-transform:uppercase;" id="side-panel-title">Tabelas / Classificação</h3>
+        <div class="group-tables-grid" id="groups-container"></div>
+        <div class="bracket-list" id="bracket-list-container" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PÓDIO DA COMPETIÇÃO -->
+  <div id="podium-screen" class="screen" style="display: none;">
+    <h1 style="color: var(--text-main); margin-bottom: 5px; font-size: 1.6rem; text-align:center; text-transform: uppercase;" id="podium-title">👑 GRANDES CAMPEÕES 👑</h1>
+    <p id="podium-subtitle" style="color:#60a5fa; margin-bottom:20px; font-weight:600; text-align:center; font-size:0.9rem;">Competição Encerrada!</p>
+    <div class="podium-container">
+      <div class="podium-step podium-2" id="step-2">
+        <div id="podium-badge-2" style="width:35px; height:35px;"></div>
+        <div style="font-size:0.8rem; margin-top:4px;">🥈 Vice</div>
+        <div class="podium-team-name" id="podium-name-2">--</div>
+      </div>
+      <div class="podium-step podium-1" id="step-1">
+        <div class="trophy">🏆</div>
+        <div id="podium-badge-1" style="width:45px; height:45px;"></div>
+        <div style="font-size:0.85rem; margin-top:4px;">1º CAMPEÃO</div>
+        <div class="podium-team-name" id="podium-name-1">--</div>
+      </div>
+      <div class="podium-step podium-3" id="step-3">
+        <div id="podium-badge-3" style="width:30px; height:30px;"></div>
+        <div style="font-size:0.75rem; margin-top:4px;">🥉 3º LUGAR</div>
+        <div class="podium-team-name" id="podium-name-3">--</div>
+      </div>
+    </div>
+    <div id="season-stats-box" class="season-stats-box"></div>
+    <button class="btn-start" id="btn-next-phase" style="margin-top:25px;" onclick="handlePodiumNextPhase()">Avançar para a próxima fase</button>
+  </div>
+
+  <!-- MODAL DE TROCA DE JOGADOR (TEMPORADAS DE REFORÇO) -->
+  <div id="swap-modal-overlay">
+    <div class="swap-modal">
+      <div class="swap-modal-title" id="swap-modal-title">Substituir Jogador</div>
+      <p style="font-size:0.8rem; color:var(--text-muted); text-align:center;" id="swap-modal-subtitle">Escolha qual jogador do seu elenco sairá para a entrada do reforço:</p>
+      <div class="swap-list" id="swap-modal-list"></div>
+    </div>
+  </div>
+
+  <script>
+    const TEAM_LOGOS = {
+      "real madrid": "https://thumb.wikimedia.org/wikipedia/pt/thumb/9/98/Real_Madrid.png/250px-Real_Madrid.png",
+      "fc barcelona": "https://thumb.wikimedia.org/wikipedia/pt/thumb/4/43/FCBarcelona.svg/1280px-FCBarcelona.svg.png",
+      "bayern de munique": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1b/FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg/960px-FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg.png",
+      "ac milan": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/17/AC_Milan.png/330px-AC_Milan.png",
+      "liverpool": "https://thumb.wikimedia.org/wikipedia/pt/thumb/0/0c/Liverpool_FC.svg/1920px-Liverpool_FC.svg.png",
+      "manchester united": "https://upload.wikimedia.org/wikipedia/pt/b/b6/Manchester_United_FC_logo.png",
+      "juventus": "https://upload.wikimedia.org/wikipedia/commons/5/51/Juventus_FC_2017_logo.png",
+      "inter de milão": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/05/FC_Internazionale_Milano_2021.svg/1280px-FC_Internazionale_Milano_2021.svg.png",
+      "boca juniors": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Boca_escudo.png",
+      "river plate": "https://upload.wikimedia.org/wikipedia/commons/f/f1/River_Plate.png",
+      "santos": "https://upload.wikimedia.org/wikipedia/commons/1/15/Santos_Logo.png",
+      "flamengo": "https://upload.wikimedia.org/wikipedia/commons/9/93/Flamengo-RJ_%28BRA%29.png",
+      "são paulo": "https://upload.wikimedia.org/wikipedia/commons/4/4b/S%C3%A3o_Paulo_Futebol_Clube.png",
+      "palmeiras": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/10/Palmeiras_logo.svg/500px-Palmeiras_logo.svg.png",
+      "peñarol": "https://upload.wikimedia.org/wikipedia/commons/2/26/Escudo-club-atletico-penarol.png",
+      "nacional": "https://upload.wikimedia.org/wikipedia/commons/7/74/Club_Nacional_de_Football_logo_%282012%E2%80%932018%29.png",
+      "afc ajax": "https://thumb.wikimedia.org/wikipedia/pt/thumb/b/b8/AFC_Ajax_Amsterdam.svg/3840px-AFC_Ajax_Amsterdam.svg.png",
+      "sl benfica": "https://thumb.wikimedia.org/wikipedia/pt/thumb/d/de/Sport_Lisboa_e_Benfica.svg/3840px-Sport_Lisboa_e_Benfica.svg.png",
+      "fc porto": "https://upload.wikimedia.org/wikipedia/pt/c/c5/F.C._Porto_logo.png",
+      "corinthians": "https://upload.wikimedia.org/wikipedia/pt/b/b4/Corinthians_simbolo.png",
+      "grêmio": "https://upload.wikimedia.org/wikipedia/commons/0/08/Gremio_logo.svg",
+      "internacional": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Sport_Club_Internacional_logo.svg/960px-Sport_Club_Internacional_logo.svg.png",
+      "cruzeiro": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/Cruzeiro_Esporte_Clube_%28logo%29.svg/3840px-Cruzeiro_Esporte_Clube_%28logo%29.svg.png",
+      "independiente": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/Escudo_del_Club_Atl%C3%A9tico_Independiente.svg/500px-Escudo_del_Club_Atl%C3%A9tico_Independiente.svg.png",
+      "chelsea": "https://thumb.wikimedia.org/wikipedia/pt/thumb/c/cc/Chelsea_FC.svg/1280px-Chelsea_FC.svg.png",
+      "arsenal": "https://thumb.wikimedia.org/wikipedia/pt/thumb/5/53/Arsenal_FC.svg/1280px-Arsenal_FC.svg.png",
+      "manchester city": "https://upload.wikimedia.org/wikipedia/pt/0/02/Manchester_City_Football_Club.png",
+      "paris saint-germain": "https://logodownload.org/wp-content/uploads/2017/02/psg-logo-escudo-paris-saint-germain.png",
+      "atlético de madrid": "https://upload.wikimedia.org/wikipedia/pt/1/19/AtleticoMadrid2017.png",
+      "borussia dortmund": "https://upload.wikimedia.org/wikipedia/commons/7/74/Borussia_Dortmund.png",
+      "olympique de marseille": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Olympique_Marseille_logo.svg/250px-Olympique_Marseille_logo.svg.png",
+      "celtic": "https://upload.wikimedia.org/wikipedia/pt/3/39/Celtic_FC_logo.png",
+      "rangers": "https://upload.wikimedia.org/wikipedia/pt/6/6c/Rangers_FC_logo.svg.png",
+      "atlético mineiro": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Atletico_mineiro_galo.png",
+      "fluminense": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ad/Fluminense_FC_escudo.png/250px-Fluminense_FC_escudo.png",
+      "vasco da gama": "https://thumb.wikimedia.org/wikipedia/pt/thumb/8/8b/EscudoDoVascoDaGama.svg/960px-EscudoDoVascoDaGama.svg.png",
+      "botafogo": "https://upload.wikimedia.org/wikipedia/commons/c/cb/Escudo_Botafogo.png",
+      "racing club": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/56/Escudo_de_Racing_Club_%282014%29.svg/1920px-Escudo_de_Racing_Club_%282014%29.svg.png",
+      "san lorenzo": "https://upload.wikimedia.org/wikipedia/commons/6/62/Escudo_del_Club_Atl%C3%A9tico_San_Lorenzo_de_Almagro.png",
+      "estudiantes de la plata": "https://upload.wikimedia.org/wikipedia/commons/6/68/Escudo_del_Club_Estudiantes_de_La_Plata.svg",
+      "olimpia": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_de_Olimpia_2022_PNG_HD.png",
+      "colo-colo": "https://upload.wikimedia.org/wikipedia/pt/e/e8/Colo-Colo_Futbol_Club.png",
+      "atlético nacional": "https://upload.wikimedia.org/wikipedia/commons/d/d7/Atl%C3%A9tico_Nacional.png",
+      "al ahly": "https://upload.wikimedia.org/wikipedia/pt/c/cb/Alahly_crest.png",
+      "américa": "https://logodownload.org/wp-content/uploads/2018/10/america-mexico-logo-1.png",
+      "chivas guadalajara": "https://upload.wikimedia.org/wikipedia/pt/c/c8/Chivas_Guadalajara_-_Escudo.png",
+      "tottenham hotspur": "https://upload.wikimedia.org/wikipedia/pt/6/6d/Tottenham_Hotspur.png",
+      "aston villa": "https://thumb.wikimedia.org/wikipedia/pt/thumb/1/15/Aston_Villa.svg/500px-Aston_Villa.svg.png",
+      "everton": "https://upload.wikimedia.org/wikipedia/pt/a/ae/Everton_FC_logo_2014.png",
+      "nottingham forest": "https://upload.wikimedia.org/wikipedia/pt/a/a2/Nottingham_Forest.png",
+      "as roma": "https://upload.wikimedia.org/wikipedia/pt/8/8c/AS_Roma_logo.png",
+      "napoli": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/SSC_Napoli.svg/500px-SSC_Napoli.svg.png",
+      "ss lazio": "https://upload.wikimedia.org/wikipedia/pt/e/ed/SS_Lazio.png",
+      "fiorentina": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8c/ACF_Fiorentina_-_logo_%28Italy%2C_2022%29.svg/3840px-ACF_Fiorentina_-_logo_%28Italy%2C_2022%29.svg.png",
+      "torino": "https://upload.wikimedia.org/wikipedia/pt/2/2e/Torino_FC_logo.png",
+      "athletic bilbao": "https://upload.wikimedia.org/wikipedia/pt/9/90/Athletic_Club_de_Bilbao.png",
+      "sevilla": "https://upload.wikimedia.org/wikipedia/pt/c/cd/Sevilla_cf.png",
+      "valencia": "https://upload.wikimedia.org/wikipedia/pt/6/66/Valencia_Cf_Logo_original.png",
+      "hamburger sv": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/Hamburger_SV_logo.svg/960px-Hamburger_SV_logo.svg.png",
+      "borussia mönchengladbach": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/Borussia_M%C3%B6nchengladbach_logo.svg/1920px-Borussia_M%C3%B6nchengladbach_logo.svg.png",
+      "schalke 04": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6d/FC_Schalke_04_Logo.svg/1280px-FC_Schalke_04_Logo.svg.png",
+      "bayer leverkusen": "https://upload.wikimedia.org/wikipedia/pt/a/a2/Bayer_Leverkusen.png",
+      "werder bremen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/be/SV-Werder-Bremen-Logo.svg/1920px-SV-Werder-Bremen-Logo.svg.png",
+      "sporting cp": "https://upload.wikimedia.org/wikipedia/pt/3/3e/Sporting_Clube_de_Portugal.png",
+      "psv eindhoven": "https://upload.wikimedia.org/wikipedia/pt/c/ca/PSV_Eindhoven_escudo.png",
+      "feyenoord": "https://upload.wikimedia.org/wikipedia/pt/0/03/Feyenoord.png",
+      "as monaco": "https://a.espncdn.com/i/teamlogos/soccer/500/174.png",
+      "lyon": "https://upload.wikimedia.org/wikipedia/pt/6/6d/Olympique_lyonnais.png",
+      "saint-étienne": "https://upload.wikimedia.org/wikipedia/commons/f/fb/AS_Saint-%C3%89tienne_official_logo.png",
+      "athletico paranaense": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Athletico_Paranaense_%28Logo_2019%29.svg/1920px-Athletico_Paranaense_%28Logo_2019%29.svg.png",
+      "bahia": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Esporte_Clube_Bahia_logo.svg/250px-Esporte_Clube_Bahia_logo.svg.png",
+      "sport": "https://thumb.wikimedia.org/wikipedia/pt/thumb/1/1a/Sport-clube-recife.svg/1920px-Sport-clube-recife.svg.png",
+      "vélez sarsfield": "https://upload.wikimedia.org/wikipedia/pt/5/5b/CA_Velez_Sarsfield_logo.png",
+      "newell's old boys": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Newell%27s_Old_Boys_Escudo.png",
+      "rosario central": "https://upload.wikimedia.org/wikipedia/pt/e/ec/Club_Atl%C3%A9tico_Ros%C3%A1rio_Central.png",
+      "universidad de chile": "https://upload.wikimedia.org/wikipedia/pt/5/50/C.F._Universidad_de_Chile_logo.png",
+      "universidad católica": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ca/Escudo_Club_Deportivo_Universidad_Cat%C3%B3lica.svg/1280px-Escudo_Club_Deportivo_Universidad_Cat%C3%B3lica.svg.png",
+      "millonarios": "https://upload.wikimedia.org/wikipedia/commons/7/78/Escudo_de_Millonarios_temporada_2022.png",
+      "américa de cali": "https://thumb.wikimedia.org/wikipedia/pt/thumb/7/77/Am%C3%A9rica_de_Cali_logo.svg/1920px-Am%C3%A9rica_de_Cali_logo.svg.png",
+      "ldu quito": "https://upload.wikimedia.org/wikipedia/commons/7/72/LDU_Escudo_Actualizado_2023.png",
+      "barcelona de guayaquil": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Barcelona_Sporting_Club_Logo.png",
+      "independiente del valle": "https://assets.footylogos.com/previews/independiente-del-valle/independiente-del-valle-logo-footylogos-1200.webp",
+      "cerro porteño": "https://upload.wikimedia.org/wikipedia/commons/5/5b/Escudo_del_Club_Cerro_Porte%C3%B1o.png",
+      "libertad": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Club_Libertad.png",
+      "universitario": "https://upload.wikimedia.org/wikipedia/commons/6/67/Logo_oficial_de_Universitario.png",
+      "alianza lima": "https://thumb.wikimedia.org/wikipedia/pt/thumb/6/6c/Alianzalima.png/250px-Alianzalima.png",
+      "inter miami": "https://thumb.wikimedia.org/wikipedia/pt/thumb/5/5c/Inter_Miami_CF_logo.svg/1280px-Inter_Miami_CF_logo.svg.png",
+      "bolívar": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d6/Emblem_bolivar.png/500px-Emblem_bolivar.png",
+      "real betis": "https://upload.wikimedia.org/wikipedia/pt/1/17/Real_Betis_Balompi%C3%A9.png",
+      "villareal": "https://upload.wikimedia.org/wikipedia/pt/7/70/Villarreal_CF_logo.svg",
+      "tigres": "https://cdn.prod.website-files.com/68f550992570ca0322737dc2/68f6add5913f9312828e02e7_tigres-uanl-footballlogos-org.webp",
+      "cf monterrey": "https://upload.wikimedia.org/wikipedia/pt/f/f5/CF_Monterrey_logo.png",
+      "crystal palace": "https://upload.wikimedia.org/wikipedia/pt/c/c1/Crystal_Palace_FC_logo.png",
+      "newcastle": "https://upload.wikimedia.org/wikipedia/pt/2/25/Newcastle_United_Logo.png",
+      "freiburg": "https://upload.wikimedia.org/wikipedia/pt/7/7b/SC_Freiburg.png",
+      "la galaxy": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/70/Los_Angeles_Galaxy_logo.svg/960px-Los_Angeles_Galaxy_logo.svg.png",
+      "galatasaray": "https://upload.wikimedia.org/wikipedia/commons/4/49/Galatasaray_SK_football_logo.png",
+      "fenerbahçe": "https://upload.wikimedia.org/wikipedia/pt/0/0a/Fenerbah%C3%A7e_SK_logo.png",
+      "beşiktaş": "https://upload.wikimedia.org/wikipedia/pt/3/3d/Besiktas_JK_logo.png",
+      "olympiacos": "https://upload.wikimedia.org/wikipedia/pt/2/2e/Olympiakos.png",
+      "panathinaikos": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Panathinaikos_FC_logo.png/500px-Panathinaikos_FC_logo.png",
+      "estrela vermelha": "https://thumb.wikimedia.org/wikipedia/pt/thumb/c/c5/OK_Crvena_Zvezda%28logo%29.png/250px-OK_Crvena_Zvezda%28logo%29.png",
+      "wolfsburg": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/Logo-VfL-Wolfsburg.svg/960px-Logo-VfL-Wolfsburg.svg.png",
+      "como": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Logo_Como_1907_2019.png/500px-Logo_Como_1907_2019.png",
+      "atalanta": "https://upload.wikimedia.org/wikipedia/pt/5/54/Atalanta_Bergamasca_Calcio_logo.png",
+      "dynamo kyiv": "https://upload.wikimedia.org/wikipedia/commons/d/db/Futbolny_Klub_Dynamo_Kyiv_logo.svg",
+      "shakhtar donetsk": "https://upload.wikimedia.org/wikipedia/pt/2/20/FC_Shakhtar_Donetsk.png",
+      "spartak moscou": "https://upload.wikimedia.org/wikipedia/commons/9/91/FC_Spartak_Moscow_Logotype.png",
+      "cska moscou": "https://thumb.wikimedia.org/wikipedia/pt/thumb/1/17/PFC_CSKA.svg/500px-PFC_CSKA.svg.png",
+      "zenit": "https://upload.wikimedia.org/wikipedia/commons/0/0b/FC_Zenit_2_star_2023_logo.png",
+      "leipzig": "https://upload.wikimedia.org/wikipedia/pt/6/65/RB_Leipzig_2020_Logo.png",
+      "eintracht frankfurt": "https://thumb.wikimedia.org/wikipedia/en/thumb/7/7e/Eintracht_Frankfurt_crest.svg/1280px-Eintracht_Frankfurt_crest.svg.png",
+      "raja casablanca": "https://upload.wikimedia.org/wikipedia/pt/b/be/Raja_Casablanca_Logo.png",
+      "al-hilal": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/55/Al_Hilal_SFC_Logo.svg/500px-Al_Hilal_SFC_Logo.svg.png",
+      "genoa": "https://upload.wikimedia.org/wikipedia/pt/0/04/GenoaCFC.png",
+      "brentford": "https://upload.wikimedia.org/wikipedia/pt/5/5a/Brentford_FC.png",
+      "lille": "https://upload.wikimedia.org/wikipedia/pt/7/74/Lille_osc.png",
+      "emelec": "https://upload.wikimedia.org/wikipedia/commons/0/0b/EscudoCSEmelec.png",
+      "santa fe": "https://upload.wikimedia.org/wikipedia/commons/5/58/Escudo_de_Independiente_Santa_Fe.png",
+      "junior barranquilla": "https://upload.wikimedia.org/wikipedia/commons/3/31/Escudo_Junior_de_Barranquilla_2018.png",
+      "caracas fc": "https://upload.wikimedia.org/wikipedia/pt/f/f4/Caracas_FC.png",
+      "deportivo táchira": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Deportivo_T%C3%A1chira_FC.png",
+      "hertha berlin": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/Hertha_BSC_Logo_2012.svg/1280px-Hertha_BSC_Logo_2012.svg.png",
+      "hoffenheim": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkemw_WeEqyCu8NubZCZ7Z7gpLe2ytyR7vWh2XX2jq5g&s=10",
+      "al nassr": "https://upload.wikimedia.org/wikipedia/fr/9/9d/Logo_Al-Nassr.png",
+    };
+
+    const RAW_ESTADUALZAO_LIST = [
+      "Real Madrid", "FC Barcelona", "Bayern de Munique", "AC Milan", "Liverpool", "Manchester United", "Juventus", "Inter de Milão", "Boca Juniors", "River Plate", "Santos", "Flamengo", "São Paulo", "Palmeiras", "Peñarol", "Nacional", "AFC Ajax", "SL Benfica", "FC Porto", "Corinthians", "Grêmio", "Internacional", "Cruzeiro", "Independiente", "Chelsea", "Arsenal", "Manchester City", "Paris Saint-Germain", "Atlético de Madrid", "Borussia Dortmund", "Olympique de Marseille", "Celtic", "Rangers", "Atlético Mineiro", "Fluminense", "Vasco da Gama", "Botafogo", "Racing Club", "San Lorenzo", "Estudiantes de La Plata", "Olimpia", "Colo-Colo", "Atlético Nacional", "Al Ahly", "América", "Chivas Guadalajara", "Tottenham Hotspur", "Aston Villa", "Everton", "Nottingham Forest", "AS Roma", "Napoli", "SS Lazio", "Fiorentina", "Torino", "Athletic Bilbao", "Sevilla", "Valencia", "Hamburger SV", "Borussia Mönchengladbach", "Schalke 04", "Bayer Leverkusen", "Werder Bremen", "Sporting CP", "PSV Eindhoven", "Feyenoord", "AS Monaco", "Lyon", "Saint-Étienne", "Athletico Paranaense", "Bahia", "Sport", "Vélez Sarsfield", "Newell's Old Boys", "Rosario Central", "Universidad de Chile", "Universidad Católica", "Millonarios", "América de Cali", "LDU Quito", "Barcelona de Guayaquil", "Independiente del Valle", "Cerro Porteño", "Libertad", "Universitario", "Alianza Lima", "Inter Miami", "Bolívar", "Real Betis", "Villareal", "Tigres", "CF Monterrey", "Crystal Palace", "Newcastle", "Freiburg", "LA Galaxy", "Galatasaray", "Fenerbahçe", "Beşiktaş", "Olympiacos", "Panathinaikos", "Estrela Vermelha", "Wolfsburg", "Como", "Atalanta", "Dynamo Kyiv", "Shakhtar Donetsk", "Spartak Moscou", "CSKA Moscou", "Zenit", "Leipzig", "Eintracht Frankfurt", "Raja Casablanca", "Al-Hilal", "Genoa", "Brentford", "Lille", "Emelec", "Santa Fe", "Junior Barranquilla", "Caracas FC", "Deportivo Táchira", "Hertha Berlin", "Hoffenheim", "Al Nassr"
+    ];
+
+    const BIG_TEAMS = new Set([
+      "Flamengo", "Corinthians", "Palmeiras", "Atlético Mineiro", "São Paulo", "Fluminense", "Botafogo", "Vasco da Gama", "Cruzeiro", "Grêmio", "Internacional", "Santos", "Real Madrid", "FC Barcelona", "Bayern de Munique", "AC Milan", "Liverpool", "Manchester United", "Juventus", "Inter de Milão", "Manchester City", "Chelsea", "Arsenal", "Paris Saint-Germain", "Atlético de Madrid", "Boca Juniors", "River Plate"
+    ]);
+
+    function getTeamLogoHTML(teamName, badgeObj) {
+      if (!teamName) return `<span class="badge-inline-svg">${generateBadgeSVG(badgeObj)}</span>`;
+      const cleanName = teamName.toLowerCase().replace(/^[a-z]{2}\s*-\s*/, '').trim();
+      const logoUrl = TEAM_LOGOS[teamName.toLowerCase().trim()] || TEAM_LOGOS[cleanName];
+      if (logoUrl) {
+        return `<img src="${logoUrl}" class="team-badge-icon" alt="${teamName}">`;
+      }
+      return `<span class="badge-inline-svg">${generateBadgeSVG(badgeObj)}</span>`;
+    }
+
+    function selectGameMode(mode) {
+      if (mode === 'leilao') {
+        document.getElementById('main-menu-screen').style.display = 'none';
+        document.getElementById('setup-screen').style.display = 'flex';
+      } else {
+        alert('Este modo de jogo será criado em breve!');
+      }
+    }
+
+    function backToMainMenu() {
+      document.getElementById('setup-screen').style.display = 'none';
+      document.getElementById('main-menu-screen').style.display = 'flex';
+    }
+
+    const database = {
+      GOL: [
+        { name: "Thibaut Courtois", ovr: 91, photo: "https://cdn-img.staticzz.com/img/planteis/new/13/56/6981356_thibaut_courtois_20250113131353.png" },
+        { name: "Alisson Becker", ovr: 89, photo: "https://cdn-img.staticzz.com/img/planteis/new/14/64/8721464_alisson_becker_20240419091353.png" },
+        { name: "Ederson", ovr: 88, photo: "https://www.ogol.com.br/img/jogadores/new/68/85/136885_ederson_moraes_20250618210458.png" },
+        { name: "Mike Maignan", ovr: 88, photo: "https://www.ogol.com.br/img/jogadores/new/88/10/168810_mike_maignan_20251228124300.png" },
+        { name: "Gianluigi Donnarumma", ovr: 90, photo: "https://cdn-img.staticzz.com/img/planteis/new/44/60/8684460_gigi_donnarumma_20250206035904.png" },
+        { name: "Emiliano Martínez", ovr: 87, photo: "https://cdn-img.staticzz.com/img/planteis/new/50/91/16565091_emiliano_martinez_20260617131340.png" },
+        { name: "Unai Simón", ovr: 85, photo: "https://www.ogol.com.br/img/jogadores/new/90/56/439056_unai_simon_20260128225626.png" },
+        { name: "Oliver Kahn", ovr: 91, photo: "https://www.ogol.com.br/img/jogadores/new/25/91/2591_oliver_kahn_20250101181633.png" },
+        { name: "Gregor Kobel", ovr: 87, photo: "https://www.ogol.com.br/img/jogadores/new/93/06/1499306_gregor_kobel_20260602013547.png" },
+        { name: "David Raya", ovr: 87, photo: "https://www.ogol.com.br/img/jogadores/new/76/92/397692_david_raya_20260511135256.png" },
+        { name: "Gabriel Peroseni", ovr: 99, photo: "https://kommodo.ai/i/e3VxFZj7kMs60s1e4amz" },
+        { name: "Jan Oblak", ovr: 90, photo: "https://cdn-img.staticzz.com/img/planteis/new/96/92/14899692_jan_oblak_20260127193140.png" },
+        { name: "Marc-André ter Stegen", ovr: 90, photo: "https://cdn-img.staticzz.com/img/planteis/new/94/77/11229477_marc_andre_ter_stegen_20251223225657.png" },
+        { name: "Lev Yashin", ovr: 93, photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-L_q7jJsRy4w5-d0yz4pnuWuDktLpPT5QNP0ESMdswQ&s=10" },
+        { name: "Manuel Neuer", ovr: 94, photo: "https://cdn-img.staticzz.com/img/planteis/new/61/01/6106101_manuel_neuer_20250129232414.png" },
+        { name: "Gianluigi Buffon", ovr: 93, photo: "https://www.ogol.com.br/img/jogadores/new/19/79/1979_gianluigi_buffon_20250409143104.png" },
+        { name: "Iker Casillas", ovr: 92, photo: "https://www.ogol.com.br/img/jogadores/14/771714_med_20210411193746_iker_casillas.png" },
+        { name: "Petr Cech", ovr: 90, photo: "https://www.ogol.com.br/img/jogadores/38/766438_ori_20210327022445_petr_cech.png" },
+        { name: "Cássio", ovr: 88, photo: "https://www.ogol.com.br/img/jogadores/new/14/50/31450_cassio_20240627125554.png" },
+        { name: "Marcos", ovr: 88, photo: "https://www.palmeiras.com.br/wp-content/uploads/2019/08/marcos-pagina-de-craques-2.png" },
+        { name: "Van der Sar", ovr: 90, photo: "https://fifarosters.com/assets/players/fifa23/dynamic/50383187.png" },
+        { name: "Taffarel", ovr: 89, photo: "https://fussball-legende.de/wp-content/uploads/2025/03/Taffarel.png" },
+        { name: "Julio Cesar", ovr: 89, photo: "https://cdn-img.staticzz.com/img/planteis/new/64/08/4296408 julio cesar 20241226174717.png" },
+        { name: "Carlos Miguel", ovr: 81, photo: "https://www.verdazzo.com.br/wp-content/uploads/2025/08/carlosmiguel.png" },
+        { name: "Hugo Souza", ovr: 82, photo: "https://cdn-img.staticzz.com/img/planteis/new/72/46/14167246_hugo_souza_20250505162035.png" },
+        { name: "Felipe Gregate", ovr: 96, photo: "https://scontent.cdninstagram.com/v/t51.82787-19/767743332_18120562640309278_1800313310714424773_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_cat=111&ccb=7-5&_nc_sid=f7ccc5&efg=eyJ2ZW5jb2RIX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=bZv5vKzKU2YQ7kNvwHW6JJi&_nc_oc=AdrblQzh9konl-p-ui14hv5Sp23KQymDHH7q-i-fiSbMnszejrNgd9yV5-fwkbcsml4&_nc_zt=248&_nc_ht=scontent.cdninstagram.com&_nc_gid=F1mtW4FLgDKbn11lbkJ5TQ&_nc_ss=7b689&oh=00_AQNDM-IO29DGfA35zbhM1WP458OHUESCIL4_uvNmpKGA1w&oe=6ACC23EF" },
+        { name: "Lunin", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/404839-1701294131.jpg?lm=4711" },
+        { name: "Joan Garcia", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/561613-1747386081.jpg?lm=4711" },
+        { name: "Szczesny", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/44058-1744278078.jpg?lm=4711" },
+        { name: "Gulasci", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/57071-1719214600.jpg?lm=4711" },
+        { name: "Alex remiro", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/212862-1694594210.jpg?lm=4711" },
+        { name: "Alvaro Vales", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/417913-1773343747.jpg?lm=4711" },
+        { name: "Radu", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/303657-1699432718.jpg?lm=4711" },
+        { name: "Vlachodimos", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/124419-1706829687.jpg?lm=4711" },
+        { name: "Soria", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/226012-1696863038.jpg?lm=4711" },
+        { name: "Kepa", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/192279-1661855851.jpg?lm=4711" },
+        { name: "Mamardashvilli", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/502676-1716542116.jpg?lm=4711" },
+        { name: "Lammens", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/503883-1755675220.jpg?lm=4711" },
+        { name: "Pope", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/192080-1663841362.jpg?lm=4711" },
+        { name: "Suzuki", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/432298-1780323348.jpg?lm=4711" },
+        { name: "Henderson", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/258919-1716297478.jpg?lm=4711" },
+        { name: "Trafford", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/566799-1689876147.jpg?lm=4711" },
+        { name: "Pickford", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/130164-1668499964.jpg?lm=4711" },
+        { name: "Leno", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/72476-1774470314.jpg?lm=4711" },
+        { name: "Flekken", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/125714-1758704276.jpg?lm=4711" },
+        { name: "Josep", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/388516-1686153132.jpg?lm=4711" },
+        { name: "Vicario", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/286047-1725874745.jpg?lm=4711" },
+        { name: "Robert Sanchez", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/403151-1695028195.jpg?lm=4711" },
+        { name: "Svilar", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/338670-1725532174.jpg?lm=4711" },
+        { name: "Carnessechi", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/459763-1695027944.jpg?lm=4711" },
+        { name: "Meret", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/240414-1695025886.jpg?lm=4711" },
+        { name: "De gea", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/59377-1667548362.jpg?lm=4711" },
+        { name: "Safonov", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/318470-1790709013.png?lm=4711" },
+        { name: "Rossi", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/352324-1633537886.JPG?lm=4711" },
+        { name: "Otávio", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/997947-1745456431.jpeg?lm=4711" },
+        { name: "Léo Jardim", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/288415-1744073496.jpg?lm=4711" },
+        { name: "Fábio", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/22415-1752661918.jpg?lm=4711" },
+        { name: "Gabriel Brazão", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/371247-1780359299.jpg?lm=4711" },
+        { name: "Everson", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/106032-1686575213.jpg?lm=4711" },
+        { name: "Rafael", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/68097-1755221835.jpg?lm=4711" },
+        { name: "Weverton", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/69400-1751657170.jpg?lm=4711" },
+        { name: "Walter", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/269860-1580198215.jpg?lm=4711" },
+        { name: "Rogério Ceni", ovr: 88, photo: "https://static.wikia.nocookie.net/the-football-database/images/c/cf/S%C3%A3o_Paulo_R._Ceni_001.png/revision/latest?cb=20141023213224" },
+        { name: "Sommer", ovr: 84, photo: " https://cdn-img.staticzz.com/img/planteis/new/96/14/14899614_yann_sommer_20250905103036.png" },
+        { name: "Dida", ovr: 90, photo: "https://www.ogol.com.br/img/jogadores/98/767798_med__20210330164957_dida.jpg" },
+        { name: "Keylor Navas", ovr: 87, photo: "https://cdn-img.staticzz.com/img/planteis/new/16/15/14961615_keylor_navas_20250922012407.png" },
+      ],
+      DEF: [
+        { name: "Rúben Dias", ovr: 89, photo: "https://cdn-img.staticzz.com/img/planteis/new/79/34/11527934_ruben_dias_20240816210746.png" },
+        { name: "Virgil van Dijk", ovr: 92, photo: "https://www.ogol.com.br/img/jogadores/new/45/93/194593_virgil_van_dijk_20251022235737.png" },
+        { name: "Antonio Rüdiger", ovr: 87, photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1VoMXpZusvIsXwi-yHN90ZkOpA8GNtQazqigRc0I4Jw&s=10" },
+        { name: "William Saliba", ovr: 88, photo: "https://cdn-img.staticzz.com/img/planteis/504/7367504_.png" },
+        { name: "Marquinhos", ovr: 88, photo: "https://cdn-img.staticzz.com/img/planteis/new/99/21/14899921_marquinhos_20260901203314.png" },
+        { name: "Gabriel Magalhães", ovr: 89, photo: "https://www.ogol.com.br/img/jogadores/new/98/52/499852_gabriel_magalhaes_20250928235227.png" },
+        { name: "Alessandro Bastoni", ovr: 87, photo: "https://www.ogol.com.br/img/jogadores/new/18/64/511864_alessandro_bastoni_20250904233014.png" },
+        { name: "Theo Hernández", ovr: 86, photo: "https://cdn-img.staticzz.com/img/planteis/new/24/67/11232467_theo_hernandez_20250714145950.png" },
+        { name: "Achraf Hakimi", ovr: 90, photo: "https://www.ogol.com.br/img/jogadores/new/86/25/478625_achraf_hakimi_20260217234110.png" },
+        { name: "Trent Alexander-Arnold", ovr: 87, photo: "https://www.ogol.com.br/img/jogadores/new/97/52/449752_trent_alexander_arnold_20260217194323.png" },
+        { name: "Jules Koundé", ovr: 86, photo: "https://cdn-img.staticzz.com/img/planteis/526/7367526_.png" },
+        { name: "Beckenbauer", ovr: 93, photo: "https://sportal365images.com/process/smp-images-production/assets/25032026/f04dcf54-8d03-47f3-886d-202bd82fad55.png?operations=crop(11:100:271:360)" },
+        { name: "Ronald Araújo", ovr: 86, photo: "https://www.ogol.com.br/img/jogadores/new/17/42/591742_ronald_araujo_20260824100530.png" },
+        { name: "Thiago Silva", ovr: 89, photo: "https://cdn-img.staticzz.com/img/planteis/new/62/38/14226238_thiago_silva_20251220230859.png" },
+        { name: "Éder Militão", ovr: 87, photo: "https://www.ogol.com.br/img/jogadores/new/48/29/484829_eder_militao_20240809095340.png" },
+        { name: "Baresi", ovr: 92, photo: "https://s.hs-data.com/gfx/person/cropped/250x250/45216.png?fallback=male" },
+        { name: "Paolo Maldini", ovr: 93, photo: "https://www.ogol.com.br/img/jogadores/new/19/47/1947_paolo_maldini_20251010135723.png" },
+        { name: "Sergio Ramos", ovr: 92, photo: "https://static.wikia.nocookie.net/fightclubchampfanom/images/5/51/Sergio_Ramos.png/revision/latest?cb=20201029180308" },
+        { name: "Roberto Carlos", ovr: 91, photo: "https://img.a.transfermarkt.technology/portrait/big/7518-1726487760.jpg?lm=4711" },
+        { name: "Cafu", ovr: 91, photo: "https://cdn.soccerwiki.org/images/player/2467.png" },
+        { name: "Carles Puyol", ovr: 90, photo: "https://cdn.futwiz.com/assets/img/fc24/faces/50570032.png" },
+        { name: "Fabio Cannavaro", ovr: 91, photo: "https://game-assets.fut.gg/cdn-cgi/image/quality=85,width=300,format=auto/2026/player-item/26-1183.cbdf73a6855c3d8d4f8cfe24acc56fee80717baa7dacb4ca30156e63cac44a63.webp" },
+        { name: "Thiago Martins", ovr: 99, photo: "https://kommodo.ai/i/NFVa4bfrv9fyJzKZ0r3D" },
+        { name: "Phillip Lahm", ovr: 90, photo: "https://b.fssta.com/uploads/application/soccer/headshots/2253.png" },
+        { name: "Marcelo", ovr: 89, photo: "https://cdn-img.staticzz.com/img/planteis/new/82/91/758291_marcelo_20240924143428.jpg" },
+        { name: "Nuno Mendes", ovr: 89, photo: "https://cdn-img.staticzz.com/img/planteis/new/73/21/8727321_nuno_mendes_20250925203602.png" },
+        { name: "Varane", ovr: 88, photo: "https://www.teamtalk.com/content/themes/teamtalk2/img/png/player/headshots/raphael-xavier-varane.png" },
+        { name: "Matheuzinho", ovr: 81, photo: "https://www.ogol.com.br/img/jogadores/new/01/64/1490164_matheuzinho_20260515150332.png" },
+        { name: "Upamecano", ovr: 86, photo: "https://cdn.soccerwiki.org/images/player/82312-action.png" },
+        { name: "Konate", ovr: 85, photo: "https://assets.bundesliga.com/player/dfl-obj-0027sm-dfl-clu-000017-dfl-sea-0001k4-body.png?crop=0,0,100,55&fit=1200,630" },
+        { name: "Jordi alba", ovr: 86, photo: "https://cdn.futwiz.com/assets/img/fc25/faces/189332.png?25" },
+        { name: "João Cancelo", ovr: 86, photo: "https://www.fcbarcelona.com/photo-resources/2026/08/19/7d3f20c8-d349-42e6-90a5-d70a6a2f86b7/00-Cancelo.png?width=670&height=790" },
+        { name: "Evra", ovr: 85, photo: "https://static.wikia.nocookie.net/the-football-database/images/b/b0/ManUnited_P._Evra_001.png/revision/latest?cb=20131127214911" },
+        { name: "Zanetti", ovr: 88, photo: "https://www.ogol.com.br/img/jogadores/new/20/13/2013_javier_zanetti_20251010143134.png" },
+        { name: "Rodinei", ovr: 80, photo: "https://assets.bundesliga.com/player/dfl-obj-j01e20-dfl-clu-j0003i-dfl-sea-0001k9.png?fit=256,256" },
+        { name: "Gil", ovr: 80, photo: "https://www.ogol.com.br/img/jogadores/new/65/54/86554_gil_20250724121524.png" },
+        { name: "Pau cubarsi", ovr: 88, photo: "https://assets.bundesliga.com/player/dfl-obj-j01t3m-dfl-clu-j0002f-dfl-sea-0001ka.png" },
+        { name: "Gustavo gomez", ovr: 83, photo: "https://cdn.soccerwiki.org/images/player/50937.png" },
+        { name: "Fagner", ovr: 80, photo: "https://www.diarioceleste.com.br/wp-content/uploads/2025/07/Fagner-01.png" },
+        { name: "Nesta", ovr: 91, photo: "https://cdn.soccerwiki.org/images/player/2460.png" },
+        { name: "Lucio", ovr: 88, photo: "https://www.ogol.com.br/img/jogadores/new/32/07/3207_lucio_20241016233007.jpg" },
+        { name: "Pique", ovr: 88, photo: "https://cdn.soccerwiki.org/images/player/1110.png" },
+        { name: "Pepe", ovr: 88, photo: "https://www.ogol.com.br/img/jogadores/new/01/30/130_pepe_20260306120404.jpg" },
+        { name: "Djalma santos", ovr: 90, photo: "https://www.ogol.com.br/img/jogadores/76/29976_20210506031152_djalma_santos.png" },
+        { name: "Ashley cole", ovr: 87, photo: "https://static.wikia.nocookie.net/fifa/images/0/00/Ashley_Cole.png/revision/latest?cb=20161215154441" },
+        { name: "Celso giusti", ovr: 96, photo: "https://media.licdn.com/dms/image/v2/C4E03AQHhNIGYfn30mw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1516837179308?e=2147483647&v=beta&t=vv9yM8ePVRIaCs25X7zguwVl26n25taKqWy1yJjD_RY" },
+        { name: "Daniel Manoel", ovr: 96, photo: "https://avatars.githubusercontent.com/u/82040810?v=4" },
+        { name: "Huijsen", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/890290-1750251451.jpg?lm=4711" },
+        { name: "Asencio", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/935245-1731168094.jpg?lm=4711" },
+        { name: "Cucurella", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/284857-1765185117.jpg?lm=4711" },
+        { name: "Mendy", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/291417-1701294025.jpg?lm=4711" },
+        { name: "Alexander Arnold", ovr: 87, photo: "https://img.a.transfermarkt.technology/portrait/medium/314353-1701680958.jpg?lm=4711" },
+        { name: "Dumfries", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/321528-1746042223.jpg?lm=4711" },
+        { name: "Alejandro Balde", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/636688-1662836200.jpg?lm=4711" },
+        { name: "Romero", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/355915-1665609429.jpg?lm=4711" },
+        { name: "Le normand", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/351809-1707948228.jpg?lm=4711" },
+        { name: "Grimaldo", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/193082-1689710805.jpg?lm=4711" },
+        { name: "Natan", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/735568-1708553167.jpg?lm=4711" },
+        { name: "Bartra", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/99922-1724053472.jpg?lm=4711" },
+        { name: "Bellerin", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/191217-1773344002.jpg?lm=4711" },
+        { name: "Laporte", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/176553-1685546335.jpg?lm=4711" },
+        { name: "Berchiche", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/61812-1709675167.png?lm=4711" },
+        { name: "Vivian", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/524000-1709674998.png?lm=4711" },
+        { name: "Cardoso", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/155025-1736318779.JPG?lm=4711" },
+        { name: "Gaya", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/221322-1605193468.jpg?lm=4711" },
+        { name: "Arnau", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/826224-1701444094.jpg?lm=4711" },
+        { name: "Angelino", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/277179-1706626191.jpg?lm=4711" },
+        { name: "Guehi", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/392757-1683030598.jpg?lm=4711" },
+        { name: "Khusanov", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/763079-1791350691.jpg?lm=4711" },
+        { name: "Vitor Reis", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/1005575-1788354130.jpg?lm=4711" },
+        { name: "Gvardiol", ovr: 87, photo: "https://img.a.transfermarkt.technology/portrait/medium/475959-1713391602.jpg?lm=4711" },
+        { name: "O-reilly", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/743413-1751367149.jpg?lm=4711" },
+        { name: "Rico lewis", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/701057-1788354425.jpg?lm=4711" },
+        { name: "Hincapie", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/659813-1727377918.jpg?lm=4711" },
+        { name: "Calafiori", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/502821-1727382174.jpg?lm=4711" },
+        { name: "Ben white", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/335721-1683275943.jpg?lm=4711" },
+        { name: "Reece James", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/472423-1683900849.jpg?lm=4711" },
+        { name: "Gusto", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/620322-1752061866.jpg?lm=4711" },
+        { name: "Jacquet", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/1004301-1714503850.jpg?lm=4711" },
+        { name: "Frimpong", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/484547-1788428543.jpg?lm=4711" },
+        { name: "Lisandro", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/480762-1680681507.jpg?lm=4711" },
+        { name: "De ligt", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/326031-1700659567.jpg?lm=4711" },
+        { name: "Maguire", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/177907-1663841733.jpg?lm=4711" },
+        { name: "Dalot", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/357147-1727785546.jpg?lm=4711" },
+        { name: "Porro", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/553875-1730812390.jpg?lm=4711" },
+        { name: "Burn", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/134270-1682340860.jpg?lm=4711" },
+        { name: "Pau Torres", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/399776-1765899002.jpg?lm=4711" },
+        { name: "Lindelof", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/184573-1788894147.jpg?lm=4711" },
+        { name: "Wan-bissaka", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/477758-1769112496.jpg?lm=4711" },
+        { name: "Tomiyasu", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/331560-1682591217.jpg?lm=4711" },
+        { name: "Chillwell", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/316125-1683899136.jpg?lm=4711" },
+        { name: "Murillo", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/1005649-1709159139.jpg?lm=4711" },
+        { name: "Branthwhite", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/661053-1687975679.jpg?lm=4711" },
+        { name: "Tah", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/196357-1789742523.jpg?lm=4711" },
+        { name: "Davies", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/424204-1711745534.jpg?lm=4711" },
+        { name: "Laimer", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/223967-1700659266.jpg?lm=4711" },
+        { name: "Schlotterbeck", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/388198-1790592553.jpg?lm=4711" },
+        { name: "Tapsoba", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/564545-1695368009.jpg?lm=4711" },
+        { name: "Quansah", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/632349-1758704191.jpg?lm=4711" },
+        { name: "Akanji", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/284730-1684165752.jpg?lm=4711" },
+        { name: "Dimarco", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/198116-1725531769.jpg?lm=4711" },
+        { name: "Pavard", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/353366-1713819215.jpg?lm=4711" },
+        { name: "Stones", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/186590-1684764261.jpg?lm=4711" },
+        { name: "Bremer", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/516716-1725531520.jpg?lm=4711" },
+        { name: "Gatti", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/509022-1725531068.jpg?lm=4711" },
+        { name: "Yan couto", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/627228-1723922216.jpg?lm=4711" },
+        { name: "Tomori", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/303254-1684856117.jpg?lm=4711" },
+        { name: "Wesley", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/964580-1743167536.jpg?lm=4711" },
+        { name: "Molina", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/424042-1697037362.jpg?lm=4711" },
+        { name: "Dodo", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/401529-1788764416.jpg?lm=4711" },
+        { name: "Pacho", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/661171-1696508666.jpg?lm=4711" },
+        { name: "Vanderson", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/789082-1655282894.jpg?lm=4711" },
+        { name: "Murilo", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/458710-1787183790.jpg?lm=4711" },
+        { name: "Barboza", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/379752-1680009523.jpg?lm=4711" },
+        { name: "Piquerez", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/496268-1706144655.jpg?lm=4711" },
+        { name: "Leo ortiz", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/374136-1751370337.jpg?lm=4711" },
+        { name: "Leo pereira", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/288431-1751370674.jpg?lm=4711" },
+        { name: "Alex Sandro", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/79960-1751370710.jpg?lm=4711" },
+        { name: "Royal", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/476344-1737380789.jpg?lm=4711" },
+        { name: "Fabricio Bruno", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/432773-1744743199.jpg?lm=4711" },
+        { name: "William", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/341710-1643899558.JPG?lm=4711" },
+        { name: "Tchoca", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/1005650-1720056483.jpg?lm=4711" },
+        { name: "Andre ramalho", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/175792-1721347430.jpg?lm=4711" },
+        { name: "Gustavo Henrique", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/208681-1725326922.jpg?lm=4711" },
+        { name: "Gabriel Paulista", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/149498-1727355000.png?lm=4711" },
+        { name: "Matheus Bidu", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/670021-1660574686.jpg?lm=4711" },
+        { name: "Lucas piton", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/670201-1737731172.jpg?lm=4711" },
+        { name: "Alex telles", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/255755-1659559306.jpg?lm=4711" },
+        { name: "Luciano Juba", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/676035-1694193133.jpg?lm=4711" },
+        { name: "Renan Lodi", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/476352-1703065997.jpg?lm=4711" },
+        { name: "Kanneman", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/145400-1547647538.jpg?lm=4711" },
+      ],
+      MC: [
+        { name: "Kimmich", ovr: 88, photo: "https://img.a.transfermarkt.technology/portrait/medium/161056-1700039639.jpg?lm=4711" },
+        { name: "Emre Can", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/119296-1790592166.jpg?lm=4711" },
+        { name: "Jude Bellingham", ovr: 91, photo: "https://www.ogol.com.br/img/jogadores/new/75/32/737532_jude_bellingham_20250618231333.png" },
+        { name: "Kevin De Bruyne", ovr: 91, photo: "https://cdn-img.staticzz.com/img/planteis/new/53/22/5805322_kevin_de_bruyne_20260515065922.png" },
+        { name: "Rodri", ovr: 91, photo: "https://www.ogol.com.br/img/jogadores/new/13/48/331348_rodri_20251110125120.png" },
+        { name: "Phil Foden", ovr: 89, photo: "https://www.ogol.com.br/img/jogadores/new/02/09/480209_phil_foden_20251110125327.png" },
+        { name: "Florian Wirtz", ovr: 88, photo: "https://www.ogol.com.br/img/jogadores/new/25/25/782525_florian_wirtz_20260114143456.png" },
+        { name: "Jamal Musiala", ovr: 88, photo: "https://cdn-img.staticzz.com/img/planteis/new/47/65/8754765_jamal_musiala_20260523001810.png" },
+        { name: "Cole Palmer", ovr: 87, photo: "https://www.ogol.com.br/img/jogadores/new/90/19/659019_cole_palmer_20260207203123.png" },
+        { name: "Zinedine Zidane", ovr: 94, photo: "https://cdn.soccerwiki.org/images/player/2916.png" },
+        { name: "Kaká", ovr: 91, photo: "https://www.ogol.com.br/img/jogadores/new/19/63/1963_kaka_20260422183909.png" },
+        { name: "Luka Modrić", ovr: 90, photo: "https://cdn-img.staticzz.com/img/planteis/new/42/48/11524248_luka_modric_20250721164546.png" },
+        { name: "Iniesta", ovr: 92, photo: "https://b.fssta.com/uploads/application/soccer/headshots/709.png" },
+        { name: "Zico", ovr: 92, photo: "https://images.tcdn.com.br/files/311840/themes/5393/img/paginas-personalizadas/times/flamengo/idolos/zico.png?8ebe65019458cb68498c507a78506472" },
+        { name: "Arrascaeta", ovr: 85, photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBmZQ9Vf2pW-1vxXHnrcZWc78GcfLBWI9V6lasJY2ipg&s=10" },
+        { name: "Breno Bidon", ovr: 78, photo: "https://cdn-img.staticzz.com/img/planteis/new/43/79/14254379_breno_bidon_20250507190426.png" },
+        { name: "Vampeta", ovr: 82, photo: "https://d1x4bjge7r9nas.cloudfront.net/wp-content/uploads/2025/09/30165415/Vampeta.png" },
+        { name: "Paqueta", ovr: 85, photo: "https://assets.bundesliga.com/player/dfl-obj-j01qxj-dfl-clu-j0008p-dfl-sea-0001ka.png" },
+        { name: "Nico", ovr: 99, photo: "https://plain-enam-prod-public.komododecks.com/202610/01/m9YV62Pn7nzkRXeDd0sf/image.jpg" },
+        { name: "Gullit", ovr: 92, photo: "https://www.ogol.com.br/img/jogadores/93/736693_ori_20201229045048_ruud_gullit.png" },
+        { name: "Matthaus", ovr: 91, photo: "https://www.fifarosters.com/assets/players/fifa24/faces/238435.png" },
+        { name: "Ozil", ovr: 89, photo: "https://www.ogol.com.br/img/jogadores/53/450453_ori_20180102100134_mesut_ozil.png" },
+        { name: "James rodriguez", ovr: 85, photo: "https://assets.realmadrid.com/is/image/realmadrid/1330783932802?$Mobile$&fit=wrap&wid=312" },
+        { name: "Pirlo", ovr: 90, photo: "https://kingsleague.pro/_ipx/fit_outside&s_600x844/kama/production/seasonTeamPlayer/image/994644621.png" },
+        { name: "Kroos", ovr: 90, photo: "https://assets.realmadrid.com/is/image/realmadrid/KROOS2_HP_PNG?$Mobile$&fit=wrap&wid=312" },
+        { name: "Octavio Moreira", ovr: 99, photo: "https://kommodo.ai/i/gxcqLdbye6lzrvPBxG0U" },
+        { name: "Pogba", ovr: 85, photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfV_93sUJ2acPvA4RI-p0VsBCdx0VSa5tF-UykeDtv3jfxQYV5GxgrAojx&s=10" },
+        { name: "Tchouameni", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/413112-1668500754.jpg?lm=4711" },
+        { name: "Valverde", ovr: 89, photo: "https://img.a.transfermarkt.technology/portrait/medium/369081-1731018042.jpg?lm=4711" },
+        { name: "Arda Guler", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/861410-1791212860.jpg?lm=4711" },
+        { name: "Bernardo Silva", ovr: 88, photo: "https://img.a.transfermarkt.technology/portrait/medium/241641-1684311533.jpg?lm=4711" },
+        { name: "Gavi", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/646740-1682685701.jpg?lm=4711" },
+        { name: "De jong", ovr: 87, photo: "https://img.a.transfermarkt.technology/portrait/medium/326330-1746041680.jpg?lm=4711" },
+        { name: "Dani Olmo", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/293385-1780663091.jpg?lm=4711" },
+        { name: "Fermín Lopez", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/636703-1698086824.jpg?lm=4711" },
+        { name: "Llorente", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/282411-1773182531.jpg?lm=4711" },
+        { name: "Jonnhy Cardoso", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/689505-1742036970.jpg?lm=4711" },
+        { name: "Koke", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/74229-1664970397.jpg?lm=4711" },
+        { name: "Kang in lee", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/557149-1703978046.jpg?lm=4711" },
+        { name: "Alex Baena", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/548111-1761821030.jpg?lm=4711" },
+        { name: "Ceballos", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/319745-1723666162.jpg?lm=4711" },
+        { name: "Isco", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/85288-1744375744.jpg?lm=4711" },
+        { name: "Moriba", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/617074-1758827372.jpg?lm=4711" },
+        { name: "Fofana", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/569598-1725528517.jpg?lm=4711" },
+        { name: "Guido", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/342385-1668181269.jpg?lm=4711" },
+        { name: "Guerra", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/834764-1696188716.jpg?lm=4711" },
+        { name: "Casadó", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/636695-1729771427.jpg?lm=4711" },
+        { name: "Elliot Anderson", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/567576-1696453772.jpg?lm=4711" },
+        { name: "Bouaddi", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/1097139-1741119960.jpg?lm=4711" },
+        { name: "Enzo Fernandez", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/648195-1669894717.jpg?lm=4711" },
+        { name: "Allan", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/1082631-1788354346.jpg?lm=4711" },
+        { name: "Rice", ovr: 88, photo: "https://img.a.transfermarkt.technology/portrait/medium/357662-1687962936.jpg?lm=4711" },
+        { name: "Odegaard", ovr: 89, photo: "https://img.a.transfermarkt.technology/portrait/medium/316264-1782847069.jpg?lm=4711" },
+        { name: "Bruno Guimaraes", ovr: 87, photo: "https://img.a.transfermarkt.technology/portrait/medium/520624-1780929894.jpg?lm=4711" },
+        { name: "Eze", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/479999-1761083931.jpg?lm=4711" },
+        { name: "Caicedo", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/687626-1660729724.jpg?lm=4711" },
+        { name: "Macallister", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/534033-1669835342.jpg?lm=4711" },
+        { name: "Szoboslai", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/451276-1758715234.jpg?lm=4711" },
+        { name: "Andrey santos", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/743600-1788427034.jpg?lm=4711" },
+        { name: "Bruno Fernandes", ovr: 88, photo: "https://img.a.transfermarkt.technology/portrait/medium/240306-1683882766.jpg?lm=4711" },
+        { name: "Mount", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/346483-1683291495.jpg?lm=4711" },
+        { name: "Tonali", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/397033-1688389270.jpg?lm=4711" },
+        { name: "Bergvall", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/866246-1701861399.jpg?lm=4711" },
+        { name: "Xavi Simons", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/566931-1729778226.jpg?lm=4711" },
+        { name: "Joeligton", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/333241-1674210135.jpg?lm=4711" },
+        { name: "João Gomes", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/735570-1675092223.jpg?lm=4711" },
+        { name: "Goretzka", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/153084-1700040179.jpg?lm=4711" },
+        { name: "Xhaka", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/111455-1689711080.jpg?lm=4711" },
+        { name: "Jobe Bellingham", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/796297-1790591656.jpg?lm=4711" },
+        { name: "Sabitzer", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/106987-1790592753.jpg?lm=4711" },
+        { name: "Stiller", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/443710-1753308094.jpg?lm=4711" },
+        { name: "Barella", ovr: 87, photo: "https://img.a.transfermarkt.technology/portrait/medium/255942-1725531625.jpg?lm=4711" },
+        { name: "Çalhanoglu", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/126414-1709035146.jpg?lm=4711" },
+        { name: "Locatelli", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/265088-1730125083.jpg?lm=4711" },
+        { name: "Douglas Luiz", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/447661-1696598670.jpg?lm=4711" },
+        { name: "Khepren Thuram", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/463618-1683889273.jpg?lm=4711" },
+        { name: "Nico Paz", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/948294-1699472504.jpg?lm=4711" },
+        { name: "Rabiot", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/182913-1681462009.jpg?lm=4711" },
+        { name: "Kone", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/624690-1757931309.jpg?lm=4711" },
+        { name: "Ederson", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/607854-1646648856.jpg?lm=4711" },
+        { name: "Vitinha", ovr: 87, photo: "https://img.a.transfermarkt.technology/portrait/medium/487469-1749415169.jpg?lm=4711" },
+        { name: "Joao neves", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/670681-1701295511.jpg?lm=4711" },
+        { name: "Fabian Ruiz", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/350219-1718958379.jpg?lm=4711" },
+        { name: "Marlon Freitas", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/364972-1751918531.jpg?lm=4711" },
+        { name: "Andreas Pereira", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/203394-1659355525.jpg?lm=4711" },
+        { name: "Pulgar", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/215616-1744288828.jpg?lm=4711" },
+        { name: "Jorginho", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/102017-1682590896.jpg?lm=4711" },
+        { name: "Gerson", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/341705-1752473227.png?lm=4711" },
+        { name: "Matheus Pereira", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/225984-1697289790.jpg?lm=4711" },
+        { name: "Garro", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/565009-1725327608.jpg?lm=4711" },
+        { name: "Everton Ribeiro", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/52896-1610006872.jpg?lm=4711" },
+        { name: "Ganso", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/67920-1751718526.jpg?lm=4711" },
+        { name: "Gustavo Scarpa", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/330085-1671798544.jpg?lm=4711" },
+        { name: "Fred", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/191614-1765458332.png?lm=4711" },
+        { name: "Allan Patrick", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/104505-1641992716.png?lm=4711" },
+      ],
+      ATA: [
+        { name: "Kylian Mbappé", ovr: 92, photo: "https://cdn-img.staticzz.com/img/planteis/new/82/60/16538260_kylian_mbappe_20260615102715.png" },
+        { name: "Erling Haaland", ovr: 92, photo: "https://cdn-img.staticzz.com/img/planteis/new/64/23/14836423_erling_haaland_20260620022833.png" },
+        { name: "Vinícius Jr", ovr: 91, photo: "https://www.ogol.com.br/img/jogadores/new/77/37/547737_vinicius_junior_20250923225603.png" },
+        { name: "Harry Kane", ovr: 91, photo: "https://cdn-img.staticzz.com/img/planteis/new/44/67/8834467_harry_kane_20250507144126.png" },
+        { name: "Mohamed Salah", ovr: 91, photo: "https://www.ogol.com.br/img/jogadores/new/75/88/207588_mohamed_salah_20260114143557.png" },
+        { name: "Lamine Yamal", ovr: 89, photo: "https://cdn-img.staticzz.com/img/planteis/new/80/82/16558082_lamine_yamal_20260612140847.png" },
+        { name: "Lautaro Martínez", ovr: 88, photo: "https://www.ogol.com.br/img/jogadores/new/87/47/468747_lautaro_martinez_20260104222007.png" },
+        { name: "Felipe Nogueira", ovr: 99, photo: "https://kommodo.ai/i/Hz4m2NZ2qBrgTpDY2rhX" },
+        { name: "Antoine Griezmann", ovr: 88, photo: "https://cdn-img.staticzz.com/img/planteis/new/79/49/11617949_antoine_griezmann_20260127192908.png" },
+        { name: "Kauã Romualdo", ovr: 99, photo: "https://plain-enam-prod-public.komododecks.com/202609/26/5tdFoHYOxTXSP7ybi5g0/image.jpg" },
+        { name: "Rafael Leão", ovr: 87, photo: "https://cdn-img.staticzz.com/img/planteis/new/76/14/16547614_rafael_leao_20260615104218.png" },
+        { name: "Matheus Marques", ovr: 99, photo: "https://kommodo.ai/i/AE5fiSnwclfLqQhhDbcL" },
+        { name: "Michael Olise", ovr: 87, photo: "https://cdn-img.staticzz.com/img/planteis/new/17/62/14901762_michael_olise_20260531112255.png" },
+        { name: "Lionel Messi", ovr: 94, photo: "https://cdn-img.staticzz.com/img/planteis/new/51/10/16565110_lionel_messi_20260615111812.png" },
+        { name: "Cristiano Ronaldo", ovr: 94, photo: "https://cdn-img.staticzz.com/img/planteis/new/76/13/16547613_cristiano_ronaldo_20260615104221.png" },
+        { name: "Neymar Jr", ovr: 93, photo: "https://cdn-img.staticzz.com/img/planteis/new/19/62/2551962_neymar_20240502170305.png" },
+        { name: "Ronaldinho Gaúcho", ovr: 94, photo: "https://cdn-img.staticzz.com/img/planteis/new/98/32/4279832_ronaldinho_gaucho_20250422142002.png" },
+        { name: "Ronaldo Nazário", ovr: 95, photo: "https://cdn.futwiz.com/assets/img/fifa20/faces/237064.png" },
+        { name: "Thierry Henry", ovr: 92, photo: "https://cdn.soccerwiki.org/images/player/27.png" },
+        { name: "Robert Lewandowski", ovr: 90, photo: "https://cdn-img.staticzz.com/img/planteis/new/66/10/8706610_robert_lewandowski_20251122055135.png" },
+        { name: "Dembele", ovr: 89, photo: "https://www.ogol.com.br/img/jogadores/new/83/24/488324_ousmane_dembele_20260208232541.png" },
+        { name: "Gareth Bale", ovr: 88, photo: "https://a.espncdn.com/combiner/i?img=/i/headshots/soccer/players/full/77653.png&w=350&h=254" },
+        { name: "Adriano Imperador", ovr: 90, photo: "https://cdn-img.staticzz.com/img/planteis/new/58/09/585809_adriano_20241121020837.jpg" },
+        { name: "Johan Cruyff", ovr: 94, photo: "https://static.wikia.nocookie.net/the-football-database/images/3/30/Johan-Cruyff_%282%29.png/revision/latest?cb=20130801202722" },
+        { name: "Pele", ovr: 97, photo: "https://crystalpng.com/wp-content/uploads/2025/02/Pele-png-02.png" },
+        { name: "Maradona", ovr: 96, photo: "https://crystalpng.com/wp-content/uploads/2025/02/Maradona-png-01.png" },
+        { name: "Garrincha", ovr: 94, photo: "https://static.wikia.nocookie.net/the-football-database/images/7/71/Garrincha.png/revision/latest?cb=20241229093024" },
+        { name: "Benzema", ovr: 91, photo: "https://cdn-img.staticzz.com/img/planteis/new/72/61/11527261_karim_benzema_20240912121547.png" },
+        { name: "Rivaldo", ovr: 91, photo: "https://cdn-img.staticzz.com/img/planteis/new/55/86/45586_rivaldo_20260218183741.png" },
+        { name: "Romario", ovr: 92, photo: "https://r2.thesportsdb.com/images/media/player/render/1j5x171615744448.png" },
+        { name: "Ibrahimovic", ovr: 90, photo: "https://a.espncdn.com/i/headshots/soccer/players/full/11001.png" },
+        { name: "Drogba", ovr: 89, photo: "https://cdn.soccerwiki.org/images/player/473-action.png" },
+        { name: "Eto", ovr: 89, photo: "https://cdn.soccerwiki.org/images/player/2779.png" },
+        { name: "Raphinha", ovr: 88, photo: "https://ratings-images-prod.pulse.ea.com/FC25/full/player-portraits/p233419.png?padding=0.7" },
+        { name: "Marlon palata", ovr: 96, photo: "https://avatars.githubusercontent.com/u/173830944?v=4" },
+        { name: "Van Basten", ovr: 92, photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_2uq2ml5dhcOmRqv1ZJF08zmZJGc7cPewGKR4xplGYw&s=10" },
+        { name: "Depay", ovr: 84, photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEkOn3DBGLfrlgjkTTNqr4QCHJNdq6PRc4gt6j-ICe-A&s=10" },
+        { name: "Diomande", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/1390649-1759779499.jpg?lm=4711" },
+        { name: "Endrick", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/971570-1782847902.jpg?lm=4711" },
+        { name: "Rodrygo", ovr: 87, photo: "https://img.a.transfermarkt.technology/portrait/medium/412363-1763041611.jpg?lm=4711" },
+        { name: "Gordon", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/503733-1761080304.jpg?lm=4711" },
+        { name: "Adeyemi", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/496094-1788248133.jpg?lm=4711" },
+        { name: "Gabriel Jesus", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/363205-1669711141.jpg?lm=4711" },
+        { name: "Lookman", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/406040-1769763751.jpg?lm=4711" },
+        { name: "Simeone", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/742201-1741120599.jpg?lm=4711" },
+        { name: "Julian alvarez", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/576024-1684920938.jpg?lm=4711" },
+        { name: "Sorloth", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/238407-1716403969.jpg?lm=4711" },
+        { name: "Saliba", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/842420-1740597560.jpg?lm=4711" },
+        { name: "Gerard Moreno", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/177467-1726231623.jpg?lm=4711" },
+        { name: "Gonçalo Guedes", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/225122-1701334424.jpg?lm=4711" },
+        { name: "Kubo", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/405398-1697110254.jpg?lm=4711" },
+        { name: "Oyarzabal", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/351478-1749415304.jpg?lm=4711" },
+        { name: "Antony", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/602105-1758783018.jpg?lm=4711" },
+        { name: "Cucho hernandez", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/459463-1773344529.jpg?lm=4711" },
+        { name: "Nico wiliams", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/709187-1709676169.png?lm=4711" },
+        { name: "Inaki williams", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/255508-1709676323.png?lm=4711" },
+        { name: "Iago Aspas", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/72047-1758827533.jpg?lm=4711" },
+        { name: "Vargas", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/345886-1779793578.jpg?lm=4711" },
+        { name: "Danjuma", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/355861-1674657323.jpg?lm=4711" },
+        { name: "Hugo Duro", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/573775-1683213249.jpg?lm=4711" },
+        { name: "Aubameyang", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/58864-1762262625.jpg?lm=4711" },
+        { name: "Unal", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/251106-1669365680.jpg?lm=4711" },
+        { name: "Cherki", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/607223-1773302431.jpg?lm=4711" },
+        { name: "Doku", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/486049-1743670159.jpg?lm=4711" },
+        { name: "Semenyo", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/583255-1737452028.jpg?lm=4711" },
+        { name: "Madueke", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/503987-1788426614.jpg?lm=4711" },
+        { name: "Gyokeres", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/503987-1788426614.jpg?lm=4711" },
+        { name: "Rogers", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/503743-1706786450.jpg?lm=4711" },
+        { name: "Estevao", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/1056993-1766148652.jpg?lm=4711" },
+        { name: "João Pedro", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/626724-1724792744.jpg?lm=4711" },
+        { name: "Barcola", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/708265-1780989250.jpg?lm=4711" },
+        { name: "Gakpo", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/434675-1682690965.jpg?lm=4711" },
+        { name: "Isak", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/349066-1680791339.jpg?lm=4711" },
+        { name: "Cunha", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/517894-1780390711.jpg?lm=4711" },
+        { name: "Rashford", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/258923-1674473054.jpg?lm=4711" },
+        { name: "Savinho", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/743591-1751367497.jpg?lm=4711" },
+        { name: "Elanga", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/583189-1700739021.jpg?lm=4711" },
+        { name: "Mitoma", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/504849-1731683095.jpg?lm=4711" },
+        { name: "Igor thiago", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/739443-1770372295.jpg?lm=4711" },
+        { name: "Garnacho", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/811779-1703629085.jpg?lm=4711" },
+        { name: "Rayan", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/1012564-1780390891.jpg?lm=4711" },
+        { name: "Igor Jesus", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/432164-1725325779.jpg?lm=4711" },
+        { name: "Grealish", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/203460-1676499047.jpg?lm=4711" },
+        { name: "Kevin", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/900195-1762354062.jpg?lm=4711" },
+        { name: "Luis diaz", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/480692-1757938077.jpg?lm=4711" },
+        { name: "Diaby", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/395516-1642608355.jpg?lm=4711" },
+        { name: "Gnabry", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/159471-1759909173.jpg?lm=4711" },
+        { name: "Guirassy", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/270541-1790592498.jpg?lm=4711" },
+        { name: "Nusa", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/894914-1724337096.jpg?lm=4711" },
+        { name: "Nkunku", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/344381-1663686834.jpg?lm=4711" },
+        { name: "Undav", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/339314-1691999036.jpg?lm=4711" },
+        { name: "Marcus Thuram", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/318528-1746041509.jpg?lm=4711" },
+        { name: "Boga", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/216569-1756824408.jpg?lm=4711" },
+        { name: "Kolo Muani", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/487969-1718697120.jpg?lm=4711" },
+        { name: "Yildiz", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/845654-1759822280.jpg?lm=4711" },
+        { name: "Moise Kean", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/364135-1725532147.jpg?lm=4711" },
+        { name: "Pulisic", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/315779-1691696699.jpg?lm=4711" },
+        { name: "Gonçalo Ramos", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/550550-1681906158.jpg?lm=4711" },
+        { name: "Dybala", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/206050-1725530843.jpg?lm=4711" },
+        { name: "Malen", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/326029-1711746104.jpg?lm=4711" },
+        { name: "David Neres", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/469822-1701334470.jpg?lm=4711" },
+        { name: "Hojlund", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/610442-1757931324.jpg?lm=4711" },
+        { name: "Doue", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/914562-1667317075.jpg?lm=4711" },
+        { name: "Ferran Torres", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/398184-1779789996.jpg?lm=4711" },
+        { name: "Mauricio", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/678439-1746578477.jpg?lm=4711" },
+        { name: "Jhon Arias", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/588989-1719245400.jpg?lm=4711" },
+        { name: "Vitor Roque", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/943837-1744743482.jpg?lm=4711" },
+        { name: "Flaco Lopez", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/844797-1739618753.jpg?lm=4711" },
+        { name: "Samuel Lino", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/694928-1695982815.jpg?lm=4711" },
+        { name: "Pedro", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/432895-1668696996.jpg?lm=4711" },
+        { name: "Bruno Henrique", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/353108-1733188857.jpg?lm=4711" },
+        { name: "Wesley", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/1007378-1719453433.jpg?lm=4711" },
+        { name: "Arroyo", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/1074584-1739177410.jpeg?lm=4711" },
+        { name: "Kaio Jorge", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/620477-1693289628.jpg?lm=4711" },
+        { name: "Kaio cesar", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/766258-1671194523.jpg?lm=4711" },
+        { name: "Yuri Alberto", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/489893-1744075236.jpg?lm=4711" },
+        { name: "Pedro Raúl", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/547443-1748479789.jpg?lm=4711" },
+        { name: "Adson", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/868891-1704213480.jpg?lm=4711" },
+        { name: "Andrez gomez", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/957461-1780328928.jpg?lm=4711" },
+        { name: "Arthur Cabral", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/390638-1701333640.jpg?lm=4711" },
+        { name: "Soteldo", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/312294-1751718251.jpg?lm=4711" },
+        { name: "Hulk", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/80562-1563436073.jpg?lm=4711" },
+        { name: "Jonh Kennedy", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/856085-1754005857.jpg?lm=4711" },
+        { name: "Cebolinha", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/321239-1744288639.jpg?lm=4711" },
+        { name: "Gabigol", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/244275-1779755625.jpg?lm=4711" },
+        { name: "Rony Rústico", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/371009-1766179736.jpg?lm=4711" },
+        { name: "Leozinho", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/1110658-1721164064.jpg?lm=4711" },
+        { name: "Viveros", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/580461-1730059272.jpg?lm=4711" },
+        { name: "Isidro Pitta", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/675178-1745259011.jpg?lm=4711" },
+        { name: "Lucas Moura", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/77100-1654164113.jpg?lm=4711" },
+        { name: "Calleri", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/284727-1738840512.jpg?lm=4711" },
+        { name: "Luciano", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/223560-1750986922.jpg?lm=4711" },
+        { name: "Carlos Vinicius", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/525287-1662070180.jpg?lm=4711" },
+        { name: "Marinho", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/74758-1729175331.jpg?lm=4711" },
+        { name: "Gabriel Martinelli", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/655488-1682689091.jpg?lm=4711" },
+        { name: "João Felix", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/462250-1668165358.jpg?lm=4711" },
+        { name: "Coman", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/243714-1700040256.jpg?lm=4711" },
+      ]
+    };
+
+    // ===== CONFIGURAÇÕES DO JOGO =====
+    const MAX_PASSES = 4;          // recusas por time no leilão
+    const SWAPS_PER_SEASON = 4;    // trocas por time em cada temporada de reforços (2ª, 3ª e 4ª)
+    const MAX_SEASONS = 4;         // total de temporadas (sempre o mesmo campeonato: Estadualzão)
+
+    // Elenco de 11: 1 GOL + 4 DEF + 3 MC + 3 ATA
+    const DEF_SLOTS = ['DEF1', 'DEF2', 'DEF3', 'DEF4'];
+    const MC_SLOTS = ['MC1', 'MC2', 'MC3'];
+    const ATA_SLOTS = ['ATA1', 'ATA2', 'ATA3'];
+    const SLOT_LABELS = {
+      GOL: 'GOL',
+      DEF1: 'DEF 1', DEF2: 'DEF 2', DEF3: 'DEF 3', DEF4: 'DEF 4',
+      MC1: 'MC 1', MC2: 'MC 2', MC3: 'MC 3',
+      ATA1: 'ATA 1', ATA2: 'ATA 2', ATA3: 'ATA 3'
+    };
+
+    function emptyLineup() {
+      const l = { GOL: null };
+      DEF_SLOTS.forEach(k => l[k] = null);
+      MC_SLOTS.forEach(k => l[k] = null);
+      ATA_SLOTS.forEach(k => l[k] = null);
+      return l;
+    }
+
+    function getSlotsForPos(pos) {
+      if (pos === 'GOL') return ['GOL'];
+      if (pos === 'DEF') return DEF_SLOTS;
+      if (pos === 'MC') return MC_SLOTS;
+      return ATA_SLOTS;
+    }
+
+    let playerCount = 5;
+
+    let defaultTeamsMaster = [
+      { id: 0, name: "Time 1", tokens: 100, passesLeft: MAX_PASSES, season2SwapsLeft: SWAPS_PER_SEASON, lineup: emptyLineup(), badge: { c1: "#3b82f6", c2: "#0f172a", shape: "shield", pattern: "solid", animal: "🦅" } },
+      { id: 1, name: "Time 2", tokens: 100, passesLeft: MAX_PASSES, season2SwapsLeft: SWAPS_PER_SEASON, lineup: emptyLineup(), badge: { c1: "#10b981", c2: "#ffffff", shape: "circle", pattern: "solid", animal: "🟢" } },
+      { id: 2, name: "Time 3", tokens: 100, passesLeft: MAX_PASSES, season2SwapsLeft: SWAPS_PER_SEASON, lineup: emptyLineup(), badge: { c1: "#f59e0b", c2: "#000000", shape: "diamond", pattern: "half", animal: "🦁" } },
+      { id: 3, name: "Time 4", tokens: 100, passesLeft: MAX_PASSES, season2SwapsLeft: SWAPS_PER_SEASON, lineup: emptyLineup(), badge: { c1: "#8b5cf6", c2: "#ffffff", shape: "shield", pattern: "stripes", animal: "🦅" } },
+      { id: 4, name: "Time 5", tokens: 100, passesLeft: MAX_PASSES, season2SwapsLeft: SWAPS_PER_SEASON, lineup: emptyLineup(), badge: { c1: "#06b6d4", c2: "#ffffff", shape: "circle", pattern: "stars", animal: "🐉" } },
+      { id: 5, name: "Time 6", tokens: 100, passesLeft: MAX_PASSES, season2SwapsLeft: SWAPS_PER_SEASON, lineup: emptyLineup(), badge: { c1: "#ec4899", c2: "#ffffff", shape: "shield", pattern: "solid", animal: "🐺" } },
+      { id: 6, name: "Time 7", tokens: 100, passesLeft: MAX_PASSES, season2SwapsLeft: SWAPS_PER_SEASON, lineup: emptyLineup(), badge: { c1: "#e11d48", c2: "#000000", shape: "diamond", pattern: "stripes", animal: "🐅" } },
+      { id: 7, name: "Time 8", tokens: 100, passesLeft: MAX_PASSES, season2SwapsLeft: SWAPS_PER_SEASON, lineup: emptyLineup(), badge: { c1: "#84cc16", c2: "#0f172a", shape: "circle", pattern: "half", animal: "🦁" } }
+    ];
+
+    let teams = JSON.parse(JSON.stringify(defaultTeamsMaster.slice(0, playerCount)));
+
+    let currentDeck = [];
+    let rejectedQueue = [];
+    let usedPlayerNames = new Set(); 
+    let currentPlayerCard = null;
+    let turnOrder = [];
+    let activeTurnIndex = 0;
+    let highestBid = -1;
+    let highestBidderId = null;
+    let activeBidders = [];
+    let playersActedThisCard = new Set();
+    let isAuctionStarted = false;
+    let isDiceRolled = false;
+    let isTransitioning = false;
+    let currentSeason = 1;
+    let season2DraftCount = 0;
+    let tournamentStage = 'ESTADUALZAO_PHASE1';
+    let tournamentData = { groups: {}, round: 1, maxRounds: 7, bracket: {} };
+    let currentBrasfootState = { active: false, currentMatchMinute: 0, currentMatches: [], history: [] };
+    let topScorers = {}; 
+    let teamStats = {}; // estatísticas acumuladas (todas as temporadas) dos times dos jogadores: { id: { v, e, d, gp, gc } }
+    let playoffResults = { champion: null, runnerUp: null, semifinalists: [] };
+
+    let peer = null, connections = [], hostConn = null, isHost = true, myPlayerId = 0;
+
+    let pendingSwap = null;      
+    let swapModalKey = null;     
+    let matchTimer = null;       
+    const MATCH_DURATION_MS = 60000;
+    const HUMAN_TEAM_BONUS = 3;   // leve vantagem para os times dos jogadores (elencos montados no leilão)
+    const BIG_TEAM_BONUS = 3;     // vantagem dos clubes grandes sobre os pequenos
+    const SCORER_WEIGHTS = { ATA: 10, MC: 4, DEF: 0.25 }; // chance relativa de cada posição fazer gol (zagueiro bem raro) 
+
+    function switchSetupTab(tab) {
+      const tabHost = document.getElementById('tab-host');
+      const tabJoin = document.getElementById('tab-join');
+      const hostCtrls = document.getElementById('host-controls');
+      const joinCtrls = document.getElementById('join-controls');
+      const btnHostStart = document.getElementById('btn-host-start');
+
+      if (tab === 'host') {
+        tabHost.classList.add('active');
+        tabJoin.classList.remove('active');
+        hostCtrls.style.display = 'flex';
+        joinCtrls.style.display = 'none';
+        btnHostStart.style.display = 'inline-block';
+        isHost = true;
+      } else {
+        tabJoin.classList.add('active');
+        tabHost.classList.remove('active');
+        hostCtrls.style.display = 'none';
+        joinCtrls.style.display = 'flex';
+        btnHostStart.style.display = 'none';
+        isHost = false;
+      }
+    }
+
+    function changePlayerCount(count) {
+      playerCount = parseInt(count);
+      teams = defaultTeamsMaster.slice(0, playerCount).map(t => JSON.parse(JSON.stringify(t)));
+      
+      for (let i = 0; i < 8; i++) {
+        const card = document.getElementById(`card-t${i}`);
+        const panel = document.getElementById(`panel-${i}`);
+        if (i < playerCount) {
+          if (card) card.style.display = 'flex';
+          if (panel) panel.style.display = 'flex';
+        } else {
+          if (card) card.style.display = 'none';
+          if (panel) panel.style.display = 'none';
+        }
+      }
+      updateBadgePreviews();
+      if (isHost) broadcastState();
+    }
+
+    function saveBadgesToStorage() {
+      const savedBadges = teams.map(t => ({ name: t.name, badge: t.badge }));
+      localStorage.setItem('auction_saved_teams_5p_v3', JSON.stringify(savedBadges));
+    }
+
+    function loadBadgesFromStorage() {
+      const stored = localStorage.getItem('auction_saved_teams_5p_v3');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          parsed.forEach((item, i) => {
+            if (teams[i]) {
+              if (item.name) teams[i].name = item.name;
+              if (item.badge) teams[i].badge = item.badge;
+              const nameEl = document.getElementById(`t${i}-name`);
+              if (nameEl) nameEl.value = teams[i].name;
+              const c1El = document.getElementById(`t${i}-c1`);
+              if (c1El) c1El.value = teams[i].badge.c1;
+              const c2El = document.getElementById(`t${i}-c2`);
+              if (c2El) c2El.value = teams[i].badge.c2;
+              const shapeEl = document.getElementById(`t${i}-shape`);
+              if (shapeEl) shapeEl.value = teams[i].badge.shape;
+              const patternEl = document.getElementById(`t${i}-pattern`);
+              if (patternEl) patternEl.value = teams[i].badge.pattern;
+              const animalEl = document.getElementById(`t${i}-animal`);
+              if (animalEl) animalEl.value = teams[i].badge.animal;
+            }
+          });
+        } catch (e) { console.error(e); }
+      }
+    }
+
+    function generateBadgeSVG(badgeObj) {
+      if (!badgeObj) return '';
+      const { c1, c2, shape, pattern, animal } = badgeObj;
+      let shapePath = "M 5,5 L 45,5 L 45,35 L 25,48 L 5,35 Z";
+      if (shape === 'circle') shapePath = "M 25,5 A 20,20 0 1,0 25,45 A 20,20 0 1,0 25,5";
+      if (shape === 'diamond') shapePath = "M 25,2 L 48,25 L 25,48 L 2,25 Z";
+
+      let fillContent = `<path d="${shapePath}" fill="${c1 || '#3b82f6'}" stroke="${c2 || '#fff'}" stroke-width="2"/>`;
+
+      if (pattern === 'stripes') {
+        fillContent = `
+          <defs><clipPath id="clip-${shape}"><path d="${shapePath}"/></clipPath></defs>
+          <path d="${shapePath}" fill="${c1}" stroke="${c2}" stroke-width="2"/>
+          <g clip-path="url(#clip-${shape})">
+            <rect x="10" y="0" width="6" height="50" fill="${c2}"/>
+            <rect x="22" y="0" width="6" height="50" fill="${c2}"/>
+            <rect x="34" y="0" width="6" height="50" fill="${c2}"/>
+          </g>
+        `;
+      } else if (pattern === 'half') {
+        fillContent = `
+          <defs><clipPath id="clip-${shape}"><path d="${shapePath}"/></clipPath></defs>
+          <path d="${shapePath}" fill="${c1}" stroke="${c2}" stroke-width="2"/>
+          <g clip-path="url(#clip-${shape})"><rect x="25" y="0" width="25" height="50" fill="${c2}"/></g>
+        `;
+      } else if (pattern === 'stars') {
+        fillContent += `<text x="25" y="15" font-size="8" fill="${c2}" text-anchor="middle">★</text>`;
+      }
+
+      return `
+        <svg viewBox="0 0 50 50" width="100%" height="100%">
+          ${fillContent}
+          <text x="25" y="${pattern === 'stars' ? '32' : '29'}" font-size="16" text-anchor="middle" dominant-baseline="central">${animal || '🦅'}</text>
+        </svg>
+      `;
+    }
+
+    function updateBadgePreviews() {
+      for (let i = 0; i < playerCount; i++) {
+        const nameInput = document.getElementById(`t${i}-name`);
+        if (nameInput) teams[i].name = nameInput.value || `Time ${i+1}`;
+        
+        const c1El = document.getElementById(`t${i}-c1`);
+        if (c1El) {
+          teams[i].badge = {
+            c1: c1El.value,
+            c2: document.getElementById(`t${i}-c2`).value,
+            shape: document.getElementById(`t${i}-shape`).value,
+            pattern: document.getElementById(`t${i}-pattern`).value,
+            animal: document.getElementById(`t${i}-animal`).value
+          };
+        }
+        const prevBox = document.getElementById(`badge-prev-${i}`);
+        if (prevBox) prevBox.innerHTML = generateBadgeSVG(teams[i].badge);
+      }
+      saveBadgesToStorage();
+    }
+
+    function initPeer() {
+      peer = new Peer();
+      peer.on('open', (id) => {
+        document.getElementById('host-id-display').innerHTML = `<b>ID da Sala:</b> <span style="user-select:all; background:var(--bg-input); padding:2px 6px; border-radius:4px; border:1px solid var(--border-color);">${id}</span>`;
+      });
+
+      peer.on('connection', (conn) => {
+        if (connections.length >= playerCount - 1) return;
+        connections.push(conn);
+        const assignedId = connections.length;
+
+        conn.on('open', () => {
+          conn.send({ type: 'ASSIGN_PLAYER', playerId: assignedId, playerCount: playerCount });
+          broadcastState();
+        });
+
+        conn.on('data', (data) => handleIncomingNetworkData(data, conn));
+      });
+
+      loadBadgesFromStorage();
+      changePlayerCount(5);
+    }
+
+    function getLocalTeamData(slotIndex) {
+      const idx = slotIndex !== undefined ? slotIndex : 1;
+      return {
+        name: document.getElementById(`t${idx}-name`) ? document.getElementById(`t${idx}-name`).value.trim() : `Time ${idx+1}`,
+        badge: {
+          c1: document.getElementById(`t${idx}-c1`) ? document.getElementById(`t${idx}-c1`).value : "#10b981",
+          c2: document.getElementById(`t${idx}-c2`) ? document.getElementById(`t${idx}-c2`).value : "#ffffff",
+          shape: document.getElementById(`t${idx}-shape`) ? document.getElementById(`t${idx}-shape`).value : "circle",
+          pattern: document.getElementById(`t${idx}-pattern`) ? document.getElementById(`t${idx}-pattern`).value : "solid",
+          animal: document.getElementById(`t${idx}-animal`) ? document.getElementById(`t${idx}-animal`).value : "🦅"
+        }
+      };
+    }
+
+    function joinRoom() {
+      updateBadgePreviews();
+      const hostId = document.getElementById('join-room-id').value.trim();
+      const customNameInput = document.getElementById('join-team-name').value.trim();
+
+      if (!hostId) return alert('Insira o ID da Sala!');
+
+      hostConn = peer.connect(hostId);
+      isHost = false;
+
+      document.getElementById('status-conn').innerText = "Conectando ao Host...";
+
+      hostConn.on('open', () => {
+        document.getElementById('status-conn').innerText = "Conectado! Aguardando o Host iniciar.";
+        document.getElementById('btn-join').disabled = true;
+
+        const myData = getLocalTeamData(1);
+        if (customNameInput) myData.name = customNameInput;
+
+        hostConn.send({ type: 'SET_NAME', name: myData.name, badge: myData.badge });
+      });
+
+      hostConn.on('data', (data) => handleIncomingNetworkData(data, hostConn));
+    }
+
+    function sendActionToHost(actionType, payload = {}) {
+      if (isHost) processActionHost(actionType, payload, myPlayerId);
+      else if (hostConn) hostConn.send({ type: 'PLAYER_ACTION', action: actionType, payload: payload, senderId: myPlayerId });
+    }
+
+    function handleIncomingNetworkData(data, conn) {
+      if (data.type === 'ASSIGN_PLAYER') {
+        myPlayerId = data.playerId;
+        if (data.playerCount) {
+          playerCount = data.playerCount;
+          changePlayerCount(playerCount);
+        }
+        const customNameInput = document.getElementById('join-team-name').value.trim();
+        const myData = getLocalTeamData(myPlayerId);
+        if (customNameInput) myData.name = customNameInput;
+
+        if (hostConn) {
+          hostConn.send({ type: 'SET_NAME', name: myData.name, badge: myData.badge, senderId: myPlayerId });
+        }
+      } 
+      else if (data.type === 'SYNC_STATE') {
+        applyStateSync(data.state);
+      } 
+      else if (data.type === 'SET_NAME' && isHost) {
+        const pId = data.senderId !== undefined ? data.senderId : connections.indexOf(conn) + 1;
+        if (pId !== undefined && teams[pId]) {
+          teams[pId].name = data.name || teams[pId].name;
+          if (data.badge) teams[pId].badge = data.badge;
+          const inputEl = document.getElementById(`t${pId}-name`);
+          if (inputEl) inputEl.value = teams[pId].name;
+          broadcastState();
+        }
+      } 
+      else if (data.type === 'PLAYER_ACTION' && isHost) {
+        processActionHost(data.action, data.payload, data.senderId);
+      }
+    }
+
+    function processActionHost(action, payload, senderId) {
+      if (action === 'ROLL_DICE') rollDiceLogic();
+      else if (action === 'BID') handleBidLogic(payload.amount, senderId);
+      else if (action === 'PASS') handlePassLogic(senderId);
+      else if (action === 'NEXT_SEASON') {
+        const podiumOpen = document.getElementById('podium-screen').style.display !== 'none';
+        if (currentSeason < MAX_SEASONS && podiumOpen) startNextSeasonAuction();
+      }
+      else if (action === 'CONFIRM_SWAP') {
+        if (pendingSwap && senderId === pendingSwap.teamId &&
+            getSlotsForPos(pendingSwap.card.pos).includes(payload.targetSlot) &&
+            teams[senderId] && teams[senderId].lineup[payload.targetSlot]) {
+          const swapTeamId = pendingSwap.teamId;
+          const swapCard = pendingSwap.card;
+          pendingSwap = null;
+          executeSwapInTeam(swapTeamId, payload.targetSlot, swapCard);
+        }
+      }
+      broadcastState();
+    }
+
+    function broadcastState() {
+      if (!isHost) return;
+      updateBadgePreviews();
+
+      const state = {
+        playerCount, teams, currentDeck, rejectedQueue,
+        usedPlayerNames: Array.from(usedPlayerNames),
+        currentPlayerCard, turnOrder, activeTurnIndex, highestBid,
+        highestBidderId, activeBidders, playersActedThisCard: Array.from(playersActedThisCard), isAuctionStarted, isDiceRolled, isTransitioning, currentSeason, season2DraftCount, tournamentStage, tournamentData,
+        pendingSwap: pendingSwap,
+        topScorers: topScorers,
+        teamStats: teamStats,
+        playoffResults: playoffResults,
+        diceResultText: document.getElementById('dice-result').innerText,
+        setupHidden: document.getElementById('setup-screen').style.display === 'none',
+        menuHidden: document.getElementById('main-menu-screen').style.display === 'none',
+        gameArenaVisible: document.getElementById('game-arena').style.display !== 'none',
+        leagueScreenVisible: document.getElementById('league-screen').style.display !== 'none',
+        podiumScreenVisible: document.getElementById('podium-screen').style.display !== 'none',
+        brasfootState: currentBrasfootState
+      };
+
+      connections.forEach(conn => { if (conn.open) conn.send({ type: 'SYNC_STATE', state: state }); });
+      applyStateSync(state);
+    }
+
+    function applyStateSync(state) {
+      if (state.playerCount && state.playerCount !== playerCount) {
+        changePlayerCount(state.playerCount);
+      }
+      teams = state.teams; 
+      currentDeck = state.currentDeck; 
+      rejectedQueue = state.rejectedQueue || [];
+      usedPlayerNames = new Set(state.usedPlayerNames || []);
+      currentPlayerCard = state.currentPlayerCard;
+      turnOrder = state.turnOrder; 
+      activeTurnIndex = state.activeTurnIndex; 
+      highestBid = state.highestBid;
+      highestBidderId = state.highestBidderId; 
+      activeBidders = state.activeBidders;
+      playersActedThisCard = new Set(state.playersActedThisCard || []);
+      isAuctionStarted = state.isAuctionStarted; 
+      isDiceRolled = state.isDiceRolled; 
+      isTransitioning = state.isTransitioning;
+      currentSeason = state.currentSeason || 1;
+      season2DraftCount = state.season2DraftCount || 0;
+      tournamentStage = state.tournamentStage || 'ESTADUALZAO_PHASE1';
+      pendingSwap = state.pendingSwap || null;
+      if (state.tournamentData) tournamentData = state.tournamentData;
+      if (state.topScorers) topScorers = state.topScorers;
+      if (state.teamStats) teamStats = state.teamStats;
+      if (state.playoffResults) playoffResults = state.playoffResults;
+
+      for (let i = 0; i < playerCount; i++) {
+        const input = document.getElementById(`t${i}-name`);
+        if (input && teams[i]) input.value = teams[i].name;
+      }
+
+      if (state.menuHidden) document.getElementById('main-menu-screen').style.display = 'none';
+      if (state.setupHidden) document.getElementById('setup-screen').style.display = 'none';
+      
+      document.getElementById('game-arena').style.display = state.gameArenaVisible ? 'grid' : 'none';
+      document.getElementById('league-screen').style.display = state.leagueScreenVisible ? 'flex' : 'none';
+      document.getElementById('podium-screen').style.display = state.podiumScreenVisible ? 'flex' : 'none';
+      
+      if (currentPlayerCard) {
+        document.getElementById('c-ovr').innerText = currentPlayerCard.ovr;
+        document.getElementById('c-pos').innerText = currentPlayerCard.pos;
+        document.getElementById('c-name').innerText = currentPlayerCard.name;
+        document.getElementById('c-photo').src = currentPlayerCard.photo && currentPlayerCard.photo.trim() !== "" 
+          ? currentPlayerCard.photo 
+          : "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50%' y='55%' font-size='50' text-anchor='middle' dominant-baseline='central' fill='%23fff'>👤</text></svg>";
+      }
+
+      document.getElementById('current-bid-val').innerText = highestBid >= 0 ? `${highestBid} Tokens` : "0 Tokens";
+      document.getElementById('highest-bidder-name').innerText = (highestBidderId !== null && teams[highestBidderId]) ? `Líder: ${teams[highestBidderId].name}` : "Nenhum lance";
+      document.getElementById('dice-result').innerText = state.diceResultText || "";
+      document.getElementById('my-passes-count').innerText = teams[myPlayerId] ? teams[myPlayerId].passesLeft : 0;
+      document.getElementById('season-badge').innerText = `${currentSeason}ª Temp: ${currentSeason === 1 ? 'Leilão Principal' : 'Leilão de Reforços'}`;
+
+      if (state.brasfootState && state.brasfootState.active) {
+        currentBrasfootState = state.brasfootState;
+        renderTournamentUI();
+      }
+
+      renderTeamPanels();
+      updateTurnUI();
+      if (state.podiumScreenVisible) renderPodium();
+      syncSwapModal();
+    }
+
+    function syncSwapModal() {
+      const overlay = document.getElementById('swap-modal-overlay');
+      if (pendingSwap && pendingSwap.teamId === myPlayerId) {
+        const key = `${pendingSwap.teamId}:${pendingSwap.card.name}`;
+        if (swapModalKey !== key) {
+          swapModalKey = key;
+          openSwapModal(pendingSwap.teamId, pendingSwap.card);
+        }
+      } else {
+        overlay.style.display = 'none';
+        if (!pendingSwap) swapModalKey = null;
+      }
+    }
+
+    window.onload = initPeer;
+
+    function startGame() {
+      if (!isHost) return;
+      isHost = true; 
+      myPlayerId = 0;
+      currentSeason = 1;
+      season2DraftCount = 0;
+      tournamentStage = 'ESTADUALZAO_PHASE1';
+      usedPlayerNames.clear();
+      topScorers = {};
+      teamStats = {};
+      playoffResults = { champion: null, runnerUp: null, semifinalists: [] };
+      updateBadgePreviews();
+
+      document.getElementById('main-menu-screen').style.display = 'none';
+      document.getElementById('setup-screen').style.display = 'none';
+      document.getElementById('game-arena').style.display = 'grid';
+
+      buildDeck();
+      renderTeamPanels();
+      drawNextPlayer();
+      broadcastState();
+    }
+
+    function buildDeck() {
+      const fullList = [
+        ...database.GOL.map(p => ({ ...p, pos: 'GOL' })),
+        ...database.DEF.map(p => ({ ...p, pos: 'DEF' })),
+        ...database.MC.map(p => ({ ...p, pos: 'MC' })),
+        ...database.ATA.map(p => ({ ...p, pos: 'ATA' }))
+      ];
+      const filtered = fullList.filter(p => !usedPlayerNames.has(p.name));
+      currentDeck = filtered.sort(() => Math.random() - 0.5);
+    }
+
+    function startNextSeasonAuction() {
+      if (currentSeason >= MAX_SEASONS) return;
+      currentSeason++;
+      season2DraftCount = 0;
+      pendingSwap = null;
+      tournamentStage = 'LIGA';
+      playoffResults = { champion: null, runnerUp: null, semifinalists: [] };
+      
+      teams.forEach(t => {
+        t.tokens += 100;
+        t.passesLeft = MAX_PASSES;
+        t.season2SwapsLeft = SWAPS_PER_SEASON;
+      });
+
+      document.getElementById('league-screen').style.display = 'none';
+      document.getElementById('podium-screen').style.display = 'none';
+      document.getElementById('game-arena').style.display = 'grid';
+
+      buildDeck();
+      renderTeamPanels();
+      drawNextPlayer();
+      broadcastState();
+    }
+
+    function drawNextPlayer() {
+      let allDone = true;
+
+      if (currentSeason === 1) {
+        for (let i = 0; i < playerCount; i++) {
+          if (!isTeamFull(i)) { allDone = false; break; }
+        }
+        if (allDone) {
+          startEstadualzaoPhase1();
+          return;
+        }
+      } else {
+        for (let i = 0; i < playerCount; i++) {
+          if (teams[i].season2SwapsLeft > 0) { allDone = false; break; }
+        }
+        if (allDone) {
+          startEstadualzaoPhase1();
+          return;
+        }
+      }
+
+      currentPlayerCard = pickNextPlayableCard();
+
+      document.getElementById('c-ovr').innerText = currentPlayerCard.ovr;
+      document.getElementById('c-pos').innerText = currentPlayerCard.pos;
+      document.getElementById('c-name').innerText = currentPlayerCard.name;
+      document.getElementById('c-photo').src = currentPlayerCard.photo && currentPlayerCard.photo.trim() !== "" 
+        ? currentPlayerCard.photo 
+        : "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50%' y='55%' font-size='50' text-anchor='middle' dominant-baseline='central' fill='%23fff'>👤</text></svg>";
+
+      pendingSwap = null;
+      highestBid = -1; 
+      highestBidderId = null; 
+      isAuctionStarted = false; 
+      isDiceRolled = false; 
+      isTransitioning = false;
+      activeBidders = []; 
+      turnOrder = [];
+      playersActedThisCard.clear();
+
+      document.getElementById('current-bid-val').innerText = "0 Tokens";
+      document.getElementById('highest-bidder-name').innerText = "Nenhum lance";
+      document.getElementById('dice-result').innerText = "";
+      document.getElementById('btn-roll-dice').disabled = false;
+      document.getElementById('turn-indicator').innerText = "Role os dados para a ordem!";
+      toggleBidButtons(false);
+    }
+
+    // Na 1ª temporada, só aparecem cartas de posições em que ao menos um time ainda tem vaga
+    function isCardPlayableNow(card) {
+      if (currentSeason !== 1) return true;
+      for (let i = 0; i < playerCount; i++) {
+        if (!isTeamFull(i) && teamHasOpenSlot(i, card.pos)) return true;
+      }
+      return false;
+    }
+
+    function pickNextPlayableCard() {
+      let guard = 0;
+      while (guard++ < 5000) {
+        let card = null;
+        if (currentDeck.length > 0) {
+          card = currentDeck.pop();
+        } else if (rejectedQueue.length > 0) {
+          card = rejectedQueue.shift();
+        } else {
+          buildDeck();
+          if (currentDeck.length === 0) return null;
+          card = currentDeck.pop();
+        }
+        if (isCardPlayableNow(card)) return card;
+      }
+      return currentDeck.pop();
+    }
+
+    function teamHasOpenSlot(teamId, pos) {
+      return !!teams[teamId] && getSlotsForPos(pos).some(s => teams[teamId].lineup[s] === null);
+    }
+
+    function isTeamFull(teamId) {
+      return teams[teamId] && Object.values(teams[teamId].lineup).every(slot => slot !== null);
+    }
+
+    function rollDice() { sendActionToHost('ROLL_DICE'); }
+
+    function rollDiceLogic() {
+      let activeIndices = [];
+      for (let i = 0; i < playerCount; i++) activeIndices.push(i);
+
+      if (currentSeason === 1) {
+        turnOrder = activeIndices.filter(id => !isTeamFull(id) && teamHasOpenSlot(id, currentPlayerCard.pos)).sort(() => Math.random() - 0.5);
+      } else {
+        turnOrder = activeIndices.filter(id => teams[id].season2SwapsLeft > 0).sort(() => Math.random() - 0.5);
+      }
+      activeBidders = [...turnOrder];
+      activeTurnIndex = 0;
+      isDiceRolled = true;
+      document.getElementById('dice-result').innerText = `Ordem: ${turnOrder.map(i => teams[i].name).join(' ➔ ')}`;
+      document.getElementById('btn-roll-dice').disabled = true;
+      updateTurnUI();
+    }
+
+    function toggleBidButtons(enable) {
+      document.getElementById('btn-pass').disabled = !enable;
+      document.getElementById('btn-bid-0').disabled = !enable;
+      document.getElementById('btn-bid-1').disabled = !enable;
+      document.getElementById('btn-bid-2').disabled = !enable;
+      document.getElementById('btn-bid-3').disabled = !enable;
+    }
+
+    function updateTurnUI() {
+      document.querySelectorAll('.team-panel').forEach(p => p.classList.remove('active-turn'));
+      document.getElementById('btn-roll-dice').disabled = isDiceRolled || (!isHost && myPlayerId !== turnOrder[0]);
+
+      if (!isDiceRolled) {
+        document.getElementById('turn-indicator').innerText = "Role os dados para ordem!";
+        toggleBidButtons(false);
+        return;
+      }
+
+      if (activeBidders.length === 0) {
+        document.getElementById('turn-indicator').innerText = "Carta recusada! Indo para a sobra...";
+        toggleBidButtons(false);
+        if (isHost && !isTransitioning) {
+          isTransitioning = true;
+          rejectedQueue.push(currentPlayerCard);
+          setTimeout(() => { drawNextPlayer(); broadcastState(); }, 1200);
+        }
+        return;
+      }
+
+      if (activeBidders.length === 1 && isAuctionStarted) {
+        toggleBidButtons(false);
+        const winnerId = activeBidders[0];
+        if (pendingSwap) {
+          document.getElementById('turn-indicator').innerText = pendingSwap.teamId === myPlayerId
+            ? `Vendido para você! Escolha quem sai.`
+            : `Vendido para ${teams[winnerId].name}! Aguardando a troca...`;
+        } else {
+          document.getElementById('turn-indicator').innerText = `Vendido para ${teams[winnerId].name}!`;
+        }
+        if (isHost && !isTransitioning) {
+          isTransitioning = true;
+          finishAuction(winnerId);
+        }
+        return;
+      }
+
+      const currentTeamId = activeBidders[activeTurnIndex % activeBidders.length];
+      const activePanel = document.getElementById(`panel-${currentTeamId}`);
+      if (activePanel) activePanel.classList.add('active-turn');
+
+      if (teams[currentTeamId]) {
+        document.getElementById('turn-indicator').innerText = `Vez de: ${teams[currentTeamId].name}`;
+      }
+
+      const isMyTurn = (currentTeamId === myPlayerId) && !isTransitioning;
+      toggleBidButtons(isMyTurn);
+
+      if (isMyTurn && teams[myPlayerId] && teams[myPlayerId].passesLeft <= 0 && highestBid < 0 && !playersActedThisCard.has(myPlayerId)) {
+        document.getElementById('btn-pass').disabled = true;
+      }
+
+      if (!isAuctionStarted) {
+        document.getElementById('btn-bid-0').style.display = 'inline-block';
+        document.getElementById('btn-bid-1').innerText = "+1 Token";
+        document.getElementById('btn-bid-2').disabled = true;
+        document.getElementById('btn-bid-3').disabled = true;
+      } else {
+        document.getElementById('btn-bid-0').style.display = 'none';
+        if (isMyTurn) {
+          document.getElementById('btn-bid-2').disabled = false;
+          document.getElementById('btn-bid-3').disabled = false;
+        }
+      }
+    }
+
+    function handleBid(amount) { sendActionToHost('BID', { amount: amount }); }
+
+    function handleBidLogic(amount, senderId) {
+      const currentTeamId = activeBidders[activeTurnIndex % activeBidders.length];
+      if (senderId !== currentTeamId || isTransitioning) return;
+
+      let newBid = !isAuctionStarted ? amount : highestBid + amount;
+      
+      if (teams[currentTeamId].tokens < newBid) {
+        if (senderId === myPlayerId) alert("⚠ Tokens insuficientes!");
+        return;
+      }
+
+      highestBid = newBid;
+      highestBidderId = currentTeamId;
+      isAuctionStarted = true;
+      playersActedThisCard.add(senderId);
+
+      document.getElementById('current-bid-val').innerText = `${highestBid} Tokens`;
+      document.getElementById('highest-bidder-name').innerText = `Líder: ${teams[currentTeamId].name}`;
+
+      activeTurnIndex++;
+      updateTurnUI();
+    }
+
+    function handlePass() {
+      if (teams[myPlayerId] && teams[myPlayerId].passesLeft <= 0 && highestBid < 0 && !playersActedThisCard.has(myPlayerId)) {
+        return alert("⚠️ Limite de recusas atingido!");
+      }
+      sendActionToHost('PASS');
+    }
+
+    function handlePassLogic(senderId) {
+      const currentTeamId = activeBidders[activeTurnIndex % activeBidders.length];
+      if (senderId !== currentTeamId || isTransitioning) return;
+
+      if (highestBid < 0 && !playersActedThisCard.has(senderId)) {
+        if (teams[senderId] && teams[senderId].passesLeft > 0) {
+          teams[senderId].passesLeft--;
+        }
+      }
+
+      playersActedThisCard.add(senderId);
+
+      activeBidders.splice(activeTurnIndex % activeBidders.length, 1);
+      if (activeBidders.length > 0) {
+        activeTurnIndex = activeTurnIndex % activeBidders.length;
+      }
+      updateTurnUI();
+    }
+
+    function finishAuction(winnerId) {
+      const winner = teams[winnerId];
+      winner.tokens -= (highestBid > 0 ? highestBid : 0);
+      usedPlayerNames.add(currentPlayerCard.name);
+      
+      if (currentSeason >= 2) {
+        winner.season2SwapsLeft--;
+        promptSwapPlayerSelection(winnerId, currentPlayerCard);
+      } else {
+        assignPlayerToTeam(winnerId, currentPlayerCard);
+        renderTeamPanels();
+        setTimeout(() => { drawNextPlayer(); broadcastState(); }, 1200);
+      }
+    }
+
+    function assignPlayerToTeam(teamId, card) {
+      const winner = teams[teamId];
+      const targetSlots = getSlotsForPos(card.pos);
+
+      for (let s of targetSlots) {
+        if (winner.lineup[s] === null) {
+          winner.lineup[s] = card;
+          break;
+        }
+      }
+    }
+
+    function promptSwapPlayerSelection(winnerId, card) {
+      pendingSwap = { teamId: winnerId, card: card };
+      renderTeamPanels();
+    }
+
+    function openSwapModal(teamId, card) {
+      const winner = teams[teamId];
+      const slotLabels = SLOT_LABELS;
+
+      const overlay = document.getElementById('swap-modal-overlay');
+      const listContainer = document.getElementById('swap-modal-list');
+      document.getElementById('swap-modal-subtitle').innerText = `Escolha quem sai para a entrada de ${card.name} (${card.ovr}):`;
+      
+      listContainer.innerHTML = '';
+
+      const allowedSlots = getSlotsForPos(card.pos);
+      for (let slotKey in winner.lineup) {
+        if (!allowedSlots.includes(slotKey)) continue;
+        const p = winner.lineup[slotKey];
+        if (p) {
+          const item = document.createElement('div');
+          item.className = 'swap-item';
+          item.innerHTML = `
+            <div>
+              <div class="swap-item-name">${p.name} (${p.ovr})</div>
+              <div class="swap-item-pos">Posição: ${slotLabels[slotKey]}</div>
+            </div>
+            <button class="btn-action btn-bid" style="padding:6px 10px; font-size:0.75rem;">Substituir</button>
+          `;
+          item.onclick = () => {
+            overlay.style.display = 'none';
+            sendActionToHost('CONFIRM_SWAP', { targetSlot: slotKey });
+          };
+          listContainer.appendChild(item);
+        }
+      }
+
+      overlay.style.display = 'flex';
+    }
+
+    function executeSwapInTeam(teamId, slotKey, newCard) {
+      if (teams[teamId]) {
+        teams[teamId].lineup[slotKey] = newCard;
+      }
+      renderTeamPanels();
+      setTimeout(() => { drawNextPlayer(); broadcastState(); }, 1200);
+    }
+
+    function renderTeamPanels() {
+      for (let i = 0; i < playerCount; i++) {
+        const panel = document.getElementById(`panel-${i}`);
+        if (!panel) continue;
+
+        const team = teams[i];
+        const slotLabels = SLOT_LABELS;
+
+        let html = `
+          <div class="team-header">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <div style="width:22px; height:22px;">${getTeamLogoHTML(team.name, team.badge)}</div>
+              <strong>${team.name}</strong>
+            </div>
+            <div>
+              <span class="team-tokens">${team.tokens} TK</span>
+              <span class="passes-left">${team.passesLeft}x Rec.</span>
+              ${currentSeason >= 2 ? `<span style="background:#3b82f6; color:#fff; padding:2px 6px; border-radius:4px; font-size:0.65rem; font-weight:bold; margin-left:2px;">${team.season2SwapsLeft} Trocas</span>` : ''}
+            </div>
+          </div>
+          <div class="lineup-slots">
+        `;
+
+        for (let key in team.lineup) {
+          const player = team.lineup[key];
+          if (player) {
+            html += `
+              <div class="slot filled">
+                <span class="slot-pos">${slotLabels[key]}</span>
+                <span class="slot-player">${player.name} (${player.ovr})</span>
+              </div>
+            `;
+          } else {
+            html += `
+              <div class="slot">
+                <span class="slot-pos">${slotLabels[key]}</span>
+                <span class="slot-player" style="color:var(--text-muted);">--</span>
+              </div>
+            `;
+          }
+        }
+        html += `</div>`;
+        panel.innerHTML = html;
+      }
+    }
+
+    function calculateTeamOvr(team) {
+      let total = 0, count = 0;
+      for (let k in team.lineup) {
+        if (team.lineup[k]) { total += team.lineup[k].ovr; count++; }
+      }
+      return count > 0 ? Math.round(total / count) : 80;
+    }
+
+    // 1. INÍCIO DO CAMPEONATO (SEM DUPLICAÇÕES DE TIMES)
+    function startEstadualzaoPhase1() {
+      document.getElementById('game-arena').style.display = 'none';
+      document.getElementById('league-screen').style.display = 'flex';
+
+      if (!isHost) return;
+
+      let allParticipants = [];
+      const humanTeamNames = new Set();
+
+      for (let i = 0; i < playerCount; i++) {
+        allParticipants.push({
+          id: teams[i].id,
+          name: teams[i].name,
+          badge: teams[i].badge,
+          isHuman: true,
+          ovr: calculateTeamOvr(teams[i])
+        });
+        humanTeamNames.add(teams[i].name.toLowerCase().trim());
+      }
+
+      // Filtra lista removendo duplicatas entre si e com os times reais
+      let uniqueTeamNames = Array.from(new Set(RAW_ESTADUALZAO_LIST)).filter(name => 
+        !humanTeamNames.has(name.toLowerCase().trim())
+      );
+
+      let availableTeamNames = uniqueTeamNames.sort(() => Math.random() - 0.5);
+      let listIndex = 0;
+
+      while (allParticipants.length < 128) {
+        if (listIndex >= availableTeamNames.length) {
+          availableTeamNames.push(`Clube ${listIndex + 1}`);
+        }
+
+        const teamName = availableTeamNames[listIndex];
+        const isBig = BIG_TEAMS.has(teamName);
+        const baseOvr = isBig ? (Math.floor(Math.random() * 8) + 80) : (Math.floor(Math.random() * 12) + 66);
+
+        allParticipants.push({
+          id: `est_${listIndex}_${teamName}`,
+          name: teamName,
+          badge: { c1: "#475569", c2: "#ffffff", shape: "shield", pattern: "solid", animal: "⚽" },
+          isHuman: false,
+          ovr: baseOvr
+        });
+        listIndex++;
+      }
+
+      allParticipants = allParticipants.sort(() => Math.random() - 0.5);
+
+      const groups = {};
+      const groupLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
+      groupLetters.forEach((gLetter, idx) => {
+        groups[gLetter] = allParticipants.slice(idx * 8, idx * 8 + 8).map(t => ({
+          ...t, pts: 0, pj: 0, v: 0, e: 0, d: 0, gp: 0, gc: 0, sg: 0
+        }));
+      });
+
+      tournamentStage = 'ESTADUALZAO_PHASE1';
+      tournamentData = {
+        groups: groups,
+        round: 1,
+        maxRounds: 7,
+        bracket: {}
+      };
+
+      setupPhase1RoundMatches();
+      broadcastState();
+      runCurrentMatchesLoop();
+    }
+
+    function setupPhase1RoundMatches() {
+      let roundMatches = [];
+      const groupKeys = Object.keys(tournamentData.groups);
+
+      groupKeys.forEach(gKey => {
+        const list = tournamentData.groups[gKey];
+        const r = tournamentData.round;
+        for (let i = 0; i < 4; i++) {
+          let homeIdx = (r - 1 + i) % 7;
+          let awayIdx = (7 - i + r - 1) % 7;
+          if (i === 0) awayIdx = 7;
+          
+          roundMatches.push(createMatchObj(list[homeIdx], list[awayIdx], gKey));
+        }
+      });
+
+      currentBrasfootState = {
+        active: true,
+        currentMatchMinute: 0,
+        currentMatches: roundMatches,
+        history: currentBrasfootState.history || []
+      };
+    }
+
+    function createMatchObj(home, away, groupLabel = '') {
+      return {
+        home: home,
+        away: away,
+        homeScore: 0,
+        awayScore: 0,
+        group: groupLabel,
+        events: [],
+        stats: { homeShots: 0, awayShots: 0, homePossession: 50, awayPossession: 50 }
+      };
+    }
+
+    function runCurrentMatchesLoop() {
+      if (!isHost) return;
+      if (matchTimer) { clearInterval(matchTimer); matchTimer = null; }
+
+      const startTime = Date.now();
+      const matchDurationMs = allHumansEliminated() ? MATCH_DURATION_MS / 2 : MATCH_DURATION_MS;
+
+      matchTimer = setInterval(() => {
+        if (!currentBrasfootState.active) {
+          clearInterval(matchTimer);
+          matchTimer = null;
+          return;
+        }
+
+        const elapsed = Date.now() - startTime;
+        const targetMinute = Math.min(90, Math.floor((elapsed / matchDurationMs) * 90));
+        if (targetMinute <= currentBrasfootState.currentMatchMinute) return;
+
+        while (currentBrasfootState.currentMatchMinute < targetMinute) {
+          currentBrasfootState.currentMatchMinute++;
+          currentBrasfootState.currentMatches.forEach(m => {
+            simulateMatchMinute(m, currentBrasfootState.currentMatchMinute);
+          });
+        }
+
+        broadcastState();
+
+        if (currentBrasfootState.currentMatchMinute >= 90) {
+          clearInterval(matchTimer);
+          matchTimer = null;
+          setTimeout(() => { finishCurrentBatch(); }, 1500);
+        }
+      }, 250);
+    }
+
+    // 2. RETORNA ARTILHEIRO SE FOR HUMANO (RETORNA NULL PARA BOTS)
+    function getRandomScorerName(teamObj) {
+      if (teamObj.isHuman) {
+        const humanTeam = teams.find(t => t.id === teamObj.id || t.name === teamObj.name);
+        if (humanTeam && humanTeam.lineup) {
+          const availablePlayers = [];
+          let totalWeight = 0;
+          for (let key in humanTeam.lineup) {
+            if (humanTeam.lineup[key] && key !== 'GOL') {
+              const posKey = key.replace(/[0-9]/g, '');
+              const w = SCORER_WEIGHTS[posKey] !== undefined ? SCORER_WEIGHTS[posKey] : 1;
+              availablePlayers.push({ name: humanTeam.lineup[key].name, w: w });
+              totalWeight += w;
+            }
+          }
+          if (availablePlayers.length > 0) {
+            let r = Math.random() * totalWeight;
+            for (let p of availablePlayers) {
+              r -= p.w;
+              if (r <= 0) return p.name;
+            }
+            return availablePlayers[availablePlayers.length - 1].name;
+          }
+        }
+      }
+      return null;
+    }
+
+    // 3. ARTILHARIA APENAS DOS JOGADORES REAIS
+    function isScorerHumanPlayer(scorerName) {
+      for (let t of teams) {
+        if (t.lineup) {
+          for (let key in t.lineup) {
+            if (t.lineup[key] && t.lineup[key].name === scorerName) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+
+    function recordGoal(scorerName, teamName) {
+      if (!scorerName || !isScorerHumanPlayer(scorerName)) return;
+
+      if (!topScorers[scorerName]) {
+        topScorers[scorerName] = { goals: 0, team: teamName };
+      }
+      topScorers[scorerName].goals++;
+      topScorers[scorerName].team = teamName;
+    }
+
+    // 4. SIMULAÇÃO DO MINUTO E FORMATAÇÃO DO LOG DO GOL
+    function getEffectiveOvr(t) {
+      return t.ovr + (BIG_TEAMS.has(t.name) ? BIG_TEAM_BONUS : 0) + (t.isHuman ? HUMAN_TEAM_BONUS : 0);
+    }
+
+    // Verdadeiro quando TODOS os times dos jogadores já estão eliminados (partidas passam a 2x)
+    function isHumanEliminated(teamId) {
+      let found = null, groupList = null;
+      const groups = tournamentData.groups || {};
+      for (let g in groups) {
+        const t = groups[g].find(x => x.id === teamId);
+        if (t) { found = t; groupList = groups[g]; break; }
+      }
+      if (tournamentStage === 'PLAYOFFS') {
+        return !currentBrasfootState.currentMatches.some(m => m.home.id === teamId || m.away.id === teamId);
+      }
+      if (!found) return tournamentStage === 'ESTADUALZAO_PHASE2';
+      const vagas = tournamentStage === 'ESTADUALZAO_PHASE1' ? 4 : 2;
+      const maxPts = found.pts + 3 * ((tournamentData.maxRounds || 0) - found.pj);
+      const acima = groupList.filter(x => x.id !== teamId && x.pts > maxPts).length;
+      return acima >= vagas;
+    }
+
+    function allHumansEliminated() {
+      if (!playerCount) return false;
+      for (let i = 0; i < playerCount; i++) {
+        if (!isHumanEliminated(teams[i].id)) return false;
+      }
+      return true;
+    }
+
+    function simulateMatchMinute(match, min) {
+      const ovrDiff = getEffectiveOvr(match.home) - getEffectiveOvr(match.away);
+
+      const homeChance = Math.min(0.065, Math.max(0.012, 0.03 + (ovrDiff * 0.003)));
+      const awayChance = Math.min(0.065, Math.max(0.012, 0.03 - (ovrDiff * 0.003)));
+      const homeConv = Math.min(0.5, Math.max(0.25, 0.38 + (ovrDiff * 0.004)));
+      const awayConv = Math.min(0.5, Math.max(0.25, 0.38 - (ovrDiff * 0.004)));
+
+      match.stats.homePossession = Math.min(78, Math.max(22, 50 + Math.round(ovrDiff * 1.8) + Math.floor(Math.random() * 5 - 2)));
+      match.stats.awayPossession = 100 - match.stats.homePossession;
+
+      if (Math.random() < homeChance) {
+        match.stats.homeShots++;
+        if (Math.random() < homeConv) {
+          match.homeScore++;
+          const scorer = getRandomScorerName(match.home);
+          if (scorer) {
+            recordGoal(scorer, match.home.name);
+            match.events.unshift(`⚽ ${min}' GOL do ${scorer} (${match.home.name})! (${match.homeScore}-${match.awayScore})`);
+          } else {
+            match.events.unshift(`⚽ ${min}' GOL do ${match.home.name}! (${match.homeScore}-${match.awayScore})`);
+          }
+        }
+      }
+
+      if (Math.random() < awayChance) {
+        match.stats.awayShots++;
+        if (Math.random() < awayConv) {
+          match.awayScore++;
+          const scorer = getRandomScorerName(match.away);
+          if (scorer) {
+            recordGoal(scorer, match.away.name);
+            match.events.unshift(`⚽ ${min}' GOL do ${scorer} (${match.away.name})! (${match.homeScore}-${match.awayScore})`);
+          } else {
+            match.events.unshift(`⚽ ${min}' GOL do ${match.away.name}! (${match.homeScore}-${match.awayScore})`);
+          }
+        }
+      }
+    }
+
+    function finishCurrentBatch() {
+      if (!isHost) return;
+
+      if (tournamentStage === 'ESTADUALZAO_PHASE1') {
+        currentBrasfootState.currentMatches.forEach(m => {
+          recordHumanMatchStats(m);
+          updateGroupStats(m.group, m.home.id, m.homeScore, m.awayScore);
+          updateGroupStats(m.group, m.away.id, m.awayScore, m.homeScore);
+        });
+
+        if (tournamentData.round < tournamentData.maxRounds) {
+          tournamentData.round++;
+          setupPhase1RoundMatches();
+          broadcastState();
+          runCurrentMatchesLoop();
+        } else {
+          startEstadualzaoPhase2();
+        }
+      } else if (tournamentStage === 'ESTADUALZAO_PHASE2') {
+        currentBrasfootState.currentMatches.forEach(m => {
+          recordHumanMatchStats(m);
+          updateGroupStats(m.group, m.home.id, m.homeScore, m.awayScore);
+          updateGroupStats(m.group, m.away.id, m.awayScore, m.homeScore);
+        });
+
+        if (tournamentData.round < tournamentData.maxRounds) {
+          tournamentData.round++;
+          setupPhase2RoundMatches();
+          broadcastState();
+          runCurrentMatchesLoop();
+        } else {
+          startEstadualzaoPlayoffs();
+        }
+      } else if (tournamentStage === 'PLAYOFFS') {
+        currentBrasfootState.currentMatches.forEach(m => recordHumanMatchStats(m));
+        currentBrasfootState.currentMatches.forEach(m => {
+          if (m.homeScore === m.awayScore) {
+            const homeAdv = getEffectiveOvr(m.home);
+            const awayAdv = getEffectiveOvr(m.away);
+            if (Math.random() * homeAdv >= Math.random() * awayAdv) m.homeScore++;
+            else m.awayScore++;
+            m.events.unshift(`🚩 Pênaltis! Vencedor: ${m.homeScore > m.awayScore ? m.home.name : m.away.name}`);
+          }
+        });
+
+        const currentMatches = currentBrasfootState.currentMatches;
+        
+        if (currentMatches.length === 2) {
+          playoffResults.semifinalists = currentMatches.map(m => m.homeScore > m.awayScore ? m.away.name : m.home.name);
+        }
+
+        let winners = currentMatches.map(m => m.homeScore > m.awayScore ? m.home : m.away);
+
+        if (currentMatches.length === 1) {
+          const finalMatch = currentMatches[0];
+          if (finalMatch.homeScore > finalMatch.awayScore) {
+            playoffResults.champion = finalMatch.home.name;
+            playoffResults.runnerUp = finalMatch.away.name;
+          } else {
+            playoffResults.champion = finalMatch.away.name;
+            playoffResults.runnerUp = finalMatch.home.name;
+          }
+          showPodiumScreen();
+        } else if (winners.length > 1) {
+          tournamentData.bracket.matches = createKnockoutPairings(winners);
+          setupPlayoffRoundMatches();
+          broadcastState();
+          runCurrentMatchesLoop();
+        }
+      }
+    }
+
+    // Soma V/E/D/gols dos times dos jogadores (placar do tempo normal; decisão nos pênaltis conta como empate)
+    function recordHumanMatchStats(m) {
+      [[m.home, m.homeScore, m.awayScore], [m.away, m.awayScore, m.homeScore]].forEach(([t, gPro, gContra]) => {
+        if (!t || !t.isHuman) return;
+        if (!teamStats[t.id]) teamStats[t.id] = { v: 0, e: 0, d: 0, gp: 0, gc: 0 };
+        const st = teamStats[t.id];
+        st.gp += gPro;
+        st.gc += gContra;
+        if (gPro > gContra) st.v++;
+        else if (gPro === gContra) st.e++;
+        else st.d++;
+      });
+    }
+
+    function updateGroupStats(groupKey, teamId, gPro, gContra) {
+      const team = tournamentData.groups[groupKey].find(t => t.id === teamId);
+      if (!team) return;
+
+      team.pj++;
+      team.gp += gPro;
+      team.gc += gContra;
+      team.sg = team.gp - team.gc;
+
+      if (gPro > gContra) { team.v++; team.pts += 3; }
+      else if (gPro === gContra) { team.e++; team.pts += 1; }
+      else { team.d++; }
+
+      tournamentData.groups[groupKey].sort((a, b) => b.pts - a.pts || b.sg - a.sg || b.gp - a.gp);
+    }
+
+    function startEstadualzaoPhase2() {
+      let qualified64 = [];
+      Object.keys(tournamentData.groups).forEach(gKey => {
+        const sorted = tournamentData.groups[gKey];
+        for (let i = 0; i < 4; i++) {
+          if (sorted[i]) {
+            qualified64.push({
+              id: sorted[i].id,
+              name: sorted[i].name,
+              badge: sorted[i].badge,
+              ovr: sorted[i].ovr,
+              isHuman: sorted[i].isHuman
+            });
+          }
+        }
+      });
+
+      qualified64 = qualified64.sort(() => Math.random() - 0.5);
+      const groups = {};
+      const groupLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
+      groupLetters.forEach((gLetter, idx) => {
+        groups[gLetter] = qualified64.slice(idx * 4, idx * 4 + 4).map(t => ({
+          ...t, pts: 0, pj: 0, v: 0, e: 0, d: 0, gp: 0, gc: 0, sg: 0
+        }));
+      });
+
+      tournamentStage = 'ESTADUALZAO_PHASE2';
+      tournamentData = {
+        groups: groups,
+        round: 1,
+        maxRounds: 6,
+        bracket: {}
+      };
+
+      setupPhase2RoundMatches();
+      broadcastState();
+      runCurrentMatchesLoop();
+    }
+
+    function setupPhase2RoundMatches() {
+      let roundMatches = [];
+      const groupKeys = Object.keys(tournamentData.groups);
+      const r = tournamentData.round;
+
+      groupKeys.forEach(gKey => {
+        const list = tournamentData.groups[gKey];
+        let pairings = [];
+        if (r === 1) pairings = [[0,1], [2,3]];
+        if (r === 2) pairings = [[0,2], [1,3]];
+        if (r === 3) pairings = [[0,3], [1,2]];
+        if (r === 4) pairings = [[1,0], [3,2]];
+        if (r === 5) pairings = [[2,0], [3,1]];
+        if (r === 6) pairings = [[3,0], [2,1]];
+
+        pairings.forEach(p => {
+          roundMatches.push(createMatchObj(list[p[0]], list[p[1]], gKey));
+        });
+      });
+
+      currentBrasfootState = {
+        active: true,
+        currentMatchMinute: 0,
+        currentMatches: roundMatches,
+        history: currentBrasfootState.history || []
+      };
+    }
+
+    function startEstadualzaoPlayoffs() {
+      let qualified32 = [];
+      Object.keys(tournamentData.groups).forEach(gKey => {
+        const sorted = tournamentData.groups[gKey];
+        for (let i = 0; i < 2; i++) {
+          if (sorted[i]) {
+            qualified32.push({
+              id: sorted[i].id,
+              name: sorted[i].name,
+              badge: sorted[i].badge,
+              ovr: sorted[i].ovr,
+              isHuman: sorted[i].isHuman
+            });
+          }
+        }
+      });
+
+      qualified32 = qualified32.sort(() => Math.random() - 0.5);
+
+      tournamentStage = 'PLAYOFFS';
+      tournamentData = {
+        groups: {},
+        bracket: {
+          matches: createKnockoutPairings(qualified32)
+        }
+      };
+
+      setupPlayoffRoundMatches();
+      broadcastState();
+      runCurrentMatchesLoop();
+    }
+
+    function createKnockoutPairings(teamList) {
+      let matches = [];
+      for (let i = 0; i < teamList.length; i += 2) {
+        matches.push({
+          home: teamList[i],
+          away: teamList[i+1],
+          homeScore: 0,
+          awayScore: 0,
+          events: [],
+          stats: { homeShots: 0, awayShots: 0, homePossession: 50, awayPossession: 50 }
+        });
+      }
+      return matches;
+    }
+
+    function setupPlayoffRoundMatches() {
+      currentBrasfootState = {
+        active: true,
+        currentMatchMinute: 0,
+        currentMatches: tournamentData.bracket.matches,
+        history: currentBrasfootState.history || []
+      };
+    }
+
+    function showPodiumScreen() {
+      currentBrasfootState.active = false;
+      document.getElementById('league-screen').style.display = 'none';
+      document.getElementById('podium-screen').style.display = 'flex';
+      renderPodium();
+      broadcastState();
+    }
+
+    function renderSeasonStatsTable() {
+      const box = document.getElementById('season-stats-box');
+      if (!box) return;
+
+      const rows = [];
+      for (let i = 0; i < playerCount; i++) {
+        const t = teams[i];
+        if (!t) continue;
+        const st = teamStats[t.id] || { v: 0, e: 0, d: 0, gp: 0, gc: 0 };
+        const j = st.v + st.e + st.d;
+        const apr = j > 0 ? ((st.v * 3 + st.e) / (j * 3)) * 100 : 0;
+        rows.push({ team: t, st, j, apr, sg: st.gp - st.gc });
+      }
+      rows.sort((a, b) => b.apr - a.apr || b.sg - a.sg || b.st.gp - a.st.gp);
+
+      const title = currentSeason === 1
+        ? '📊 Desempenho dos Jogadores - 1ª Temporada'
+        : `📊 Desempenho Acumulado - 1ª até ${currentSeason}ª Temporada`;
+
+      box.innerHTML = `
+        <div class="season-stats-title">${title}</div>
+        <div class="season-stats-scroll">
+          <table class="season-stats-table">
+            <thead>
+              <tr><th style="text-align:left;">Jogador</th><th>J</th><th>V</th><th>E</th><th>D</th><th>GM</th><th>GS</th><th>Aprov.</th></tr>
+            </thead>
+            <tbody>
+              ${rows.map((r, idx) => `
+                <tr>
+                  <td class="team-cell"><span>${idx + 1}. <span style="width:20px; height:20px; display:inline-block;">${getTeamLogoHTML(r.team.name, r.team.badge)}</span> ${r.team.name}</span></td>
+                  <td>${r.j}</td>
+                  <td>${r.st.v}</td>
+                  <td>${r.st.e}</td>
+                  <td>${r.st.d}</td>
+                  <td>${r.st.gp}</td>
+                  <td>${r.st.gc}</td>
+                  <td class="apr">${r.apr.toFixed(1)}%</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderPodium() {
+      renderSeasonStatsTable();
+      const champ = playoffResults.champion || (teams[0] ? teams[0].name : "Time Campeão");
+      const vice = playoffResults.runnerUp || (teams[1] ? teams[1].name : "Vice-Campeão");
+      const semiText = playoffResults.semifinalists && playoffResults.semifinalists.length > 0 
+        ? playoffResults.semifinalists.join(" / ") 
+        : "Semifinalistas";
+
+      document.getElementById('podium-name-1').innerText = champ;
+      document.getElementById('podium-badge-1').innerHTML = getTeamLogoHTML(champ);
+      document.getElementById('podium-name-2').innerText = vice;
+      document.getElementById('podium-badge-2').innerHTML = getTeamLogoHTML(vice);
+      document.getElementById('podium-name-3').innerText = semiText;
+      document.getElementById('podium-badge-3').innerHTML = getTeamLogoHTML(playoffResults.semifinalists[0] || semiText);
+
+      setTimeout(() => {
+        document.getElementById('step-1').classList.add('show');
+        document.getElementById('step-2').classList.add('show');
+        document.getElementById('step-3').classList.add('show');
+      }, 300);
+
+      const btnNext = document.getElementById('btn-next-phase');
+      btnNext.onclick = handlePodiumNextPhase;
+      btnNext.innerText = currentSeason < MAX_SEASONS
+        ? `Avançar para a ${currentSeason + 1}ª Temporada (Reforços)`
+        : "Voltar ao Menu Principal";
+    }
+
+    function handlePodiumNextPhase() {
+      if (currentSeason < MAX_SEASONS) sendActionToHost('NEXT_SEASON');
+      else backToMainMenu();
+    }
+
+    function renderTournamentUI() {
+      const container = document.getElementById('matches-broadcast-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      let titleStage = "🏆 ESTADUALZÃO - FASE DE GRUPOS (16x8)";
+      if (tournamentStage === 'ESTADUALZAO_PHASE2') titleStage = "🏆 ESTADUALZÃO - SEGUNDA FASE (16x4)";
+      if (tournamentStage === 'PLAYOFFS') titleStage = "🏆 ESTADUALZÃO - MATA-MATA (32 TIMES)";
+
+      document.getElementById('phase-indicator').innerText = titleStage;
+      document.getElementById('round-indicator').innerText = tournamentStage === 'PLAYOFFS' ? 'Mata-Mata em Tempo Real' : `Rodada ${tournamentData.round} de ${tournamentData.maxRounds}`;
+
+      currentBrasfootState.currentMatches.forEach(m => {
+        const box = document.createElement('div');
+        box.className = 'match-box active';
+        box.innerHTML = `
+          <div class="match-time">${currentBrasfootState.currentMatchMinute}' MIN</div>
+          <div class="match-teams">
+            <div class="team-display home">
+              ${getTeamLogoHTML(m.home.name, m.home.badge)}
+              <span>${m.home.name}</span>
+            </div>
+            <div class="match-score">${m.homeScore} - ${m.awayScore}</div>
+            <div class="team-display away">
+              <span>${m.away.name}</span>
+              ${getTeamLogoHTML(m.away.name, m.away.badge)}
+            </div>
+          </div>
+          <div class="match-stats-panel">
+            <div class="stat-row"><span class="stat-label">Chutes</span><span class="stat-val">${m.stats.homeShots} - ${m.stats.awayShots}</span></div>
+            <div class="stat-row"><span class="stat-label">Posse</span><span class="stat-val">${m.stats.homePossession}% - ${m.stats.awayPossession}%</span></div>
+          </div>
+          <div class="match-events">${m.events.map(e => `<div>${e}</div>`).join('')}</div>
+        `;
+        container.appendChild(box);
+      });
+
+      renderTopScorersUI();
+      renderTournamentSidePanel();
+    }
+
+    function renderTopScorersUI() {
+      const listEl = document.getElementById('top-scorers-list');
+      if (!listEl) return;
+
+      const sortedScorers = Object.keys(topScorers)
+        .map(name => ({ name, ...topScorers[name] }))
+        .sort((a, b) => b.goals - a.goals)
+        .slice(0, 5);
+
+      if (sortedScorers.length === 0) {
+        listEl.innerHTML = `<div style="font-size:0.75rem; color:var(--text-muted);">Nenhum gol marcado ainda.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = sortedScorers.map((s, idx) => `
+        <div class="scorer-row">
+          <span><b>${idx + 1}. ${s.name}</b> <small style="color:var(--text-muted);">(${s.team})</small></span>
+          <span style="color:var(--accent-gold); font-weight:bold;">${s.goals} ⚽</span>
+        </div>
+      `).join('');
+    }
+
+    function renderTournamentSidePanel() {
+      const groupsDiv = document.getElementById('groups-container');
+      const bracketDiv = document.getElementById('bracket-list-container');
+
+      if (tournamentStage !== 'PLAYOFFS') {
+        groupsDiv.style.display = 'grid';
+        bracketDiv.style.display = 'none';
+        groupsDiv.innerHTML = '';
+
+        Object.keys(tournamentData.groups).forEach(gKey => {
+          const card = document.createElement('div');
+          card.className = 'group-card';
+          let rowsHTML = tournamentData.groups[gKey].map((t, idx) => `
+            <tr>
+              <td class="team-cell">${idx + 1}. ${getTeamLogoHTML(t.name, t.badge)} ${t.name}</td>
+              <td><b>${t.pts}</b></td>
+              <td>${t.pj}</td>
+              <td>${t.sg}</td>
+            </tr>
+          `).join('');
+
+          card.innerHTML = `
+            <div class="group-card-title">Grupo ${gKey}</div>
+            <table>
+              <thead><tr><th style="text-align:left;">Time</th><th>P</th><th>J</th><th>SG</th></tr></thead>
+              <tbody>${rowsHTML}</tbody>
+            </table>
+          `;
+          groupsDiv.appendChild(card);
+        });
+      } else {
+        groupsDiv.style.display = 'none';
+        bracketDiv.style.display = 'flex';
+        bracketDiv.innerHTML = '';
+
+        const title = document.createElement('div');
+        title.className = 'bracket-phase-title';
+        title.innerText = 'Chaveamento Mata-Mata';
+        bracketDiv.appendChild(title);
+
+        if (tournamentData.bracket && tournamentData.bracket.matches) {
+          tournamentData.bracket.matches.forEach(m => {
+            const item = document.createElement('div');
+            item.className = 'bracket-match-item';
+            const homeWin = m.homeScore > m.awayScore;
+            const awayWin = !homeWin && m.homeScore !== m.awayScore;
+            item.innerHTML = `
+              <div class="bracket-row">
+                <span class="bracket-side home ${homeWin ? 'winner' : ''}">${getTeamLogoHTML(m.home.name, m.home.badge)} <span class="bracket-name">${m.home.name}</span></span>
+                <span class="bracket-score">${m.homeScore} - ${m.awayScore}</span>
+                <span class="bracket-side away ${awayWin ? 'winner' : ''}"><span class="bracket-name">${m.away.name}</span> ${getTeamLogoHTML(m.away.name, m.away.badge)}</span>
+              </div>
+            `;
+            bracketDiv.appendChild(item);
+          });
+        }
+      }
+    }
+  </script>
+</body>
+</html>
