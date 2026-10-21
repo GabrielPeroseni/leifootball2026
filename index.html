@@ -548,6 +548,14 @@
     .bracket-team { display: flex; justify-content: space-between; align-items: center; padding: 4px 6px; border-radius: 4px; font-size: 0.88rem; }
     .bracket-team.winner { background: rgba(16, 185, 129, 0.2); font-weight: bold; color: var(--success-color); border: 1px solid rgba(16, 185, 129, 0.4); }
 
+    .bracket-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; width: 100%; }
+    .bracket-side { display: flex; align-items: center; gap: 4px; width: 38%; min-width: 0; font-size: 0.85rem; padding: 3px 4px; border-radius: 4px; }
+    .bracket-side.home { justify-content: flex-start; }
+    .bracket-side.away { justify-content: flex-end; }
+    .bracket-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+    .bracket-side.winner { background: rgba(16, 185, 129, 0.2); font-weight: bold; color: var(--success-color); border: 1px solid rgba(16, 185, 129, 0.4); }
+    .bracket-score { font-family: monospace; font-weight: 700; color: #60a5fa; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 4px; padding: 2px 8px; white-space: nowrap; }
+
     /* PÓDIO */
     #podium-screen { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 40px; background: var(--bg-primary); }
     .podium-container { display: flex; align-items: flex-end; justify-content: center; gap: 12px; height: 300px; width: 100%; max-width: 600px; }
@@ -1199,14 +1207,11 @@
         { name: "Joan Garcia", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/561613-1747386081.jpg?lm=4711" },
         { name: "Szczesny", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/44058-1744278078.jpg?lm=4711" },
         { name: "Gulasci", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/57071-1719214600.jpg?lm=4711" },
-        { name: "Luiz junior", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/712107-1758058969.jpg?lm=4711" },
         { name: "Alex remiro", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/212862-1694594210.jpg?lm=4711" },
         { name: "Alvaro Vales", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/417913-1773343747.jpg?lm=4711" },
         { name: "Radu", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/303657-1699432718.jpg?lm=4711" },
         { name: "Vlachodimos", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/124419-1706829687.jpg?lm=4711" },
-        { name: "Román", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/562742-1745395600.jpg?lm=4711" },
         { name: "Soria", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/226012-1696863038.jpg?lm=4711" },
-        { name: "Ryan", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/128969-1668505563.jpg?lm=4711" },
         { name: "Kepa", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/192279-1661855851.jpg?lm=4711" },
         { name: "Mamardashvilli", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/502676-1716542116.jpg?lm=4711" },
         { name: "Lammens", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/503883-1755675220.jpg?lm=4711" },
@@ -1214,13 +1219,9 @@
         { name: "Suzuki", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/432298-1780323348.jpg?lm=4711" },
         { name: "Henderson", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/258919-1716297478.jpg?lm=4711" },
         { name: "Trafford", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/566799-1689876147.jpg?lm=4711" },
-        { name: "Jonh Victor", ovr: 77, photo: "https://img.a.transfermarkt.technology/portrait/medium/432914-1734107350.jpg?lm=4711" },
         { name: "Pickford", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/130164-1668499964.jpg?lm=4711" },
         { name: "Leno", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/72476-1774470314.jpg?lm=4711" },
-        { name: "Urbig", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/607720-1737037032.jpg?lm=4711" },
         { name: "Flekken", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/125714-1758704276.jpg?lm=4711" },
-        { name: "Vandervoort", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/486046-1724337345.jpg?lm=4711" },
-        { name: "Kaua Santos", ovr: 77, photo: "https://img.a.transfermarkt.technology/portrait/medium/997861-1787910168.jpg?lm=4711" },
         { name: "Josep", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/388516-1686153132.jpg?lm=4711" },
         { name: "Vicario", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/286047-1725874745.jpg?lm=4711" },
         { name: "Robert Sanchez", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/403151-1695028195.jpg?lm=4711" },
@@ -1229,14 +1230,12 @@
         { name: "Meret", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/240414-1695025886.jpg?lm=4711" },
         { name: "De gea", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/59377-1667548362.jpg?lm=4711" },
         { name: "Safonov", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/318470-1790709013.png?lm=4711" },
-        { name: "Marcelo Lomba", ovr: 77, photo: "https://img.a.transfermarkt.technology/portrait/medium/53015-1523613416.jpg?lm=4711" },
         { name: "Rossi", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/352324-1633537886.JPG?lm=4711" },
         { name: "Otávio", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/997947-1745456431.jpeg?lm=4711" },
         { name: "Léo Jardim", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/288415-1744073496.jpg?lm=4711" },
         { name: "Fábio", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/22415-1752661918.jpg?lm=4711" },
-        { name: "Gabriel Brazão", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/371247-1780359299.jpg?lm=4711" },
+        { name: "Gabriel Brazão", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/371247-1780359299.jpg?lm=4711" },
         { name: "Everson", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/106032-1686575213.jpg?lm=4711" },
-        { name: "Tiago Volpi", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/227671-1547634654.jpg?lm=4711" },
         { name: "Rafael", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/68097-1755221835.jpg?lm=4711" },
         { name: "Weverton", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/69400-1751657170.jpg?lm=4711" },
         { name: "Walter", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/269860-1580198215.jpg?lm=4711" },
@@ -1264,12 +1263,11 @@
         { name: "Baresi", ovr: 92, photo: "https://s.hs-data.com/gfx/person/cropped/250x250/45216.png?fallback=male" },
         { name: "Paolo Maldini", ovr: 93, photo: "https://www.ogol.com.br/img/jogadores/new/19/47/1947_paolo_maldini_20251010135723.png" },
         { name: "Sergio Ramos", ovr: 92, photo: "https://static.wikia.nocookie.net/fightclubchampfanom/images/5/51/Sergio_Ramos.png/revision/latest?cb=20201029180308" },
-        { name: "Roberto Carlos", ovr: 91, photo: "https://www.ogol.com.br/img/jogadores/94/739894_ori_20210109014356_roberto_carlos.png" },
+        { name: "Roberto Carlos", ovr: 91, photo: "https://img.a.transfermarkt.technology/portrait/big/7518-1726487760.jpg?lm=4711" },
         { name: "Cafu", ovr: 91, photo: "https://cdn.soccerwiki.org/images/player/2467.png" },
         { name: "Carles Puyol", ovr: 90, photo: "https://cdn.futwiz.com/assets/img/fc24/faces/50570032.png" },
         { name: "Fabio Cannavaro", ovr: 91, photo: "https://game-assets.fut.gg/cdn-cgi/image/quality=85,width=300,format=auto/2026/player-item/26-1183.cbdf73a6855c3d8d4f8cfe24acc56fee80717baa7dacb4ca30156e63cac44a63.webp" },
         { name: "Thiago Martins", ovr: 99, photo: "https://kommodo.ai/i/NFVa4bfrv9fyJzKZ0r3D" },
-        { name: "Octavio Moreira", ovr: 99, photo: "https://kommodo.ai/i/gxcqLdbye6lzrvPBxG0U" },
         { name: "Phillip Lahm", ovr: 90, photo: "https://b.fssta.com/uploads/application/soccer/headshots/2253.png" },
         { name: "Marcelo", ovr: 89, photo: "https://cdn-img.staticzz.com/img/planteis/new/82/91/758291_marcelo_20240924143428.jpg" },
         { name: "Nuno Mendes", ovr: 89, photo: "https://cdn-img.staticzz.com/img/planteis/new/73/21/8727321_nuno_mendes_20250925203602.png" },
@@ -1282,57 +1280,43 @@
         { name: "Evra", ovr: 85, photo: "https://static.wikia.nocookie.net/the-football-database/images/b/b0/ManUnited_P._Evra_001.png/revision/latest?cb=20131127214911" },
         { name: "Zanetti", ovr: 88, photo: "https://www.ogol.com.br/img/jogadores/new/20/13/2013_javier_zanetti_20251010143134.png" },
         { name: "Rodinei", ovr: 80, photo: "https://assets.bundesliga.com/player/dfl-obj-j01e20-dfl-clu-j0003i-dfl-sea-0001k9.png?fit=256,256" },
-        { name: "Gil", ovr: 80, photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrPf9vQpbKdHnh6UQUB-EP3t4_9ZDKD5IBosZAZCfwig&s=10" },
+        { name: "Gil", ovr: 80, photo: "https://www.ogol.com.br/img/jogadores/new/65/54/86554_gil_20250724121524.png" },
         { name: "Pau cubarsi", ovr: 88, photo: "https://assets.bundesliga.com/player/dfl-obj-j01t3m-dfl-clu-j0002f-dfl-sea-0001ka.png" },
-        { name: "Gustavo gomez", ovr: 84, photo: "https://cdn.soccerwiki.org/images/player/50937.png" },
+        { name: "Gustavo gomez", ovr: 83, photo: "https://cdn.soccerwiki.org/images/player/50937.png" },
         { name: "Fagner", ovr: 80, photo: "https://www.diarioceleste.com.br/wp-content/uploads/2025/07/Fagner-01.png" },
         { name: "Nesta", ovr: 91, photo: "https://cdn.soccerwiki.org/images/player/2460.png" },
         { name: "Lucio", ovr: 88, photo: "https://www.ogol.com.br/img/jogadores/new/32/07/3207_lucio_20241016233007.jpg" },
         { name: "Pique", ovr: 88, photo: "https://cdn.soccerwiki.org/images/player/1110.png" },
-        { name: "Pepe", ovr: 88, photo: "https://www.ogol.com.br/img/treinadores/325/96325_pri_20260709143001_pepe.png" },
+        { name: "Pepe", ovr: 88, photo: "https://www.ogol.com.br/img/jogadores/new/01/30/130_pepe_20260306120404.jpg" },
         { name: "Djalma santos", ovr: 90, photo: "https://www.ogol.com.br/img/jogadores/76/29976_20210506031152_djalma_santos.png" },
         { name: "Ashley cole", ovr: 87, photo: "https://static.wikia.nocookie.net/fifa/images/0/00/Ashley_Cole.png/revision/latest?cb=20161215154441" },
         { name: "Celso giusti", ovr: 96, photo: "https://media.licdn.com/dms/image/v2/C4E03AQHhNIGYfn30mw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1516837179308?e=2147483647&v=beta&t=vv9yM8ePVRIaCs25X7zguwVl26n25taKqWy1yJjD_RY" },
         { name: "Daniel Manoel", ovr: 96, photo: "https://avatars.githubusercontent.com/u/82040810?v=4" },
         { name: "Huijsen", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/890290-1750251451.jpg?lm=4711" },
-        { name: "Asencio", ovr: 77, photo: "https://img.a.transfermarkt.technology/portrait/medium/935245-1731168094.jpg?lm=4711" },
+        { name: "Asencio", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/935245-1731168094.jpg?lm=4711" },
         { name: "Cucurella", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/284857-1765185117.jpg?lm=4711" },
         { name: "Mendy", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/291417-1701294025.jpg?lm=4711" },
         { name: "Alexander Arnold", ovr: 87, photo: "https://img.a.transfermarkt.technology/portrait/medium/314353-1701680958.jpg?lm=4711" },
         { name: "Dumfries", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/321528-1746042223.jpg?lm=4711" },
-        { name: "Sarr", ovr: 77, photo: "https://img.a.transfermarkt.technology/portrait/medium/910905-1773787147.jpg?lm=4711" },
         { name: "Alejandro Balde", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/636688-1662836200.jpg?lm=4711" },
         { name: "Romero", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/355915-1665609429.jpg?lm=4711" },
         { name: "Le normand", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/351809-1707948228.jpg?lm=4711" },
         { name: "Grimaldo", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/193082-1689710805.jpg?lm=4711" },
-        { name: "Renato veiga", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/805714-1749414999.jpg?lm=4711" },
-        { name: "Pau Navarro", ovr: 76, photo: "https://img.a.transfermarkt.technology/portrait/medium/1061336-1788901774.jpg?lm=4711" },
-        { name: "Carlos Romero", ovr: 77, photo: "https://img.a.transfermarkt.technology/portrait/medium/709372-1747385379.jpg?lm=4711" },
-        { name: "Santiago", ovr: 76, photo: "https://img.a.transfermarkt.technology/portrait/medium/953901-1788901706.jpg?lm=4711" },
-        { name: "Sergio gomez", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/366930-1727678534.jpg?lm=4711" },
-        { name: "Hector Fort", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/937955-1702504973.jpg?lm=4711" },
         { name: "Natan", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/735568-1708553167.jpg?lm=4711" },
         { name: "Bartra", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/99922-1724053472.jpg?lm=4711" },
-        { name: "Bellerin", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/191217-1773344002.jpg?lm=4711" },
+        { name: "Bellerin", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/191217-1773344002.jpg?lm=4711" },
         { name: "Laporte", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/176553-1685546335.jpg?lm=4711" },
         { name: "Berchiche", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/61812-1709675167.png?lm=4711" },
         { name: "Vivian", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/524000-1709674998.png?lm=4711" },
-        { name: "Javi", ovr: 76, photo: "https://img.a.transfermarkt.technology/portrait/medium/1076815-1732611843.jpg?lm=4711" },
-        { name: "Caceres", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/532389-1774479408.jpg?lm=4711" },
-        { name: "Faye", ovr: 76, photo: "https://img.a.transfermarkt.technology/portrait/medium/1182738-1695367426.jpg?lm=4711" },
-        { name: "Sergio Carreira", ovr: 77, photo: "https://img.a.transfermarkt.technology/portrait/medium/545647-1773950983.jpg?lm=4711" },
-        { name: "Marcão", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/439022-1681476532.jpg?lm=4711" },
         { name: "Cardoso", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/155025-1736318779.JPG?lm=4711" },
-        { name: "Carmona", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/711625-1696862897.jpg?lm=4711" },
-        { name: "Tarrega", ovr: 77, photo: "https://img.a.transfermarkt.technology/portrait/medium/707274-1698963222.jpg?lm=4711" },
         { name: "Gaya", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/221322-1605193468.jpg?lm=4711" },
         { name: "Arnau", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/826224-1701444094.jpg?lm=4711" },
         { name: "Angelino", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/277179-1706626191.jpg?lm=4711" },
         { name: "Guehi", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/392757-1683030598.jpg?lm=4711" },
         { name: "Khusanov", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/763079-1791350691.jpg?lm=4711" },
-        { name: "Vitor Reis", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/1005575-1788354130.jpg?lm=4711" },
+        { name: "Vitor Reis", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/1005575-1788354130.jpg?lm=4711" },
         { name: "Gvardiol", ovr: 87, photo: "https://img.a.transfermarkt.technology/portrait/medium/475959-1713391602.jpg?lm=4711" },
-        { name: "O-reilly", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/743413-1751367149.jpg?lm=4711" },
+        { name: "O-reilly", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/743413-1751367149.jpg?lm=4711" },
         { name: "Rico lewis", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/701057-1788354425.jpg?lm=4711" },
         { name: "Hincapie", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/659813-1727377918.jpg?lm=4711" },
         { name: "Calafiori", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/502821-1727382174.jpg?lm=4711" },
@@ -1347,22 +1331,19 @@
         { name: "Dalot", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/357147-1727785546.jpg?lm=4711" },
         { name: "Porro", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/553875-1730812390.jpg?lm=4711" },
         { name: "Burn", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/134270-1682340860.jpg?lm=4711" },
-        { name: "Diouf", ovr: 77, photo: "https://img.a.transfermarkt.technology/portrait/medium/1111589-1768815059.jpg?lm=4711" },
         { name: "Pau Torres", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/399776-1765899002.jpg?lm=4711" },
-        { name: "Lindelof", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/184573-1788894147.jpg?lm=4711" },
+        { name: "Lindelof", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/184573-1788894147.jpg?lm=4711" },
         { name: "Wan-bissaka", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/477758-1769112496.jpg?lm=4711" },
         { name: "Tomiyasu", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/331560-1682591217.jpg?lm=4711" },
         { name: "Chillwell", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/316125-1683899136.jpg?lm=4711" },
         { name: "Murillo", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/1005649-1709159139.jpg?lm=4711" },
-        { name: "Jair", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/984096-1770845001.jpg?lm=4711" },
-        { name: "Rodon", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/297212-1666698393.jpg?lm=4711" },
         { name: "Branthwhite", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/661053-1687975679.jpg?lm=4711" },
         { name: "Tah", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/196357-1789742523.jpg?lm=4711" },
         { name: "Davies", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/424204-1711745534.jpg?lm=4711" },
         { name: "Laimer", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/223967-1700659266.jpg?lm=4711" },
         { name: "Schlotterbeck", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/388198-1790592553.jpg?lm=4711" },
         { name: "Tapsoba", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/564545-1695368009.jpg?lm=4711" },
-        { name: "Quansah", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/632349-1758704191.jpg?lm=4711" },
+        { name: "Quansah", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/632349-1758704191.jpg?lm=4711" },
         { name: "Akanji", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/284730-1684165752.jpg?lm=4711" },
         { name: "Dimarco", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/198116-1725531769.jpg?lm=4711" },
         { name: "Pavard", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/353366-1713819215.jpg?lm=4711" },
@@ -1370,7 +1351,6 @@
         { name: "Bremer", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/516716-1725531520.jpg?lm=4711" },
         { name: "Gatti", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/509022-1725531068.jpg?lm=4711" },
         { name: "Yan couto", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/627228-1723922216.jpg?lm=4711" },
-        { name: "Kaiki", ovr: 77, photo: "https://img.a.transfermarkt.technology/portrait/medium/879217-1678847563.jpg?lm=4711" },
         { name: "Tomori", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/303254-1684856117.jpg?lm=4711" },
         { name: "Wesley", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/964580-1743167536.jpg?lm=4711" },
         { name: "Molina", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/424042-1697037362.jpg?lm=4711" },
@@ -1380,31 +1360,22 @@
         { name: "Murilo", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/458710-1787183790.jpg?lm=4711" },
         { name: "Barboza", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/379752-1680009523.jpg?lm=4711" },
         { name: "Piquerez", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/496268-1706144655.jpg?lm=4711" },
-        { name: "Giay", ovr: 77, photo: "https://img.a.transfermarkt.technology/portrait/medium/849582-1746578372.jpg?lm=4711" },
         { name: "Leo ortiz", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/374136-1751370337.jpg?lm=4711" },
         { name: "Leo pereira", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/288431-1751370674.jpg?lm=4711" },
         { name: "Alex Sandro", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/79960-1751370710.jpg?lm=4711" },
         { name: "Royal", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/476344-1737380789.jpg?lm=4711" },
         { name: "Fabricio Bruno", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/432773-1744743199.jpg?lm=4711" },
         { name: "William", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/341710-1643899558.JPG?lm=4711" },
-        { name: "Tchoca", ovr: 76, photo: "https://img.a.transfermarkt.technology/portrait/medium/1005650-1720056483.jpg?lm=4711" },
+        { name: "Tchoca", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/1005650-1720056483.jpg?lm=4711" },
         { name: "Andre ramalho", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/175792-1721347430.jpg?lm=4711" },
         { name: "Gustavo Henrique", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/208681-1725326922.jpg?lm=4711" },
-        { name: "Gabriel Paulista", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/149498-1727355000.png?lm=4711" },
-        { name: "Matheus Bidu", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/670021-1660574686.jpg?lm=4711" },
-        { name: "Robert Renan", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/958598-1674623993.png?lm=4711" },
+        { name: "Gabriel Paulista", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/149498-1727355000.png?lm=4711" },
+        { name: "Matheus Bidu", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/670021-1660574686.jpg?lm=4711" },
         { name: "Lucas piton", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/670201-1737731172.jpg?lm=4711" },
         { name: "Alex telles", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/255755-1659559306.jpg?lm=4711" },
-        { name: "Luciano Juba", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/676035-1694193133.jpg?lm=4711" },
-        { name: "Lyanco", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/379807-1756393635.jpg?lm=4711" },
+        { name: "Luciano Juba", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/676035-1694193133.jpg?lm=4711" },
         { name: "Renan Lodi", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/476352-1703065997.jpg?lm=4711" },
-        { name: "Arboleda", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/139867-1668498219.jpg?lm=4711" },
         { name: "Kanneman", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/145400-1547647538.jpg?lm=4711" },
-        { name: "Felix Torres", ovr: 76, photo: "https://img.a.transfermarkt.technology/portrait/medium/468174-1719230427.jpg?lm=4711" },
-        { name: "Cacá", ovr: 76, photo: "https://img.a.transfermarkt.technology/portrait/medium/603122-1760493152.jpg?lm=4711" },
-        { name: "Reinaldo", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/225617-1791467234.jpg?lm=4711" },
-        { name: "Yago Pikachu", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/265660-1547648152.jpg?lm=4711" },
-        { name: "Lucas Halter", ovr: 77, photo: "https://img.a.transfermarkt.technology/portrait/header/468302-1771689043.jpg?lm=4711" },
       ],
       MC: [
         { name: "Kimmich", ovr: 88, photo: "https://img.a.transfermarkt.technology/portrait/medium/161056-1700039639.jpg?lm=4711" },
@@ -1432,6 +1403,7 @@
         { name: "James rodriguez", ovr: 85, photo: "https://assets.realmadrid.com/is/image/realmadrid/1330783932802?$Mobile$&fit=wrap&wid=312" },
         { name: "Pirlo", ovr: 90, photo: "https://kingsleague.pro/_ipx/fit_outside&s_600x844/kama/production/seasonTeamPlayer/image/994644621.png" },
         { name: "Kroos", ovr: 90, photo: "https://assets.realmadrid.com/is/image/realmadrid/KROOS2_HP_PNG?$Mobile$&fit=wrap&wid=312" },
+        { name: "Octavio Moreira", ovr: 99, photo: "https://kommodo.ai/i/gxcqLdbye6lzrvPBxG0U" },
         { name: "Pogba", ovr: 85, photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfV_93sUJ2acPvA4RI-p0VsBCdx0VSa5tF-UykeDtv3jfxQYV5GxgrAojx&s=10" },
         { name: "Tchouameni", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/413112-1668500754.jpg?lm=4711" },
         { name: "Valverde", ovr: 89, photo: "https://img.a.transfermarkt.technology/portrait/medium/369081-1731018042.jpg?lm=4711" },
@@ -1446,25 +1418,17 @@
         { name: "Koke", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/74229-1664970397.jpg?lm=4711" },
         { name: "Kang in lee", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/557149-1703978046.jpg?lm=4711" },
         { name: "Alex Baena", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/548111-1761821030.jpg?lm=4711" },
-        { name: "Gueye", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/485963-1768814767.jpg?lm=4711" },
-        { name: "Gorrotxategi", ovr: 76, photo: "https://img.a.transfermarkt.technology/portrait/medium/711374-1727113195.jpg?lm=4711" },
-        { name: "Carlos soler", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/372246-1759159072.jpg?lm=4711" },
-        { name: "Bernal", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/898350-1788962862.jpg?lm=4711" },
-        { name: "Deossa", ovr: 77, photo: "https://img.a.transfermarkt.technology/portrait/medium/907559-1693600752.JPG?lm=4711" },
         { name: "Ceballos", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/319745-1723666162.jpg?lm=4711" },
         { name: "Isco", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/85288-1744375744.jpg?lm=4711" },
-        { name: "Mikel", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/938729-1709675994.png?lm=4711" },
-        { name: "Rego", ovr: 76, photo: "https://img.a.transfermarkt.technology/portrait/medium/834491-1709677367.png?lm=4711" },
-        { name: "Moriba", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/617074-1758827372.jpg?lm=4711" },
+        { name: "Moriba", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/617074-1758827372.jpg?lm=4711" },
         { name: "Fofana", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/569598-1725528517.jpg?lm=4711" },
         { name: "Guido", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/342385-1668181269.jpg?lm=4711" },
         { name: "Guerra", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/834764-1696188716.jpg?lm=4711" },
         { name: "Casadó", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/636695-1729771427.jpg?lm=4711" },
-        { name: "Alemão", ovr: 77, photo: "https://img.a.transfermarkt.technology/portrait/medium/560417-1775761327.jpg?lm=4711" },
         { name: "Elliot Anderson", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/567576-1696453772.jpg?lm=4711" },
         { name: "Bouaddi", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/1097139-1741119960.jpg?lm=4711" },
         { name: "Enzo Fernandez", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/648195-1669894717.jpg?lm=4711" },
-        { name: "Allan", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/1082631-1788354346.jpg?lm=4711" },
+        { name: "Allan", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/1082631-1788354346.jpg?lm=4711" },
         { name: "Rice", ovr: 88, photo: "https://img.a.transfermarkt.technology/portrait/medium/357662-1687962936.jpg?lm=4711" },
         { name: "Odegaard", ovr: 89, photo: "https://img.a.transfermarkt.technology/portrait/medium/316264-1782847069.jpg?lm=4711" },
         { name: "Bruno Guimaraes", ovr: 87, photo: "https://img.a.transfermarkt.technology/portrait/medium/520624-1780929894.jpg?lm=4711" },
@@ -1472,11 +1436,11 @@
         { name: "Caicedo", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/687626-1660729724.jpg?lm=4711" },
         { name: "Macallister", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/534033-1669835342.jpg?lm=4711" },
         { name: "Szoboslai", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/451276-1758715234.jpg?lm=4711" },
-        { name: "Andrey santos", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/743600-1788427034.jpg?lm=4711" },
+        { name: "Andrey santos", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/743600-1788427034.jpg?lm=4711" },
         { name: "Bruno Fernandes", ovr: 88, photo: "https://img.a.transfermarkt.technology/portrait/medium/240306-1683882766.jpg?lm=4711" },
         { name: "Mount", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/346483-1683291495.jpg?lm=4711" },
         { name: "Tonali", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/397033-1688389270.jpg?lm=4711" },
-        { name: "Bergvall", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/866246-1701861399.jpg?lm=4711" },
+        { name: "Bergvall", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/866246-1701861399.jpg?lm=4711" },
         { name: "Xavi Simons", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/566931-1729778226.jpg?lm=4711" },
         { name: "Joeligton", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/333241-1674210135.jpg?lm=4711" },
         { name: "João Gomes", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/735570-1675092223.jpg?lm=4711" },
@@ -1485,7 +1449,6 @@
         { name: "Jobe Bellingham", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/796297-1790591656.jpg?lm=4711" },
         { name: "Sabitzer", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/106987-1790592753.jpg?lm=4711" },
         { name: "Stiller", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/443710-1753308094.jpg?lm=4711" },
-        { name: "De Cat", ovr: 76, photo: "https://img.a.transfermarkt.technology/portrait/medium/1105541-1786960711.jpg?lm=4711" },
         { name: "Barella", ovr: 87, photo: "https://img.a.transfermarkt.technology/portrait/medium/255942-1725531625.jpg?lm=4711" },
         { name: "Çalhanoglu", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/126414-1709035146.jpg?lm=4711" },
         { name: "Locatelli", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/265088-1730125083.jpg?lm=4711" },
@@ -1509,7 +1472,7 @@
         { name: "Ganso", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/67920-1751718526.jpg?lm=4711" },
         { name: "Gustavo Scarpa", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/330085-1671798544.jpg?lm=4711" },
         { name: "Fred", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/191614-1765458332.png?lm=4711" },
-        { name: "Allan Patrick", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/104505-1641992716.png?lm=4711" },
+        { name: "Allan Patrick", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/104505-1641992716.png?lm=4711" },
       ],
       ATA: [
         { name: "Kylian Mbappé", ovr: 92, photo: "https://cdn-img.staticzz.com/img/planteis/new/82/60/16538260_kylian_mbappe_20260615102715.png" },
@@ -1546,12 +1509,11 @@
         { name: "Drogba", ovr: 89, photo: "https://cdn.soccerwiki.org/images/player/473-action.png" },
         { name: "Eto", ovr: 89, photo: "https://cdn.soccerwiki.org/images/player/2779.png" },
         { name: "Raphinha", ovr: 88, photo: "https://ratings-images-prod.pulse.ea.com/FC25/full/player-portraits/p233419.png?padding=0.7" },
-        { name: "Marlon palata", ovr: 96, photo: "" },
+        { name: "Marlon palata", ovr: 96, photo: "https://avatars.githubusercontent.com/u/173830944?v=4" },
         { name: "Van Basten", ovr: 92, photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_2uq2ml5dhcOmRqv1ZJF08zmZJGc7cPewGKR4xplGYw&s=10" },
         { name: "Depay", ovr: 84, photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEkOn3DBGLfrlgjkTTNqr4QCHJNdq6PRc4gt6j-ICe-A&s=10" },
         { name: "Diomande", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/1390649-1759779499.jpg?lm=4711" },
         { name: "Endrick", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/971570-1782847902.jpg?lm=4711" },
-        { name: "Carlos Espí", ovr: 76, photo: "https://img.a.transfermarkt.technology/portrait/medium/1063338-1759409131.jpg?lm=4711" },
         { name: "Rodrygo", ovr: 87, photo: "https://img.a.transfermarkt.technology/portrait/medium/412363-1763041611.jpg?lm=4711" },
         { name: "Gordon", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/503733-1761080304.jpg?lm=4711" },
         { name: "Adeyemi", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/496094-1788248133.jpg?lm=4711" },
@@ -1561,8 +1523,6 @@
         { name: "Julian alvarez", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/576024-1684920938.jpg?lm=4711" },
         { name: "Sorloth", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/238407-1716403969.jpg?lm=4711" },
         { name: "Saliba", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/842420-1740597560.jpg?lm=4711" },
-        { name: "Alberto moleiro", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/733576-1737365948.jpg?lm=4711" },
-        { name: "Buchanan", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/638793-1758059596.jpg?lm=4711" },
         { name: "Gerard Moreno", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/177467-1726231623.jpg?lm=4711" },
         { name: "Gonçalo Guedes", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/225122-1701334424.jpg?lm=4711" },
         { name: "Kubo", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/405398-1697110254.jpg?lm=4711" },
@@ -1571,17 +1531,12 @@
         { name: "Cucho hernandez", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/459463-1773344529.jpg?lm=4711" },
         { name: "Nico wiliams", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/709187-1709676169.png?lm=4711" },
         { name: "Inaki williams", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/255508-1709676323.png?lm=4711" },
-        { name: "Djaló", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/671649-1762259842.jpg?lm=4711" },
-        { name: "Swedberg", ovr: 77, photo: "https://img.a.transfermarkt.technology/portrait/medium/764859-1765193019.jpg?lm=4711" },
         { name: "Iago Aspas", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/72047-1758827533.jpg?lm=4711" },
-        { name: "Borja iglesias", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/278359-1686661509.jpg?lm=4711" },
         { name: "Vargas", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/345886-1779793578.jpg?lm=4711" },
-        { name: "Stassim", ovr: 76, photo: "https://img.a.transfermarkt.technology/portrait/medium/655012-1789578159.jpg?lm=4711" },
         { name: "Danjuma", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/355861-1674657323.jpg?lm=4711" },
-        { name: "Hugo Duro", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/573775-1683213249.jpg?lm=4711" },
+        { name: "Hugo Duro", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/573775-1683213249.jpg?lm=4711" },
         { name: "Aubameyang", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/58864-1762262625.jpg?lm=4711" },
         { name: "Unal", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/251106-1669365680.jpg?lm=4711" },
-        { name: "Chupe", ovr: 76, photo: "https://img.a.transfermarkt.technology/portrait/medium/780817-1773830581.jpg?lm=4711" },
         { name: "Cherki", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/607223-1773302431.jpg?lm=4711" },
         { name: "Doku", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/486049-1743670159.jpg?lm=4711" },
         { name: "Semenyo", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/583255-1737452028.jpg?lm=4711" },
@@ -1596,24 +1551,23 @@
         { name: "Cunha", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/517894-1780390711.jpg?lm=4711" },
         { name: "Rashford", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/258923-1674473054.jpg?lm=4711" },
         { name: "Savinho", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/743591-1751367497.jpg?lm=4711" },
-        { name: "Elanga", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/583189-1700739021.jpg?lm=4711" },
+        { name: "Elanga", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/583189-1700739021.jpg?lm=4711" },
         { name: "Mitoma", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/504849-1731683095.jpg?lm=4711" },
-        { name: "Igor thiago", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/739443-1770372295.jpg?lm=4711" },
+        { name: "Igor thiago", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/739443-1770372295.jpg?lm=4711" },
         { name: "Garnacho", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/811779-1703629085.jpg?lm=4711" },
         { name: "Rayan", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/1012564-1780390891.jpg?lm=4711" },
-        { name: "Gozo", ovr: 76, photo: "https://img.a.transfermarkt.technology/portrait/medium/1007383-1771753514.jpg?lm=4711" },
         { name: "Igor Jesus", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/432164-1725325779.jpg?lm=4711" },
         { name: "Grealish", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/203460-1676499047.jpg?lm=4711" },
-        { name: "Kevin", ovr: 77, photo: "https://img.a.transfermarkt.technology/portrait/medium/900195-1762354062.jpg?lm=4711" },
+        { name: "Kevin", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/900195-1762354062.jpg?lm=4711" },
         { name: "Luis diaz", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/480692-1757938077.jpg?lm=4711" },
         { name: "Diaby", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/395516-1642608355.jpg?lm=4711" },
         { name: "Gnabry", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/159471-1759909173.jpg?lm=4711" },
         { name: "Guirassy", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/270541-1790592498.jpg?lm=4711" },
-        { name: "Nusa", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/894914-1724337096.jpg?lm=4711" },
+        { name: "Nusa", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/894914-1724337096.jpg?lm=4711" },
         { name: "Nkunku", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/344381-1663686834.jpg?lm=4711" },
         { name: "Undav", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/339314-1691999036.jpg?lm=4711" },
         { name: "Marcus Thuram", ovr: 85, photo: "https://img.a.transfermarkt.technology/portrait/medium/318528-1746041509.jpg?lm=4711" },
-        { name: "Boga", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/216569-1756824408.jpg?lm=4711" },
+        { name: "Boga", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/216569-1756824408.jpg?lm=4711" },
         { name: "Kolo Muani", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/487969-1718697120.jpg?lm=4711" },
         { name: "Yildiz", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/845654-1759822280.jpg?lm=4711" },
         { name: "Moise Kean", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/364135-1725532147.jpg?lm=4711" },
@@ -1623,41 +1577,38 @@
         { name: "Malen", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/326029-1711746104.jpg?lm=4711" },
         { name: "David Neres", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/469822-1701334470.jpg?lm=4711" },
         { name: "Hojlund", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/610442-1757931324.jpg?lm=4711" },
-        { name: "Robinho Junior", ovr: 76, photo: "https://img.a.transfermarkt.technology/portrait/medium/1355385-1754438319.jpg?lm=4711" },
-        { name: "Doue", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/914562-1667317075.jpg?lm=4711" },
+        { name: "Doue", ovr: 86, photo: "https://img.a.transfermarkt.technology/portrait/medium/914562-1667317075.jpg?lm=4711" },
         { name: "Ferran Torres", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/398184-1779789996.jpg?lm=4711" },
         { name: "Mauricio", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/678439-1746578477.jpg?lm=4711" },
         { name: "Jhon Arias", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/588989-1719245400.jpg?lm=4711" },
-        { name: "Vitor Roque", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/943837-1744743482.jpg?lm=4711" },
+        { name: "Vitor Roque", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/943837-1744743482.jpg?lm=4711" },
         { name: "Flaco Lopez", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/844797-1739618753.jpg?lm=4711" },
         { name: "Samuel Lino", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/694928-1695982815.jpg?lm=4711" },
         { name: "Pedro", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/432895-1668696996.jpg?lm=4711" },
         { name: "Bruno Henrique", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/353108-1733188857.jpg?lm=4711" },
         { name: "Wesley", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/1007378-1719453433.jpg?lm=4711" },
-        { name: "Arroyo", ovr: 77, photo: "https://img.a.transfermarkt.technology/portrait/medium/1074584-1739177410.jpeg?lm=4711" },
-        { name: "Kaio Jorge", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/620477-1693289628.jpg?lm=4711" },
-        { name: "Kaio cesar", ovr: 77, photo: "https://img.a.transfermarkt.technology/portrait/medium/766258-1671194523.jpg?lm=4711" },
+        { name: "Arroyo", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/1074584-1739177410.jpeg?lm=4711" },
+        { name: "Kaio Jorge", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/620477-1693289628.jpg?lm=4711" },
+        { name: "Kaio cesar", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/766258-1671194523.jpg?lm=4711" },
         { name: "Yuri Alberto", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/489893-1744075236.jpg?lm=4711" },
-        { name: "Pedro Raúl", ovr: 77, photo: "https://img.a.transfermarkt.technology/portrait/medium/547443-1748479789.jpg?lm=4711" },
-        { name: "Gui negão", ovr: 76, photo: "https://img.a.transfermarkt.technology/portrait/medium/1257133-1769005239.png?lm=4711" },
-        { name: "Adson", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/868891-1704213480.jpg?lm=4711" },
-        { name: "Andrez gomez", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/957461-1780328928.jpg?lm=4711" },
+        { name: "Pedro Raúl", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/547443-1748479789.jpg?lm=4711" },
+        { name: "Adson", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/868891-1704213480.jpg?lm=4711" },
+        { name: "Andrez gomez", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/957461-1780328928.jpg?lm=4711" },
         { name: "Arthur Cabral", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/390638-1701333640.jpg?lm=4711" },
         { name: "Soteldo", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/312294-1751718251.jpg?lm=4711" },
         { name: "Hulk", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/80562-1563436073.jpg?lm=4711" },
-        { name: "Jonh Kennedy", ovr: 79, photo: "https://img.a.transfermarkt.technology/portrait/medium/856085-1754005857.jpg?lm=4711" },
-        { name: "Bontempo", ovr: 76, photo: "https://img.a.transfermarkt.technology/portrait/medium/1089958-1790687955.jpg?lm=4711" },
+        { name: "Jonh Kennedy", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/856085-1754005857.jpg?lm=4711" },
         { name: "Cebolinha", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/321239-1744288639.jpg?lm=4711" },
         { name: "Gabigol", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/244275-1779755625.jpg?lm=4711" },
         { name: "Rony Rústico", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/371009-1766179736.jpg?lm=4711" },
-        { name: "Leozinho", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/1110658-1721164064.jpg?lm=4711" },
+        { name: "Leozinho", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/1110658-1721164064.jpg?lm=4711" },
         { name: "Viveros", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/580461-1730059272.jpg?lm=4711" },
         { name: "Isidro Pitta", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/675178-1745259011.jpg?lm=4711" },
         { name: "Lucas Moura", ovr: 82, photo: "https://img.a.transfermarkt.technology/portrait/medium/77100-1654164113.jpg?lm=4711" },
         { name: "Calleri", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/284727-1738840512.jpg?lm=4711" },
         { name: "Luciano", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/223560-1750986922.jpg?lm=4711" },
         { name: "Carlos Vinicius", ovr: 81, photo: "https://img.a.transfermarkt.technology/portrait/medium/525287-1662070180.jpg?lm=4711" },
-        { name: "Marinho", ovr: 78, photo: "https://img.a.transfermarkt.technology/portrait/medium/74758-1729175331.jpg?lm=4711" },
+        { name: "Marinho", ovr: 80, photo: "https://img.a.transfermarkt.technology/portrait/medium/74758-1729175331.jpg?lm=4711" },
         { name: "Gabriel Martinelli", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/655488-1682689091.jpg?lm=4711" },
         { name: "João Felix", ovr: 83, photo: "https://img.a.transfermarkt.technology/portrait/medium/462250-1668165358.jpg?lm=4711" },
         { name: "Coman", ovr: 84, photo: "https://img.a.transfermarkt.technology/portrait/medium/243714-1700040256.jpg?lm=4711" },
@@ -1736,7 +1687,10 @@
     let pendingSwap = null;      
     let swapModalKey = null;     
     let matchTimer = null;       
-    const MATCH_DURATION_MS = 60000; 
+    const MATCH_DURATION_MS = 60000;
+    const HUMAN_TEAM_BONUS = 3;   // leve vantagem para os times dos jogadores (elencos montados no leilão)
+    const BIG_TEAM_BONUS = 3;     // vantagem dos clubes grandes sobre os pequenos
+    const SCORER_WEIGHTS = { ATA: 10, MC: 4, DEF: 0.25 }; // chance relativa de cada posição fazer gol (zagueiro bem raro) 
 
     function switchSetupTab(tab) {
       const tabHost = document.getElementById('tab-host');
@@ -2175,14 +2129,7 @@
         }
       }
 
-      if (currentDeck.length > 0) {
-        currentPlayerCard = currentDeck.pop();
-      } else if (rejectedQueue.length > 0) {
-        currentPlayerCard = rejectedQueue.shift();
-      } else {
-        buildDeck();
-        currentPlayerCard = currentDeck.pop();
-      }
+      currentPlayerCard = pickNextPlayableCard();
 
       document.getElementById('c-ovr').innerText = currentPlayerCard.ovr;
       document.getElementById('c-pos').innerText = currentPlayerCard.pos;
@@ -2207,6 +2154,33 @@
       document.getElementById('btn-roll-dice').disabled = false;
       document.getElementById('turn-indicator').innerText = "Role os dados para a ordem!";
       toggleBidButtons(false);
+    }
+
+    // Na 1ª temporada, só aparecem cartas de posições em que ao menos um time ainda tem vaga
+    function isCardPlayableNow(card) {
+      if (currentSeason !== 1) return true;
+      for (let i = 0; i < playerCount; i++) {
+        if (!isTeamFull(i) && teamHasOpenSlot(i, card.pos)) return true;
+      }
+      return false;
+    }
+
+    function pickNextPlayableCard() {
+      let guard = 0;
+      while (guard++ < 5000) {
+        let card = null;
+        if (currentDeck.length > 0) {
+          card = currentDeck.pop();
+        } else if (rejectedQueue.length > 0) {
+          card = rejectedQueue.shift();
+        } else {
+          buildDeck();
+          if (currentDeck.length === 0) return null;
+          card = currentDeck.pop();
+        }
+        if (isCardPlayableNow(card)) return card;
+      }
+      return currentDeck.pop();
     }
 
     function teamHasOpenSlot(teamId, pos) {
@@ -2527,7 +2501,7 @@
 
         const teamName = availableTeamNames[listIndex];
         const isBig = BIG_TEAMS.has(teamName);
-        const baseOvr = isBig ? (Math.floor(Math.random() * 8) + 84) : (Math.floor(Math.random() * 10) + 70);
+        const baseOvr = isBig ? (Math.floor(Math.random() * 8) + 80) : (Math.floor(Math.random() * 12) + 66);
 
         allParticipants.push({
           id: `est_${listIndex}_${teamName}`,
@@ -2603,6 +2577,7 @@
       if (matchTimer) { clearInterval(matchTimer); matchTimer = null; }
 
       const startTime = Date.now();
+      const matchDurationMs = allHumansEliminated() ? MATCH_DURATION_MS / 2 : MATCH_DURATION_MS;
 
       matchTimer = setInterval(() => {
         if (!currentBrasfootState.active) {
@@ -2612,7 +2587,7 @@
         }
 
         const elapsed = Date.now() - startTime;
-        const targetMinute = Math.min(90, Math.floor((elapsed / MATCH_DURATION_MS) * 90));
+        const targetMinute = Math.min(90, Math.floor((elapsed / matchDurationMs) * 90));
         if (targetMinute <= currentBrasfootState.currentMatchMinute) return;
 
         while (currentBrasfootState.currentMatchMinute < targetMinute) {
@@ -2638,13 +2613,22 @@
         const humanTeam = teams.find(t => t.id === teamObj.id || t.name === teamObj.name);
         if (humanTeam && humanTeam.lineup) {
           const availablePlayers = [];
+          let totalWeight = 0;
           for (let key in humanTeam.lineup) {
             if (humanTeam.lineup[key] && key !== 'GOL') {
-              availablePlayers.push(humanTeam.lineup[key].name);
+              const posKey = key.replace(/[0-9]/g, '');
+              const w = SCORER_WEIGHTS[posKey] !== undefined ? SCORER_WEIGHTS[posKey] : 1;
+              availablePlayers.push({ name: humanTeam.lineup[key].name, w: w });
+              totalWeight += w;
             }
           }
           if (availablePlayers.length > 0) {
-            return availablePlayers[Math.floor(Math.random() * availablePlayers.length)];
+            let r = Math.random() * totalWeight;
+            for (let p of availablePlayers) {
+              r -= p.w;
+              if (r <= 0) return p.name;
+            }
+            return availablePlayers[availablePlayers.length - 1].name;
           }
         }
       }
@@ -2676,22 +2660,50 @@
     }
 
     // 4. SIMULAÇÃO DO MINUTO E FORMATAÇÃO DO LOG DO GOL
-    function simulateMatchMinute(match, min) {
-      const isHomeBig = BIG_TEAMS.has(match.home.name);
-      const isAwayBig = BIG_TEAMS.has(match.away.name);
-      let ovrDiff = match.home.ovr - match.away.ovr;
-      if (isHomeBig && !isAwayBig) ovrDiff += 4;
-      if (isAwayBig && !isHomeBig) ovrDiff -= 4;
+    function getEffectiveOvr(t) {
+      return t.ovr + (BIG_TEAMS.has(t.name) ? BIG_TEAM_BONUS : 0) + (t.isHuman ? HUMAN_TEAM_BONUS : 0);
+    }
 
-      const homeChance = 0.03 + (ovrDiff * 0.003);
-      const awayChance = 0.03 - (ovrDiff * 0.003);
+    // Verdadeiro quando TODOS os times dos jogadores já estão eliminados (partidas passam a 2x)
+    function isHumanEliminated(teamId) {
+      let found = null, groupList = null;
+      const groups = tournamentData.groups || {};
+      for (let g in groups) {
+        const t = groups[g].find(x => x.id === teamId);
+        if (t) { found = t; groupList = groups[g]; break; }
+      }
+      if (tournamentStage === 'PLAYOFFS') {
+        return !currentBrasfootState.currentMatches.some(m => m.home.id === teamId || m.away.id === teamId);
+      }
+      if (!found) return tournamentStage === 'ESTADUALZAO_PHASE2';
+      const vagas = tournamentStage === 'ESTADUALZAO_PHASE1' ? 4 : 2;
+      const maxPts = found.pts + 3 * ((tournamentData.maxRounds || 0) - found.pj);
+      const acima = groupList.filter(x => x.id !== teamId && x.pts > maxPts).length;
+      return acima >= vagas;
+    }
+
+    function allHumansEliminated() {
+      if (!playerCount) return false;
+      for (let i = 0; i < playerCount; i++) {
+        if (!isHumanEliminated(teams[i].id)) return false;
+      }
+      return true;
+    }
+
+    function simulateMatchMinute(match, min) {
+      const ovrDiff = getEffectiveOvr(match.home) - getEffectiveOvr(match.away);
+
+      const homeChance = Math.min(0.065, Math.max(0.012, 0.03 + (ovrDiff * 0.003)));
+      const awayChance = Math.min(0.065, Math.max(0.012, 0.03 - (ovrDiff * 0.003)));
+      const homeConv = Math.min(0.5, Math.max(0.25, 0.38 + (ovrDiff * 0.004)));
+      const awayConv = Math.min(0.5, Math.max(0.25, 0.38 - (ovrDiff * 0.004)));
 
       match.stats.homePossession = Math.min(78, Math.max(22, 50 + Math.round(ovrDiff * 1.8) + Math.floor(Math.random() * 5 - 2)));
       match.stats.awayPossession = 100 - match.stats.homePossession;
 
-      if (Math.random() < Math.max(0.01, homeChance)) {
+      if (Math.random() < homeChance) {
         match.stats.homeShots++;
-        if (Math.random() < 0.4) {
+        if (Math.random() < homeConv) {
           match.homeScore++;
           const scorer = getRandomScorerName(match.home);
           if (scorer) {
@@ -2703,9 +2715,9 @@
         }
       }
 
-      if (Math.random() < Math.max(0.01, awayChance)) {
+      if (Math.random() < awayChance) {
         match.stats.awayShots++;
-        if (Math.random() < 0.4) {
+        if (Math.random() < awayConv) {
           match.awayScore++;
           const scorer = getRandomScorerName(match.away);
           if (scorer) {
@@ -2752,8 +2764,8 @@
       } else if (tournamentStage === 'PLAYOFFS') {
         currentBrasfootState.currentMatches.forEach(m => {
           if (m.homeScore === m.awayScore) {
-            const homeAdv = m.home.ovr + (BIG_TEAMS.has(m.home.name) ? 5 : 0);
-            const awayAdv = m.away.ovr + (BIG_TEAMS.has(m.away.name) ? 5 : 0);
+            const homeAdv = getEffectiveOvr(m.home);
+            const awayAdv = getEffectiveOvr(m.away);
             if (Math.random() * homeAdv >= Math.random() * awayAdv) m.homeScore++;
             else m.awayScore++;
             m.events.unshift(`🚩 Pênaltis! Vencedor: ${m.homeScore > m.awayScore ? m.home.name : m.away.name}`);
@@ -3074,14 +3086,12 @@
             const item = document.createElement('div');
             item.className = 'bracket-match-item';
             const homeWin = m.homeScore > m.awayScore;
+            const awayWin = !homeWin && m.homeScore !== m.awayScore;
             item.innerHTML = `
-              <div class="bracket-team ${homeWin ? 'winner' : ''}">
-                <span>${getTeamLogoHTML(m.home.name, m.home.badge)} ${m.home.name}</span>
-                <span>${m.homeScore}</span>
-              </div>
-              <div class="bracket-team ${!homeWin && m.homeScore !== m.awayScore ? 'winner' : ''}">
-                <span>${getTeamLogoHTML(m.away.name, m.away.badge)} ${m.away.name}</span>
-                <span>${m.awayScore}</span>
+              <div class="bracket-row">
+                <span class="bracket-side home ${homeWin ? 'winner' : ''}">${getTeamLogoHTML(m.home.name, m.home.badge)} <span class="bracket-name">${m.home.name}</span></span>
+                <span class="bracket-score">${m.homeScore} - ${m.awayScore}</span>
+                <span class="bracket-side away ${awayWin ? 'winner' : ''}"><span class="bracket-name">${m.away.name}</span> ${getTeamLogoHTML(m.away.name, m.away.badge)}</span>
               </div>
             `;
             bracketDiv.appendChild(item);
