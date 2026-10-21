@@ -560,6 +560,16 @@
     #podium-screen { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 40px; background: var(--bg-primary); }
     .podium-container { display: flex; align-items: flex-end; justify-content: center; gap: 12px; height: 300px; width: 100%; max-width: 600px; }
     .podium-step { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 12px; border-radius: 8px 8px 0 0; font-weight: bold; transition: transform 0.8s ease-out; transform: translateY(100%); width: 30%; }
+    #podium-screen { justify-content: safe flex-end; }
+    .season-stats-box { width: 100%; max-width: 720px; margin-top: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; }
+    .season-stats-title { color: #60a5fa; font-weight: 700; font-size: 0.95rem; text-transform: uppercase; text-align: center; margin-bottom: 8px; }
+    .season-stats-scroll { overflow-x: auto; }
+    .season-stats-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 0.85rem; }
+    .season-stats-table th, .season-stats-table td { padding: 6px 5px; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+    .season-stats-table th { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; }
+    .season-stats-table td.team-cell { text-align: left; font-weight: 600; }
+    .season-stats-table td.team-cell > span { display: inline-flex; align-items: center; gap: 6px; }
+    .season-stats-table td.apr { color: var(--accent-gold); font-weight: 700; }
     .podium-step.show { transform: translateY(0); }
     .podium-1 { height: 220px; background: #334155; color: #fff; border-top: 3px solid #60a5fa; z-index: 3; }
     .podium-2 { height: 160px; background: #283141; color: #fff; border-top: 3px solid #94a3b8; z-index: 2; }
@@ -1002,6 +1012,7 @@
         <div class="podium-team-name" id="podium-name-3">--</div>
       </div>
     </div>
+    <div id="season-stats-box" class="season-stats-box"></div>
     <button class="btn-start" id="btn-next-phase" style="margin-top:25px;" onclick="handlePodiumNextPhase()">Avançar para a próxima fase</button>
   </div>
 
@@ -1680,6 +1691,7 @@
     let tournamentData = { groups: {}, round: 1, maxRounds: 7, bracket: {} };
     let currentBrasfootState = { active: false, currentMatchMinute: 0, currentMatches: [], history: [] };
     let topScorers = {}; 
+    let teamStats = {}; // estatísticas acumuladas (todas as temporadas) dos times dos jogadores: { id: { v, e, d, gp, gc } }
     let playoffResults = { champion: null, runnerUp: null, semifinalists: [] };
 
     let peer = null, connections = [], hostConn = null, isHost = true, myPlayerId = 0;
@@ -1957,6 +1969,7 @@
         highestBidderId, activeBidders, playersActedThisCard: Array.from(playersActedThisCard), isAuctionStarted, isDiceRolled, isTransitioning, currentSeason, season2DraftCount, tournamentStage, tournamentData,
         pendingSwap: pendingSwap,
         topScorers: topScorers,
+        teamStats: teamStats,
         playoffResults: playoffResults,
         diceResultText: document.getElementById('dice-result').innerText,
         setupHidden: document.getElementById('setup-screen').style.display === 'none',
@@ -1995,6 +2008,7 @@
       pendingSwap = state.pendingSwap || null;
       if (state.tournamentData) tournamentData = state.tournamentData;
       if (state.topScorers) topScorers = state.topScorers;
+      if (state.teamStats) teamStats = state.teamStats;
       if (state.playoffResults) playoffResults = state.playoffResults;
 
       for (let i = 0; i < playerCount; i++) {
@@ -2060,6 +2074,7 @@
       tournamentStage = 'ESTADUALZAO_PHASE1';
       usedPlayerNames.clear();
       topScorers = {};
+      teamStats = {};
       playoffResults = { champion: null, runnerUp: null, semifinalists: [] };
       updateBadgePreviews();
 
@@ -2735,6 +2750,7 @@
 
       if (tournamentStage === 'ESTADUALZAO_PHASE1') {
         currentBrasfootState.currentMatches.forEach(m => {
+          recordHumanMatchStats(m);
           updateGroupStats(m.group, m.home.id, m.homeScore, m.awayScore);
           updateGroupStats(m.group, m.away.id, m.awayScore, m.homeScore);
         });
@@ -2749,6 +2765,7 @@
         }
       } else if (tournamentStage === 'ESTADUALZAO_PHASE2') {
         currentBrasfootState.currentMatches.forEach(m => {
+          recordHumanMatchStats(m);
           updateGroupStats(m.group, m.home.id, m.homeScore, m.awayScore);
           updateGroupStats(m.group, m.away.id, m.awayScore, m.homeScore);
         });
@@ -2762,6 +2779,7 @@
           startEstadualzaoPlayoffs();
         }
       } else if (tournamentStage === 'PLAYOFFS') {
+        currentBrasfootState.currentMatches.forEach(m => recordHumanMatchStats(m));
         currentBrasfootState.currentMatches.forEach(m => {
           if (m.homeScore === m.awayScore) {
             const homeAdv = getEffectiveOvr(m.home);
@@ -2797,6 +2815,20 @@
           runCurrentMatchesLoop();
         }
       }
+    }
+
+    // Soma V/E/D/gols dos times dos jogadores (placar do tempo normal; decisão nos pênaltis conta como empate)
+    function recordHumanMatchStats(m) {
+      [[m.home, m.homeScore, m.awayScore], [m.away, m.awayScore, m.homeScore]].forEach(([t, gPro, gContra]) => {
+        if (!t || !t.isHuman) return;
+        if (!teamStats[t.id]) teamStats[t.id] = { v: 0, e: 0, d: 0, gp: 0, gc: 0 };
+        const st = teamStats[t.id];
+        st.gp += gPro;
+        st.gc += gContra;
+        if (gPro > gContra) st.v++;
+        else if (gPro === gContra) st.e++;
+        else st.d++;
+      });
     }
 
     function updateGroupStats(groupKey, teamId, gPro, gContra) {
@@ -2946,7 +2978,53 @@
       broadcastState();
     }
 
+    function renderSeasonStatsTable() {
+      const box = document.getElementById('season-stats-box');
+      if (!box) return;
+
+      const rows = [];
+      for (let i = 0; i < playerCount; i++) {
+        const t = teams[i];
+        if (!t) continue;
+        const st = teamStats[t.id] || { v: 0, e: 0, d: 0, gp: 0, gc: 0 };
+        const j = st.v + st.e + st.d;
+        const apr = j > 0 ? ((st.v * 3 + st.e) / (j * 3)) * 100 : 0;
+        rows.push({ team: t, st, j, apr, sg: st.gp - st.gc });
+      }
+      rows.sort((a, b) => b.apr - a.apr || b.sg - a.sg || b.st.gp - a.st.gp);
+
+      const title = currentSeason === 1
+        ? '📊 Desempenho dos Jogadores - 1ª Temporada'
+        : `📊 Desempenho Acumulado - 1ª até ${currentSeason}ª Temporada`;
+
+      box.innerHTML = `
+        <div class="season-stats-title">${title}</div>
+        <div class="season-stats-scroll">
+          <table class="season-stats-table">
+            <thead>
+              <tr><th style="text-align:left;">Jogador</th><th>J</th><th>V</th><th>E</th><th>D</th><th>GM</th><th>GS</th><th>Aprov.</th></tr>
+            </thead>
+            <tbody>
+              ${rows.map((r, idx) => `
+                <tr>
+                  <td class="team-cell"><span>${idx + 1}. <span style="width:20px; height:20px; display:inline-block;">${getTeamLogoHTML(r.team.name, r.team.badge)}</span> ${r.team.name}</span></td>
+                  <td>${r.j}</td>
+                  <td>${r.st.v}</td>
+                  <td>${r.st.e}</td>
+                  <td>${r.st.d}</td>
+                  <td>${r.st.gp}</td>
+                  <td>${r.st.gc}</td>
+                  <td class="apr">${r.apr.toFixed(1)}%</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
     function renderPodium() {
+      renderSeasonStatsTable();
       const champ = playoffResults.champion || (teams[0] ? teams[0].name : "Time Campeão");
       const vice = playoffResults.runnerUp || (teams[1] ? teams[1].name : "Vice-Campeão");
       const semiText = playoffResults.semifinalists && playoffResults.semifinalists.length > 0 
